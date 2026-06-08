@@ -227,8 +227,8 @@ export default function SubAdminsManager() {
         </div>
       ) : (
         <div className="premium-card overflow-hidden bg-white border border-slate-200">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+          <div className="overflow-x-auto w-full pb-2">
+            <table className="w-full text-left border-collapse min-w-[700px]">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-200 text-[10px] font-bold uppercase tracking-wider text-slate-500">
                   <th className="px-6 py-4">Name</th>

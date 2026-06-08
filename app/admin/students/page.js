@@ -354,7 +354,7 @@ export default function StudentsManager() {
           {/* Add Student Button */}
           <button
             onClick={() => setModalOpen(true)}
-            className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-teal-600/10 hover:bg-teal-700 transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg bg-[#2E76C0] px-4 py-2 text-sm font-semibold text-white shadow-md shadow-[#2E76C0]/10 hover:bg-[#1F548C] transition-colors"
           >
             <UserPlus className="h-4 w-4" />
             <span>Add Student</span>
@@ -366,10 +366,10 @@ export default function StudentsManager() {
       {bulkResult && (
         <div className="rounded-xl bg-teal-50 border border-teal-200 p-5 space-y-2">
           <h3 className="font-bold text-teal-800 flex items-center gap-2">
-            <Check className="h-4 w-4 bg-teal-600 text-white rounded-full p-0.5" />
+            <Check className="h-4 w-4 bg-[#2E76C0] text-white rounded-full p-0.5" />
             Bulk Import Completed!
           </h3>
-          <p className="text-sm text-teal-700 leading-relaxed">
+          <p className="text-sm text-[#1F548C] leading-relaxed">
             CSV roster processed: <strong>{bulkResult.created}</strong> students enrolled. 
             {bulkResult.duplicates > 0 && ` (${bulkResult.duplicates} duplicates skipped).`}
             {bulkResult.errors > 0 && ` (${bulkResult.errors} formatting errors found).`}
@@ -386,7 +386,7 @@ export default function StudentsManager() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search students by name or email..."
-            className="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-200 text-sm bg-white outline-none focus:border-teal-500"
+            className="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-200 text-sm bg-white outline-none focus:border-[#00E5FF]"
           />
         </div>
 
@@ -395,7 +395,7 @@ export default function StudentsManager() {
           <select
             value={batchFilter}
             onChange={(e) => setBatchFilter(e.target.value)}
-            className="rounded-lg border border-slate-200 px-3 py-2 text-xs bg-white focus:border-teal-500 outline-none"
+            className="rounded-lg border border-slate-200 px-3 py-2 text-xs bg-white focus:border-[#00E5FF] outline-none"
           >
             <option value="">All Batches</option>
             {Array.from(new Set(students.map(s => s.batch))).filter(Boolean).map(b => (
@@ -407,7 +407,7 @@ export default function StudentsManager() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="rounded-lg border border-slate-200 px-3 py-2 text-xs bg-white focus:border-teal-500 outline-none"
+            className="rounded-lg border border-slate-200 px-3 py-2 text-xs bg-white focus:border-[#00E5FF] outline-none"
           >
             <option value="">All Statuses</option>
             <option value="active">Active</option>
@@ -431,7 +431,7 @@ export default function StudentsManager() {
 
       {/* Bulk Actions Drawer */}
       {selectedStudentIds.length > 0 && (
-        <div className="premium-card p-4 border-l-4 border-teal-650 bg-teal-50/10 space-y-3 animate-slide-down">
+        <div className="premium-card p-4 border-l-4 border-[#2765A4] bg-teal-50/10 space-y-3 animate-slide-down">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
             <div>
               <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Bulk Cohort Management</h4>
@@ -440,13 +440,13 @@ export default function StudentsManager() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => handleBulkStatusChange("active")}
-                className="bg-emerald-600 text-white font-bold text-2xs px-3 py-1.5 rounded-lg hover:bg-emerald-700 transition-colors"
+                className="bg-[#10B981] text-white font-bold text-2xs px-3 py-1.5 rounded-lg hover:bg-[#059669] transition-colors"
               >
                 Activate Accounts
               </button>
               <button
                 onClick={() => handleBulkStatusChange("suspended")}
-                className="bg-amber-500 text-white font-bold text-2xs px-3 py-1.5 rounded-lg hover:bg-amber-600 transition-colors"
+                className="bg-[#F59E0B] text-white font-bold text-2xs px-3 py-1.5 rounded-lg hover:bg-amber-600 transition-colors"
               >
                 Suspend Accounts
               </button>
@@ -480,7 +480,7 @@ export default function StudentsManager() {
               </div>
               <button
                 type="submit"
-                className="bg-teal-650 text-white text-xs font-bold px-4 py-1.5 rounded-lg hover:bg-teal-750"
+                className="bg-[#2765A4] text-white text-xs font-bold px-4 py-1.5 rounded-lg hover:bg-teal-750"
               >
                 Change Batch
               </button>
@@ -492,7 +492,7 @@ export default function StudentsManager() {
       {/* Table Section */}
       {loading ? (
         <div className="flex h-48 items-center justify-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-teal-600" />
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-[#2E76C0]" />
         </div>
       ) : students.length === 0 ? (
         <div className="premium-card p-12 text-center text-slate-500">
@@ -502,8 +502,8 @@ export default function StudentsManager() {
         </div>
       ) : (
         <div className="premium-card overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+          <div className="overflow-x-auto w-full pb-2">
+            <table className="w-full text-left border-collapse min-w-[800px]">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-200 text-xs font-semibold uppercase tracking-wider text-slate-500">
                   <th className="px-6 py-4 w-12">
@@ -529,7 +529,7 @@ export default function StudentsManager() {
                         const matchesStatus = statusFilter === "" || student.status === statusFilter;
                         return matchesSearch && matchesBatch && matchesStatus;
                       }).length && students.length > 0 ? (
-                        <CheckSquare className="h-4.5 w-4.5 text-teal-600" />
+                        <CheckSquare className="h-4.5 w-4.5 text-[#2E76C0]" />
                       ) : (
                         <Square className="h-4.5 w-4.5" />
                       )}
@@ -559,10 +559,10 @@ export default function StudentsManager() {
                         <button
                           type="button"
                           onClick={() => handleStudentSelectToggle(student._id)}
-                          className="text-slate-400 hover:text-teal-600"
+                          className="text-slate-400 hover:text-[#2E76C0]"
                         >
                           {isRowSelected ? (
-                            <CheckSquare className="h-4.5 w-4.5 text-teal-600" />
+                            <CheckSquare className="h-4.5 w-4.5 text-[#2E76C0]" />
                           ) : (
                             <Square className="h-4.5 w-4.5" />
                           )}
@@ -582,7 +582,7 @@ export default function StudentsManager() {
                         </span>
                         <button
                           onClick={() => setEditingStudent(student)}
-                          className="text-xs text-teal-650 hover:text-teal-800 font-bold ml-2.5"
+                          className="text-xs text-[#2765A4] hover:text-teal-800 font-bold ml-2.5"
                         >
                           Edit
                         </button>
@@ -622,7 +622,7 @@ export default function StudentsManager() {
                           {/* Reset Password */}
                           <button
                             onClick={() => handleResetPassword(student._id, student.name)}
-                            className="p-1.5 rounded-lg border border-teal-100 text-teal-600 hover:bg-teal-50 transition-colors"
+                            className="p-1.5 rounded-lg border border-teal-100 text-[#2E76C0] hover:bg-teal-50 transition-colors"
                             title="Reset Password & Email student"
                           >
                             <Key className="h-4 w-4" />
@@ -653,7 +653,7 @@ export default function StudentsManager() {
           <div className="w-full max-w-md bg-white rounded-2xl border border-slate-200 shadow-2xl overflow-hidden animate-slide-up">
             <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
               <h2 className="text-md font-bold text-slate-900 flex items-center gap-2">
-                <UserPlus className="h-5 w-5 text-teal-600" />
+                <UserPlus className="h-5 w-5 text-[#2E76C0]" />
                 Enroll New Student
               </h2>
               <button onClick={() => setModalOpen(false)} className="text-slate-400 hover:text-slate-600">
@@ -670,7 +670,7 @@ export default function StudentsManager() {
                     required
                     value={newStudent.name}
                     onChange={(e) => setNewStudent({ ...newStudent, name: e.target.value })}
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20"
+                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none transition-all focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/20"
                     placeholder="Siddharth Roy"
                   />
                 </div>
@@ -682,7 +682,7 @@ export default function StudentsManager() {
                     required
                     value={newStudent.email}
                     onChange={(e) => setNewStudent({ ...newStudent, email: e.target.value })}
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20"
+                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none transition-all focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/20"
                     placeholder="siddharth@medcollege.edu"
                   />
                 </div>
@@ -693,7 +693,7 @@ export default function StudentsManager() {
                     type="text"
                     value={newStudent.phone}
                     onChange={(e) => setNewStudent({ ...newStudent, phone: e.target.value })}
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20"
+                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none transition-all focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/20"
                     placeholder="+91 9998887770"
                   />
                 </div>
@@ -704,7 +704,7 @@ export default function StudentsManager() {
                     type="text"
                     value={newStudent.batch}
                     onChange={(e) => setNewStudent({ ...newStudent, batch: e.target.value })}
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20"
+                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none transition-all focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/20"
                     placeholder="NEET-2026-A"
                   />
                 </div>
@@ -720,7 +720,7 @@ export default function StudentsManager() {
                 </button>
                 <button
                   type="submit"
-                  className="rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 shadow-md shadow-teal-600/10 transition-colors"
+                  className="rounded-lg bg-[#2E76C0] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1F548C] shadow-md shadow-[#2E76C0]/10 transition-colors"
                 >
                   Create & Email Credentials
                 </button>
@@ -753,7 +753,7 @@ export default function StudentsManager() {
                     required
                     value={editingStudent.batch}
                     onChange={(e) => setEditingStudent({ ...editingStudent, batch: e.target.value })}
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20"
+                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none transition-all focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/20"
                   />
                 </div>
               </div>
@@ -768,7 +768,7 @@ export default function StudentsManager() {
                 </button>
                 <button
                   type="submit"
-                  className="rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 shadow-md shadow-teal-600/10 transition-colors"
+                  className="rounded-lg bg-[#2E76C0] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1F548C] shadow-md shadow-[#2E76C0]/10 transition-colors"
                 >
                   Save Batch
                 </button>
@@ -784,7 +784,7 @@ export default function StudentsManager() {
           <div className="w-full max-w-2xl bg-white rounded-2xl border border-slate-200 shadow-2xl overflow-hidden animate-slide-up">
             <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
               <h2 className="text-md font-bold text-slate-900 flex items-center gap-2">
-                <Upload className="h-5 w-5 text-teal-600" />
+                <Upload className="h-5 w-5 text-[#2E76C0]" />
                 Bulk CSV Roster Enrollment
               </h2>
               <button onClick={() => setBulkModalOpen(false)} className="text-slate-400 hover:text-slate-600">
@@ -800,7 +800,7 @@ export default function StudentsManager() {
                   value={csvContent}
                   onChange={(e) => handleParseCsv(e.target.value)}
                   rows="6"
-                  className="w-full rounded-lg border border-slate-200 p-3 font-mono text-xs outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20"
+                  className="w-full rounded-lg border border-slate-200 p-3 font-mono text-xs outline-none transition-all focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/20"
                   placeholder="Aman Sharma, aman@university.com, 9876543210, Batch-A&#10;Priya Patel, priya@university.com,, Batch-B"
                 />
               </div>
@@ -855,7 +855,7 @@ export default function StudentsManager() {
                 <button
                   onClick={handleBulkUpload}
                   disabled={bulkPreview.length === 0}
-                  className="rounded-lg bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 shadow-md shadow-teal-600/10 transition-colors disabled:opacity-50"
+                  className="rounded-lg bg-[#2E76C0] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1F548C] shadow-md shadow-[#2E76C0]/10 transition-colors disabled:opacity-50"
                 >
                   Import & Trigger Welcome Mails
                 </button>

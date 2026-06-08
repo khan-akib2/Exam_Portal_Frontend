@@ -39,13 +39,13 @@ export default function Navbar() {
   if (!currentUser) return null;
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-slate-200 bg-white/70 backdrop-blur-lg shadow-xs transition-all duration-300">
-      <div className="flex h-16 items-center justify-between px-6">
-        {/* Left: Branding & Mobile Menu Toggle */}
+    <header className="sticky top-0 z-40 w-full border-b border-slate-200 bg-white/80 backdrop-blur-md shadow-xs transition-all duration-300">
+      <div className="flex h-16 items-center justify-between px-6 max-w-[1600px] mx-auto">
+        {/* Left: Mobile Menu Toggle */}
         <div className="flex items-center gap-3">
           <button
             onClick={() => window.dispatchEvent(new Event("toggle-sidebar"))}
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-slate-650 transition-all hover:bg-slate-50 active:scale-95 md:hidden shrink-0"
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-all hover:bg-slate-50 active:scale-95 md:hidden shrink-0"
             title="Open Menu"
           >
             <svg
@@ -62,78 +62,64 @@ export default function Navbar() {
               />
             </svg>
           </button>
-
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-teal-650 to-teal-800 text-white shadow-md shadow-teal-500/10 shrink-0">
-            <Zap className="h-4.5 w-4.5" />
-          </div>
-          <div className="hidden sm:block">
-            <h1 className="text-sm font-black tracking-tight text-slate-900 leading-none">
-              MedExam Portal
-            </h1>
-            <span className="text-[10px] font-bold text-teal-600 uppercase tracking-widest block mt-1">
-              Gamified Clinical Assessor
-            </span>
-          </div>
         </div>
 
-        {/* Right: Gamification Info & User Profile */}
-        <div className="flex items-center gap-2 md:gap-4">
+        {/* Right: Info & User Profile */}
+        <div className="flex items-center gap-3 md:gap-5 ml-auto">
           {currentUser.role === "student" && (
-            <div className="flex items-center gap-2 md:gap-3 rounded-full border border-slate-250 bg-slate-50/50 p-1 pr-3 md:pr-4 text-xs font-semibold text-slate-700 shadow-xs hover:border-slate-300 transition-all">
+            <div className="flex items-center gap-2 md:gap-3 rounded-xl border border-slate-200 bg-slate-50/50 p-1 text-[11px] font-bold text-slate-600 shadow-sm transition-all hover:border-slate-300">
               {/* XP status */}
-              <div className="flex items-center gap-1.5 bg-amber-500/10 text-amber-700 px-3 py-1 rounded-full border border-amber-500/10">
-                <Zap className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
-                <span>{currentUser.xp || 0} XP</span>
+              <div className="flex items-center gap-1.5 bg-white px-2.5 py-1 rounded-lg border border-slate-200 shadow-xs">
+                <Zap className="h-3.5 w-3.5 text-blue-500" />
+                <span className="text-slate-700">{currentUser.xp || 0} XP</span>
               </div>
 
               {/* Streak status */}
-              <div className="flex items-center gap-1.5 text-orange-750">
-                <Flame className="h-3.5 w-3.5 fill-orange-500 text-orange-500 animate-float" />
-                <span>{currentUser.streak || 0} Day Streak</span>
+              <div className="flex items-center gap-1.5 bg-white px-2.5 py-1 rounded-lg border border-slate-200 shadow-xs mr-1">
+                <Flame className="h-3.5 w-3.5 text-amber-500" />
+                <span className="text-slate-700">{currentUser.streak || 0} Day Streak</span>
               </div>
             </div>
           )}
 
           {currentUser.role === "super_admin" && (
-            <div className="flex items-center gap-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 text-2xs font-extrabold text-indigo-700 uppercase tracking-wider">
-              <ShieldAlert className="h-3.5 w-3.5 text-indigo-600" />
+            <div className="flex items-center gap-1.5 rounded-full bg-slate-100 border border-slate-200 px-3 py-1.5 text-[10px] font-bold text-slate-600 uppercase tracking-widest shadow-sm">
+              <ShieldAlert className="h-3.5 w-3.5 text-slate-500" />
               <span>Super Admin</span>
             </div>
           )}
 
           {currentUser.role === "admin" && (
-            <div className="flex items-center gap-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 px-3 py-1 text-2xs font-extrabold text-blue-700 uppercase tracking-wider">
-              <ShieldAlert className="h-3.5 w-3.5 text-blue-600" />
+            <div className="flex items-center gap-1.5 rounded-full bg-slate-100 border border-slate-200 px-3 py-1.5 text-[10px] font-bold text-slate-600 uppercase tracking-widest shadow-sm">
+              <ShieldAlert className="h-3.5 w-3.5 text-[#2E76C0]" />
               <span>Admin</span>
             </div>
           )}
 
           {/* User profile dropdown trigger & logout */}
-          <div className="flex items-center gap-2 md:gap-3 border-l border-slate-250/70 pl-2 md:pl-4">
-            <div className="hidden md:flex flex-col text-right">
-              <span className="text-xs font-bold text-slate-900 leading-none">
-                {currentUser.name}
-              </span>
-              <span className="text-[10px] font-semibold text-slate-400 capitalize mt-1.5">
-                {currentUser.role.replace("_", " ")}
-              </span>
-            </div>
-
+          <div className="flex items-center gap-2 pl-2">
             <button
               onClick={() => {
                 if (currentUser.role === "student") router.push("/student/profile");
                 else if (currentUser.role === "admin") router.push("/admin/profile");
                 else if (currentUser.role === "super_admin") router.push("/superadmin/profile");
               }}
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-slate-600 transition-all hover:bg-teal-50 hover:text-teal-650 active:scale-95 shadow-xs"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-transparent hover:bg-slate-50 hover:border-slate-200 transition-all active:scale-95"
               title="Profile Settings"
             >
-              <User className="h-4 w-4" />
+               <div className="h-7 w-7 rounded-full bg-gradient-to-tr from-[#2E76C0] to-[#00E5FF] flex items-center justify-center text-white font-bold text-xs shadow-inner">
+                 {currentUser.name ? currentUser.name.charAt(0).toUpperCase() : "U"}
+               </div>
+               <div className="hidden md:flex flex-col text-left">
+                  <span className="text-xs font-bold text-slate-900 leading-none">
+                    {currentUser.name}
+                  </span>
+               </div>
             </button>
 
             <button
               onClick={handleLogout}
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-slate-650 transition-all hover:bg-red-50 hover:text-red-650 active:scale-95 shadow-xs"
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition-all hover:bg-red-50 hover:text-red-600 hover:border-red-200 active:scale-95 shadow-sm ml-1"
               title="Logout"
             >
               <LogOut className="h-4 w-4" />

@@ -217,15 +217,15 @@ export default function ExamsManager() {
 
   return (
     <div className="space-y-6 animate-fade-in text-left">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Exam Builder</h1>
-          <p className="text-sm text-slate-500">Configure simulated tests, assign cohorts, allot negative marking rules, and deploy assessments.</p>
+          <h1 className="text-2xl font-black tracking-tight text-slate-900">Exam Builder</h1>
+          <p className="text-sm text-slate-500 mt-1">Configure simulated tests, assign cohorts, allot negative marking rules, and deploy assessments.</p>
         </div>
 
         <button
           onClick={() => setModalOpen(true)}
-          className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-4.5 py-2.5 text-xs font-bold text-white shadow-md shadow-teal-650/15 hover:bg-teal-700 transition-all active:scale-98 shrink-0 self-start sm:self-center"
+          className="inline-flex items-center gap-2 rounded-xl bg-[#2E76C0] px-5 py-2.5 text-[13px] font-bold text-white shadow-md shadow-[#2E76C0]/20 hover:bg-[#2765A4] transition-all active:scale-95 shrink-0 self-start sm:self-center"
         >
           <Plus className="h-4 w-4" />
           <span>Build Assessment</span>
@@ -234,23 +234,23 @@ export default function ExamsManager() {
 
       {/* Exams List Table */}
       {loading ? (
-        <div className="flex h-48 items-center justify-center bg-slate-50">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-teal-650" />
+        <div className="flex h-48 items-center justify-center bg-[#FAFAFB]">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-[#2E76C0]" />
         </div>
       ) : exams.length === 0 ? (
         <div className="premium-card p-12 text-center text-slate-500 bg-white border border-slate-200">
-          <FileText className="h-12 w-12 text-slate-350 mx-auto mb-3" />
+          <FileText className="h-12 w-12 text-slate-300 mx-auto mb-3" />
           <p className="font-bold text-lg text-slate-800">No examinations created yet.</p>
           <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto leading-relaxed">
             Click the build button to configure your first simulated exam paper or auto-generate one from the MCQ pool.
           </p>
         </div>
       ) : (
-        <div className="premium-card overflow-hidden bg-white border border-slate-200">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+        <div className="premium-card overflow-hidden border border-slate-200 shadow-sm">
+          <div className="overflow-x-auto w-full pb-2">
+            <table className="w-full text-left border-collapse min-w-[700px]">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-200 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                <tr className="bg-[#FAFAFB] border-b border-slate-200 text-[10px] font-bold uppercase tracking-wider text-slate-500">
                   <th className="px-6 py-4">Exam Details</th>
                   <th className="px-6 py-4">Timer & Regulations</th>
                   <th className="px-6 py-4">Question Count</th>
@@ -259,32 +259,32 @@ export default function ExamsManager() {
                   <th className="px-6 py-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-150 text-xs text-slate-700">
+              <tbody className="divide-y divide-slate-100 text-xs text-slate-700 bg-white">
                 {exams.map((exam) => (
-                  <tr key={exam._id} className="hover:bg-slate-50/40 transition-colors">
+                  <tr key={exam._id} className="hover:bg-slate-50/50 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex flex-col gap-1">
-                        <span className="font-extrabold text-slate-900 text-sm">{exam.name}</span>
-                        <span className="text-2xs text-slate-500 max-w-xs truncate leading-normal">{exam.description || "No description provided."}</span>
-                        <span className="text-[9px] bg-slate-100 border border-slate-200 text-slate-600 px-2 py-0.5 rounded-md self-start font-bold uppercase tracking-wider">
+                        <span className="font-extrabold text-slate-900 text-[13px]">{exam.name}</span>
+                        <span className="text-[11px] text-slate-500 max-w-xs truncate leading-normal">{exam.description || "No description provided."}</span>
+                        <span className="text-[9px] bg-[#E6EEF7] border border-[#C7DBEE] text-[#2765A4] px-2 py-0.5 rounded-md self-start font-bold uppercase tracking-wider mt-1">
                           {exam.examType}
                         </span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="flex flex-col gap-1 text-slate-650">
-                        <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5 text-slate-400" /> <strong>{exam.duration} mins</strong></span>
-                        <span className="text-2xs">Pass Rate: <strong>{exam.passingMarks}%</strong></span>
-                        <span className="text-2xs text-red-600 font-semibold">Penalties: <strong>{exam.negativeMarking || 0} per wrong</strong></span>
+                      <div className="flex flex-col gap-1.5 text-slate-600">
+                        <span className="flex items-center gap-1.5"><Clock className="h-3.5 w-3.5 text-slate-400" /> <strong>{exam.duration} mins</strong></span>
+                        <span className="text-[11px]">Pass Rate: <strong>{exam.passingMarks}%</strong></span>
+                        <span className="text-[11px] text-red-600 font-semibold">Penalties: <strong>{exam.negativeMarking || 0} per wrong</strong></span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 font-black text-slate-950 text-sm">
-                      <span className="flex items-center gap-1"><FileQuestion className="h-4 w-4 text-slate-400" /> {exam.totalQuestions} Qs</span>
+                    <td className="px-6 py-4 font-black text-slate-900 text-[13px]">
+                      <span className="flex items-center gap-1.5"><FileQuestion className="h-4 w-4 text-[#2E76C0]" /> {exam.totalQuestions} Qs</span>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="flex flex-wrap gap-1">
+                      <div className="flex flex-wrap gap-1.5">
                         {exam.assignedBatches.map((b) => (
-                          <span key={b} className="text-[10px] bg-teal-50 text-teal-700 border border-teal-100 px-2 py-0.5 rounded-full font-bold">
+                          <span key={b} className="text-[10px] bg-slate-100 text-slate-700 border border-slate-200 px-2 py-0.5 rounded-full font-bold">
                             {b}
                           </span>
                         ))}
@@ -292,34 +292,34 @@ export default function ExamsManager() {
                     </td>
                     <td className="px-6 py-4">
                       {exam.status === "published" ? (
-                        <span className="inline-flex items-center text-[10px] font-extrabold uppercase bg-emerald-50 text-emerald-700 border border-emerald-150 px-2.5 py-0.5 rounded-full">
+                        <span className="inline-flex items-center text-[10px] font-extrabold uppercase bg-[#10B981]/10 text-[#10B981] border border-[#10B981]/20 px-2.5 py-1 rounded-full">
                           Published
                         </span>
                       ) : (
-                        <span className="inline-flex items-center text-[10px] font-extrabold uppercase bg-slate-100 text-slate-600 border border-slate-200 px-2.5 py-0.5 rounded-full">
+                        <span className="inline-flex items-center text-[10px] font-extrabold uppercase bg-slate-100 text-slate-600 border border-slate-200 px-2.5 py-1 rounded-full">
                           Draft
                         </span>
                       )}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-1.5">
+                      <div className="flex items-center justify-end gap-2">
                         {/* Publish / Unpublish Toggle */}
                         <button
                           onClick={() => handleToggleStatus(exam._id, exam.status)}
                           className={`p-2 rounded-xl border transition-all active:scale-95 cursor-pointer ${
                             exam.status === "published"
-                              ? "border-emerald-100 text-emerald-600 bg-emerald-50/20 hover:bg-emerald-50"
+                              ? "border-[#10B981]/20 text-[#10B981] bg-[#10B981]/10 hover:bg-[#10B981]/20"
                               : "border-slate-200 text-slate-500 bg-white hover:bg-slate-50"
                           }`}
                           title={exam.status === "published" ? "Unpublish to Draft" : "Publish to Students"}
                         >
-                          {exam.status === "published" ? <ToggleRight className="h-4.5 w-4.5" /> : <ToggleLeft className="h-4.5 w-4.5" />}
+                          {exam.status === "published" ? <ToggleRight className="h-5 w-5" /> : <ToggleLeft className="h-5 w-5" />}
                         </button>
 
                         {/* Duplicate */}
                         <button
                           onClick={() => handleDuplicateExam(exam._id)}
-                          className="p-2 rounded-xl border border-teal-150 text-teal-600 bg-teal-50/20 hover:bg-teal-50 transition-all active:scale-95 cursor-pointer"
+                          className="p-2 rounded-xl border border-[#2E76C0]/20 text-[#2E76C0] bg-[#2E76C0]/10 hover:bg-[#2E76C0]/20 transition-all active:scale-95 cursor-pointer"
                           title="Duplicate Exam Draft"
                         >
                           <Copy className="h-4.5 w-4.5" />
@@ -328,7 +328,7 @@ export default function ExamsManager() {
                         {/* Delete */}
                         <button
                           onClick={() => handleDeleteExam(exam._id, exam.name)}
-                          className="p-2 rounded-xl border border-red-100 text-red-650 bg-red-50/20 hover:bg-red-50 transition-all active:scale-95 cursor-pointer"
+                          className="p-2 rounded-xl border border-red-200 text-red-600 bg-red-50 hover:bg-red-100 transition-all active:scale-95 cursor-pointer"
                           title="Delete Exam"
                         >
                           <Trash2 className="h-4.5 w-4.5" />
@@ -364,7 +364,7 @@ export default function ExamsManager() {
             </div>
 
             {/* Wizard step breadcrumbs indicator */}
-            <div className="bg-slate-50 border-b border-slate-200 px-6 py-3.5 flex items-center justify-between gap-1 overflow-x-auto">
+            <div className="bg-[#FAFAFB] border-b border-slate-200 px-6 py-4 flex items-center justify-between gap-1 overflow-x-auto">
               {[
                 { step: 1, label: "Info" },
                 { step: 2, label: "Rules" },
@@ -373,21 +373,21 @@ export default function ExamsManager() {
                 { step: 5, label: "Deploy" }
               ].map((s) => (
                 <div key={s.step} className="flex items-center gap-2 shrink-0">
-                  <div className={`w-6.5 h-6.5 rounded-full flex items-center justify-center font-bold text-[10px] border transition-all ${
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-[11px] border transition-all ${
                     wizardStep === s.step 
-                      ? "bg-teal-600 border-teal-600 text-white shadow-sm" 
+                      ? "bg-[#2E76C0] border-[#2E76C0] text-white shadow-md shadow-[#2E76C0]/20" 
                       : wizardStep > s.step 
-                      ? "bg-teal-50 border-teal-200 text-teal-700" 
+                      ? "bg-[#E6EEF7] border-[#C7DBEE] text-[#2E76C0]" 
                       : "bg-white border-slate-200 text-slate-400"
                   }`}>
                     {wizardStep > s.step ? "✓" : s.step}
                   </div>
-                  <span className={`text-[10px] font-bold uppercase tracking-wider ${
-                    wizardStep === s.step ? "text-teal-700" : "text-slate-400"
+                  <span className={`text-[11px] font-bold uppercase tracking-wider ${
+                    wizardStep === s.step ? "text-[#2E76C0]" : "text-slate-500"
                   }`}>
                     {s.label}
                   </span>
-                  {s.step < 5 && <ChevronRight className="h-3.5 w-3.5 text-slate-300" />}
+                  {s.step < 5 && <ChevronRight className="h-4 w-4 text-slate-300 mx-1" />}
                 </div>
               ))}
             </div>
@@ -677,24 +677,24 @@ export default function ExamsManager() {
               </div>
 
               {/* Wizard Nav Controls Footer */}
-              <div className="flex items-center justify-between px-6 py-4 bg-slate-50 border-t border-slate-200">
+              <div className="flex items-center justify-between px-6 py-4 bg-[#FAFAFB] border-t border-slate-200 rounded-b-2xl">
                 <button
                   type="button"
                   onClick={() => {
                     setModalOpen(false);
                     setWizardStep(1);
                   }}
-                  className="rounded-lg border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+                  className="rounded-xl border border-slate-200 px-5 py-2.5 text-[13px] font-bold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   {wizardStep > 1 && (
                     <button
                       type="button"
                       onClick={() => setWizardStep((prev) => prev - 1)}
-                      className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-[13px] font-bold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
                     >
                       <ChevronLeft className="h-4 w-4" />
                       <span>Back</span>
@@ -705,7 +705,7 @@ export default function ExamsManager() {
                     <button
                       type="button"
                       onClick={handleWizardNext}
-                      className="inline-flex items-center gap-1 rounded-lg bg-teal-600 px-4 py-2 text-xs font-semibold text-white hover:bg-teal-700 transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1.5 rounded-xl bg-[#00E5FF] px-5 py-2.5 text-[13px] font-bold text-[#0F172A] hover:bg-[#00B8CC] shadow-md shadow-[#00E5FF]/20 transition-all active:scale-95 cursor-pointer"
                     >
                       <span>Next Step</span>
                       <ChevronRight className="h-4 w-4" />
@@ -713,7 +713,7 @@ export default function ExamsManager() {
                   ) : (
                     <button
                       type="submit"
-                      className="inline-flex items-center gap-1.5 rounded-lg bg-teal-650 px-5 py-2 text-xs font-bold text-white hover:bg-teal-700 shadow-md shadow-teal-600/10 transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-2 rounded-xl bg-[#2E76C0] px-6 py-2.5 text-[13px] font-bold text-white hover:bg-[#2765A4] shadow-md shadow-[#2E76C0]/20 transition-all active:scale-95 cursor-pointer"
                     >
                       <Check className="h-4 w-4" />
                       <span>Deploy Assessment</span>

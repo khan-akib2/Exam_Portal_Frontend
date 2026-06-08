@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { 
   FileQuestion, FileUp, Sparkles, Plus, Image as ImageIcon, 
   Trash2, Save, Check, RefreshCw, AlertCircle, Edit, CheckSquare, Square,
@@ -91,7 +91,7 @@ export default function QuestionsManager() {
     }
   };
 
-  const fetchQuestions = async () => {
+  const fetchQuestions = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
       const res = await fetch("/api/questions", {
@@ -105,9 +105,9 @@ export default function QuestionsManager() {
     } catch (err) {
       console.error(err);
     }
-  };
+  }, []);
 
-  const fetchDrafts = async () => {
+  const fetchDrafts = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
       let url = "/api/questions/drafts";
@@ -126,9 +126,9 @@ export default function QuestionsManager() {
     } catch (err) {
       console.error(err);
     }
-  };
+  }, [selectedPdfFilter]);
 
-  const fetchTemplates = async () => {
+  const fetchTemplates = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
       const res = await fetch("/api/questions/templates", {
@@ -141,9 +141,9 @@ export default function QuestionsManager() {
     } catch (err) {
       console.error(err);
     }
-  };
+  }, []);
 
-  const fetchAnalytics = async () => {
+  const fetchAnalytics = useCallback(async () => {
     setLoadingAnalytics(true);
     try {
       const token = localStorage.getItem("token");
@@ -164,19 +164,19 @@ export default function QuestionsManager() {
     } finally {
       setLoadingAnalytics(false);
     }
-  };
+  }, [selectedPdfFilter]);
 
-  const initData = async () => {
+  const initData = useCallback(async () => {
     setLoading(true);
     await Promise.all([fetchQuestions(), fetchDrafts(), fetchTemplates(), fetchAnalytics()]);
     setLoading(false);
-  };
+  }, [fetchQuestions, fetchDrafts, fetchTemplates, fetchAnalytics]);
 
   useEffect(() => {
     setTimeout(() => {
       initData();
     }, 0);
-  }, [selectedPdfFilter]);
+  }, [initData]);
 
   // Handle Manual Question Operations
   const handleSelectQuestionForEdit = (q) => {
@@ -455,11 +455,11 @@ export default function QuestionsManager() {
   };
 
   // Draft Review & Editing Operations
-  const handleDraftSelectToggle = (id) => {
+  const handleDraftSelectToggle = useCallback((id) => {
     setSelectedDraftIds((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
-  };
+  }, []);
 
   const handleSelectAllDrafts = () => {
     if (selectedDraftIds.length === drafts.length) {
@@ -470,7 +470,7 @@ export default function QuestionsManager() {
   };
 
   // Single Draft Actions
-  const handleStartEditDraft = (draft) => {
+  const handleStartEditDraft = useCallback((draft) => {
     setEditingDraftId(draft._id);
     setEditingDraftData({
       question: draft.question,
@@ -484,7 +484,7 @@ export default function QuestionsManager() {
       image: draft.image,
       imageBase64: null
     });
-  };
+  }, []);
 
   const handleDraftFieldChange = (field, value) => {
     setEditingDraftData(prev => ({
@@ -545,7 +545,7 @@ export default function QuestionsManager() {
     }
   };
 
-  const handleDeleteSingleDraft = async (id) => {
+  const handleDeleteSingleDraft = useCallback(async (id) => {
     const confirmed = await showConfirm("Delete this draft question from the Review Queue?", "Delete Draft");
     if (!confirmed) return;
 
@@ -570,9 +570,9 @@ export default function QuestionsManager() {
     } catch (err) {
       showAlert(err.message, "Error");
     }
-  };
+  }, [fetchDrafts, showConfirm, showAlert]);
 
-  const handlePublishSingleDraft = async (id) => {
+  const handlePublishSingleDraft = useCallback(async (id) => {
     try {
       const token = localStorage.getItem("token");
       const res = await fetch(`/api/questions/drafts/${id}`, {
@@ -588,7 +588,7 @@ export default function QuestionsManager() {
     } catch (err) {
       showAlert(err.message, "Error");
     }
-  };
+  }, [fetchDrafts, fetchQuestions, showAlert]);
 
   // Bulk Operations
   const handleBulkPublish = async () => {
@@ -773,7 +773,7 @@ export default function QuestionsManager() {
       {/* Header */}
       <div className="border-b border-slate-150 pb-4">
         <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5">
-          <Layers className="h-5 w-5 text-teal-650" />
+          <Layers className="h-5 w-5 text-[#2765A4]" />
           Medical MCQ Repository
         </h1>
         <p className="text-xs text-slate-500 mt-1">Ingest PDF booklets via hybrid parsing templates, audit OCR drafts, or perform catalog updates.</p>
@@ -785,7 +785,7 @@ export default function QuestionsManager() {
           onClick={() => setActiveTab("bank")}
           className={`pb-3 text-xs font-bold border-b-2 transition-all flex items-center gap-2 cursor-pointer whitespace-nowrap ${
             activeTab === "bank"
-              ? "border-teal-600 text-teal-700 font-extrabold"
+              ? "border-[#2E76C0] text-[#1F548C] font-extrabold"
               : "border-transparent text-slate-500 hover:text-slate-700"
           }`}
         >
@@ -796,18 +796,18 @@ export default function QuestionsManager() {
           onClick={() => setActiveTab("extract")}
           className={`pb-3 text-xs font-bold border-b-2 transition-all flex items-center gap-2 cursor-pointer whitespace-nowrap ${
             activeTab === "extract"
-              ? "border-teal-600 text-teal-700 font-extrabold"
+              ? "border-[#2E76C0] text-[#1F548C] font-extrabold"
               : "border-transparent text-slate-500 hover:text-slate-700"
           }`}
         >
-          <FolderOpen className="h-4 w-4 text-amber-500" />
+          <FolderOpen className="h-4 w-4 text-[#F59E0B]" />
           <span>PDF Booklet Extractor</span>
         </button>
         <button
           onClick={() => setActiveTab("review")}
           className={`pb-3 text-xs font-bold border-b-2 transition-all flex items-center gap-2 cursor-pointer whitespace-nowrap ${
             activeTab === "review"
-              ? "border-teal-600 text-teal-700 font-extrabold"
+              ? "border-[#2E76C0] text-[#1F548C] font-extrabold"
               : "border-transparent text-slate-500 hover:text-slate-700"
           }`}
         >
@@ -818,7 +818,7 @@ export default function QuestionsManager() {
           onClick={() => setActiveTab("analytics")}
           className={`pb-3 text-xs font-bold border-b-2 transition-all flex items-center gap-2 cursor-pointer whitespace-nowrap ${
             activeTab === "analytics"
-              ? "border-teal-600 text-teal-700 font-extrabold"
+              ? "border-[#2E76C0] text-[#1F548C] font-extrabold"
               : "border-transparent text-slate-500 hover:text-slate-700"
           }`}
         >
@@ -849,7 +849,7 @@ export default function QuestionsManager() {
                   )}
                   <button
                     onClick={handleNewQuestionClick}
-                    className="inline-flex items-center gap-1 text-xs font-bold text-teal-650 hover:text-teal-850 cursor-pointer"
+                    className="inline-flex items-center gap-1 text-xs font-bold text-[#2765A4] hover:text-teal-850 cursor-pointer"
                   >
                     <Plus className="h-3.5 w-3.5" />
                     <span>New MCQ</span>
@@ -865,7 +865,7 @@ export default function QuestionsManager() {
                     className="inline-flex items-center gap-1 hover:text-slate-800 cursor-pointer"
                   >
                     {selectedQuestionIds.length === questions.length ? (
-                      <CheckSquare className="h-3.5 w-3.5 text-teal-600" />
+                      <CheckSquare className="h-3.5 w-3.5 text-[#2E76C0]" />
                     ) : (
                       <Square className="h-3.5 w-3.5" />
                     )}
@@ -887,7 +887,7 @@ export default function QuestionsManager() {
                     <div
                       key={q._id}
                       className={`p-3 rounded-xl hover:bg-slate-50/50 transition-colors flex items-start gap-2.5 text-left border border-transparent ${
-                        selectedQuestion?._id === q._id ? "bg-teal-50/35 border-teal-200/50 border-l-4 border-l-teal-600" : ""
+                        selectedQuestion?._id === q._id ? "bg-teal-50/35 border-teal-200/50 border-l-4 border-l-[#2E76C0]" : ""
                       }`}
                     >
                       <button
@@ -896,10 +896,10 @@ export default function QuestionsManager() {
                           e.stopPropagation();
                           handleQuestionSelectToggle(q._id);
                         }}
-                        className="mt-0.5 text-slate-400 hover:text-teal-600 shrink-0 cursor-pointer"
+                        className="mt-0.5 text-slate-400 hover:text-[#2E76C0] shrink-0 cursor-pointer"
                       >
                         {isSelected ? (
-                          <CheckSquare className="h-4 w-4 text-teal-600" />
+                          <CheckSquare className="h-4 w-4 text-[#2E76C0]" />
                         ) : (
                           <Square className="h-4 w-4" />
                         )}
@@ -927,7 +927,7 @@ export default function QuestionsManager() {
             <div className="premium-card p-6 space-y-5 bg-white border border-slate-200">
               <div className="flex items-center justify-between border-b border-slate-150 pb-3">
                 <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                  <FileQuestion className="h-4.5 w-4.5 text-teal-600" />
+                  <FileQuestion className="h-4.5 w-4.5 text-[#2E76C0]" />
                   {selectedQuestion ? "Edit MCQ Details" : "Create New MCQ"}
                 </h3>
                 {selectedQuestion && (
@@ -949,7 +949,7 @@ export default function QuestionsManager() {
                     value={editorData.question}
                     onChange={(e) => setEditorData({ ...editorData, question: e.target.value })}
                     rows="3"
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 leading-relaxed"
+                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs outline-none focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/10 leading-relaxed"
                     placeholder="A patient presents with..."
                   />
                 </div>
@@ -999,7 +999,7 @@ export default function QuestionsManager() {
                         required
                         value={opt}
                         onChange={(e) => handleOptionChange(idx, e.target.value)}
-                        className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-xs outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10"
+                        className="flex-1 rounded-lg border border-slate-200 px-3 py-2 text-xs outline-none focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/10"
                         placeholder={`Option ${String.fromCharCode(65 + idx)}`}
                       />
                       <input
@@ -1007,7 +1007,7 @@ export default function QuestionsManager() {
                         name="correctAnswerIndex"
                         checked={editorData.correctAnswer === idx}
                         onChange={() => setEditorData({ ...editorData, correctAnswer: idx })}
-                        className="h-4.5 w-4.5 text-teal-650 focus:ring-teal-500 cursor-pointer"
+                        className="h-4.5 w-4.5 text-[#2765A4] focus:ring-[#00E5FF] cursor-pointer"
                         title="Mark as correct answer"
                       />
                     </div>
@@ -1021,7 +1021,7 @@ export default function QuestionsManager() {
                     value={editorData.explanation}
                     onChange={(e) => setEditorData({ ...editorData, explanation: e.target.value })}
                     rows="2"
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 leading-relaxed"
+                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs outline-none focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/10 leading-relaxed"
                     placeholder="Provide pathophysiology details..."
                   />
                 </div>
@@ -1035,7 +1035,7 @@ export default function QuestionsManager() {
                       required
                       value={editorData.subject}
                       onChange={(e) => setEditorData({ ...editorData, subject: e.target.value })}
-                      className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10"
+                      className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs outline-none focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/10"
                     />
                   </div>
 
@@ -1045,7 +1045,7 @@ export default function QuestionsManager() {
                       type="text"
                       value={editorData.chapter}
                       onChange={(e) => setEditorData({ ...editorData, chapter: e.target.value })}
-                      className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10"
+                      className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs outline-none focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/10"
                     />
                   </div>
 
@@ -1054,7 +1054,7 @@ export default function QuestionsManager() {
                     <select
                       value={editorData.difficulty}
                       onChange={(e) => setEditorData({ ...editorData, difficulty: e.target.value })}
-                      className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs bg-white outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10"
+                      className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs bg-white outline-none focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/10"
                     >
                       <option value="Easy">Easy</option>
                       <option value="Medium">Medium</option>
@@ -1071,7 +1071,7 @@ export default function QuestionsManager() {
                     value={editorData.tags ? editorData.tags.join(", ") : ""}
                     onChange={(e) => setEditorData({ ...editorData, tags: e.target.value.split(",").map(t => t.trim()).filter(Boolean) })}
                     placeholder="e.g. ECG, Cardiology"
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10"
+                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs outline-none focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/10"
                   />
                 </div>
 
@@ -1087,7 +1087,7 @@ export default function QuestionsManager() {
                   )}
                   <button
                     type="submit"
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-teal-650 px-4.5 py-2 text-xs font-bold text-white hover:bg-teal-700 shadow-md shadow-teal-600/10 transition-all cursor-pointer active:scale-98"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#2765A4] px-4.5 py-2 text-xs font-bold text-white hover:bg-[#1F548C] shadow-md shadow-[#2E76C0]/10 transition-all cursor-pointer active:scale-98"
                   >
                     <Save className="h-3.5 w-3.5" />
                     <span>Save Question</span>
@@ -1115,13 +1115,13 @@ export default function QuestionsManager() {
                   onDrop={handleDrop}
                   className={`border-2 border-dashed rounded-2xl p-10 text-center cursor-pointer transition-all flex flex-col items-center justify-center ${
                     dragOver 
-                      ? "border-teal-500 bg-teal-50/50 scale-[1.01] shadow-md shadow-teal-500/5" 
+                      ? "border-[#00E5FF] bg-teal-50/50 scale-[1.01] shadow-md shadow-[#00E5FF]/5" 
                       : pdfFile 
                       ? "border-teal-400 bg-teal-50/10" 
                       : "border-slate-300 bg-slate-50 hover:bg-slate-50/30 hover:border-teal-405"
                   }`}
                 >
-                  <FileUp className={`h-12 w-12 mb-3 transition-colors ${dragOver ? "text-teal-600 animate-bounce" : "text-slate-400"}`} />
+                  <FileUp className={`h-12 w-12 mb-3 transition-colors ${dragOver ? "text-[#2E76C0] animate-bounce" : "text-slate-400"}`} />
                   <span className="text-sm font-bold text-slate-805 block">
                     {pdfFile ? pdfFile.name : "Select or drag & drop MCQ booklet PDF"}
                   </span>
@@ -1142,7 +1142,7 @@ export default function QuestionsManager() {
                   <label className="block text-[10px] font-bold text-slate-700 uppercase">Optional Separate Answers Key PDF</label>
                   <div
                     onClick={() => answersFileInputRef.current.click()}
-                    className="border-2 border-dashed border-slate-200 rounded-xl p-4 text-center cursor-pointer hover:border-teal-500 bg-slate-50 hover:bg-slate-50/20 transition-all flex flex-col items-center justify-center"
+                    className="border-2 border-dashed border-slate-200 rounded-xl p-4 text-center cursor-pointer hover:border-[#00E5FF] bg-slate-50 hover:bg-slate-50/20 transition-all flex flex-col items-center justify-center"
                   >
                     <FileUp className="h-6 w-6 text-slate-400 mb-1" />
                     <span className="text-xs font-semibold text-slate-650">
@@ -1173,7 +1173,7 @@ export default function QuestionsManager() {
                   <select
                     value={selectedTemplateId}
                     onChange={(e) => setSelectedTemplateId(e.target.value)}
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs bg-white outline-none focus:border-teal-500"
+                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs bg-white outline-none focus:border-[#00E5FF]"
                   >
                     <option value="">Auto-Detect Answer Marking Styles</option>
                     {templates.map(t => (
@@ -1186,7 +1186,7 @@ export default function QuestionsManager() {
                 <button
                   type="submit"
                   disabled={!pdfFile || extracting}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-teal-600 py-3 text-sm font-bold text-white shadow-lg shadow-teal-600/10 hover:bg-teal-700 transition-colors disabled:opacity-50 cursor-pointer"
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-[#2E76C0] py-3 text-sm font-bold text-white shadow-lg shadow-[#2E76C0]/10 hover:bg-[#1F548C] transition-colors disabled:opacity-50 cursor-pointer"
                 >
                   {extracting ? (
                     <>
@@ -1207,14 +1207,14 @@ export default function QuestionsManager() {
                 <div className="bg-slate-50 border border-slate-200/85 rounded-2xl p-6 mt-6 space-y-4 animate-slide-up">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-slate-650 uppercase tracking-widest">Extraction Pipeline Steps</span>
-                    <span className="text-3xs font-extrabold text-teal-700 uppercase bg-teal-50 border border-teal-100 px-2.5 py-0.5 rounded-full animate-pulse">
+                    <span className="text-3xs font-extrabold text-[#1F548C] uppercase bg-teal-50 border border-teal-100 px-2.5 py-0.5 rounded-full animate-pulse">
                       Processing Step {parsingStep} of 6
                     </span>
                   </div>
                   {/* Progress bar */}
                   <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
                     <div 
-                      className="h-full bg-teal-600 transition-all duration-500 rounded-full"
+                      className="h-full bg-[#2E76C0] transition-all duration-500 rounded-full"
                       style={{ width: `${(parsingStep / 6) * 100}%` }}
                     />
                   </div>
@@ -1234,15 +1234,15 @@ export default function QuestionsManager() {
                         <div key={s.step} className="flex-1 flex flex-col items-center text-center">
                           <div className={`w-7 h-7 rounded-full border-2 flex items-center justify-center font-black text-2xs transition-all ${
                             isCompleted 
-                              ? "bg-teal-600 border-teal-600 text-white" 
+                              ? "bg-[#2E76C0] border-[#2E76C0] text-white" 
                               : isActive 
-                              ? "bg-white border-teal-500 text-teal-600 shadow-md ring-4 ring-teal-500/10" 
+                              ? "bg-white border-[#00E5FF] text-[#2E76C0] shadow-md ring-4 ring-[#00E5FF]/10" 
                               : "bg-white border-slate-200 text-slate-400"
                           }`}>
                             {isCompleted ? "✓" : s.step}
                           </div>
                           <span className={`text-[8px] font-bold mt-2 uppercase tracking-wider block ${
-                            isActive ? "text-teal-600" : isCompleted ? "text-slate-605" : "text-slate-400"
+                            isActive ? "text-[#2E76C0]" : isCompleted ? "text-slate-605" : "text-slate-400"
                           }`}>
                             {s.label}
                           </span>
@@ -1257,7 +1257,7 @@ export default function QuestionsManager() {
             {/* Templates Panel */}
             <div className="premium-card p-6 text-left bg-white border border-slate-200">
               <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider mb-4 flex items-center gap-1.5 border-b pb-2">
-                <Settings className="h-4.5 w-4.5 text-teal-650" />
+                <Settings className="h-4.5 w-4.5 text-[#2765A4]" />
                 Learned Templates ({templates.length})
               </h3>
               
@@ -1298,7 +1298,7 @@ export default function QuestionsManager() {
                 <select
                   value={selectedPdfFilter}
                   onChange={(e) => setSelectedPdfFilter(e.target.value)}
-                  className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs bg-white focus:border-teal-500 outline-none"
+                  className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs bg-white focus:border-[#00E5FF] outline-none"
                 >
                   <option value="">All Uploaded Drafts</option>
                   {pdfNames.map((name, i) => (
@@ -1330,7 +1330,7 @@ export default function QuestionsManager() {
                   </>
                 ) : (
                   <>
-                    <CheckSquare className="h-3.5 w-3.5 text-teal-600" />
+                    <CheckSquare className="h-3.5 w-3.5 text-[#2E76C0]" />
                     <span>Select All ({drafts.length})</span>
                   </>
                 )}
@@ -1339,7 +1339,7 @@ export default function QuestionsManager() {
               {selectedDraftIds.length > 0 && (
                 <button
                   onClick={() => setShowBulkPanel(!showBulkPanel)}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-teal-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-teal-700 transition-all cursor-pointer"
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#2E76C0] px-3 py-1.5 text-xs font-bold text-white hover:bg-[#1F548C] transition-all cursor-pointer"
                 >
                   <span>Bulk Actions ({selectedDraftIds.length})</span>
                   <ChevronRight className={`h-3.5 w-3.5 transition-transform ${showBulkPanel ? "rotate-90" : ""}`} />
@@ -1350,13 +1350,13 @@ export default function QuestionsManager() {
 
           {/* Bulk Panel Drawer */}
           {showBulkPanel && selectedDraftIds.length > 0 && (
-            <div className="premium-card p-4 border-l-4 border-teal-600 bg-teal-50/10 space-y-3 animate-slide-down border-slate-200 rounded-xl">
+            <div className="premium-card p-4 border-l-4 border-[#2E76C0] bg-teal-50/10 space-y-3 animate-slide-down border-slate-200 rounded-xl">
               <div className="flex items-center justify-between border-b border-slate-150 pb-2">
                 <h4 className="text-[10px] font-bold text-slate-800 uppercase tracking-wider">Bulk Update Selected Drafts</h4>
                 <div className="flex gap-2">
                   <button
                     onClick={handleBulkPublish}
-                    className="bg-emerald-600 text-white font-bold text-2xs px-3 py-1 rounded hover:bg-emerald-700 transition-colors cursor-pointer"
+                    className="bg-[#10B981] text-white font-bold text-2xs px-3 py-1 rounded hover:bg-[#059669] transition-colors cursor-pointer"
                   >
                     Bulk Publish
                   </button>
@@ -1377,7 +1377,7 @@ export default function QuestionsManager() {
                     value={bulkSubject}
                     onChange={(e) => setBulkSubject(e.target.value)}
                     placeholder="e.g. Cardiology"
-                    className="w-full rounded border border-slate-200 px-2.5 py-1.5 text-xs bg-white outline-none focus:border-teal-500"
+                    className="w-full rounded border border-slate-200 px-2.5 py-1.5 text-xs bg-white outline-none focus:border-[#00E5FF]"
                   />
                 </div>
                 <div>
@@ -1385,7 +1385,7 @@ export default function QuestionsManager() {
                   <select
                     value={bulkDifficulty}
                     onChange={(e) => setBulkDifficulty(e.target.value)}
-                    className="w-full rounded border border-slate-200 px-2.5 py-1.5 text-xs bg-white outline-none focus:border-teal-500"
+                    className="w-full rounded border border-slate-200 px-2.5 py-1.5 text-xs bg-white outline-none focus:border-[#00E5FF]"
                   >
                     <option value="Easy">Easy</option>
                     <option value="Medium">Medium</option>
@@ -1399,12 +1399,12 @@ export default function QuestionsManager() {
                     value={bulkTags}
                     onChange={(e) => setBulkTags(e.target.value)}
                     placeholder="e.g. Anatomy, ECG"
-                    className="w-full rounded border border-slate-200 px-2.5 py-1.5 text-xs bg-white outline-none focus:border-teal-500"
+                    className="w-full rounded border border-slate-200 px-2.5 py-1.5 text-xs bg-white outline-none focus:border-[#00E5FF]"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="bg-teal-600 text-white text-xs font-bold py-2 rounded hover:bg-teal-700 cursor-pointer"
+                  className="bg-[#2E76C0] text-white text-xs font-bold py-2 rounded hover:bg-[#1F548C] cursor-pointer"
                 >
                   Apply Metadata
                 </button>
@@ -1444,17 +1444,17 @@ export default function QuestionsManager() {
                     className={`bg-white border rounded-xl p-5 border-l-4 transition-all relative ${
                       isFocused ? "premium-card-active scale-[1.005]" : "border-slate-200"
                     } ${
-                      isSelected ? "border-teal-600 bg-teal-50/10 shadow-sm" : isLowConfidence ? "border-l-amber-400 bg-amber-50/5" : "border-l-slate-300"
+                      isSelected ? "border-[#2E76C0] bg-teal-50/10 shadow-sm" : isLowConfidence ? "border-l-amber-400 bg-amber-50/5" : "border-l-slate-300"
                     }`}
                   >
                     <div className="flex items-start gap-4">
                       {/* Checkbox */}
                       <button
                         onClick={() => handleDraftSelectToggle(draft._id)}
-                        className={`mt-1 text-slate-400 hover:text-teal-600 shrink-0 cursor-pointer`}
+                        className={`mt-1 text-slate-400 hover:text-[#2E76C0] shrink-0 cursor-pointer`}
                       >
                         {isSelected ? (
-                          <CheckSquare className="h-5 w-5 text-teal-600" />
+                          <CheckSquare className="h-5 w-5 text-[#2E76C0]" />
                         ) : (
                           <Square className="h-5 w-5" />
                         )}
@@ -1475,18 +1475,18 @@ export default function QuestionsManager() {
                               <div className="w-12 h-1.5 bg-slate-200 rounded-full overflow-hidden">
                                 <div 
                                   className={`h-full rounded-full ${
-                                    draft.confidenceScore >= 90 ? "bg-emerald-500" : draft.confidenceScore >= 70 ? "bg-amber-500" : "bg-red-500"
+                                    draft.confidenceScore >= 90 ? "bg-[#10B981]/100" : draft.confidenceScore >= 70 ? "bg-[#F59E0B]" : "bg-red-500"
                                   }`}
                                   style={{ width: `${draft.confidenceScore}%` }}
                                />
                               </div>
                               <span className={`text-[9px] font-black ${
-                                draft.confidenceScore >= 90 ? "text-emerald-600" : draft.confidenceScore >= 70 ? "text-amber-600" : "text-red-500"
+                                draft.confidenceScore >= 90 ? "text-[#10B981]" : draft.confidenceScore >= 70 ? "text-amber-600" : "text-red-500"
                               }`}>{draft.confidenceScore}%</span>
                             </div>
 
                             <span className={`text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full border ${
-                              isLowConfidence ? "bg-amber-50 text-amber-700 border-amber-150" : "bg-emerald-50 text-emerald-700 border-emerald-150"
+                              isLowConfidence ? "bg-amber-50 text-amber-700 border-amber-150" : "bg-[#10B981]/10 text-[#059669] border-emerald-150"
                             }`}>
                               {isLowConfidence ? "Needs Review" : "Auto Approved"}
                             </span>
@@ -1538,7 +1538,7 @@ export default function QuestionsManager() {
                                     key={oIdx}
                                     className={`p-2.5 rounded-lg border text-xs ${
                                       draft.correctAnswer === oIdx
-                                        ? "bg-emerald-50 border-emerald-300 text-emerald-800 font-bold"
+                                        ? "bg-[#10B981]/10 border-emerald-300 text-emerald-800 font-bold"
                                         : "bg-slate-50/50 border-slate-150 text-slate-600"
                                     }`}
                                   >
@@ -1563,7 +1563,7 @@ export default function QuestionsManager() {
                                 {draft.tags && draft.tags.length > 0 && (
                                   <div className="flex gap-1">
                                     {draft.tags.map((t, ti) => (
-                                      <span key={ti} className="bg-teal-50 text-teal-700 border border-teal-100 px-1.5 py-0.5 rounded font-bold">#{t}</span>
+                                      <span key={ti} className="bg-teal-50 text-[#1F548C] border border-teal-100 px-1.5 py-0.5 rounded font-bold">#{t}</span>
                                     ))}
                                   </div>
                                 )}
@@ -1572,7 +1572,7 @@ export default function QuestionsManager() {
                               <div className="flex items-center gap-2">
                                 <button
                                   onClick={() => handleStartEditDraft(draft)}
-                                  className="inline-flex items-center gap-1 text-[10px] font-bold text-teal-650 hover:text-teal-800 cursor-pointer"
+                                  className="inline-flex items-center gap-1 text-[10px] font-bold text-[#2765A4] hover:text-teal-800 cursor-pointer"
                                 >
                                   <Edit className="h-3.5 w-3.5" />
                                   <span>Edit</span>
@@ -1586,7 +1586,7 @@ export default function QuestionsManager() {
                                 </button>
                                 <button
                                   onClick={() => handlePublishSingleDraft(draft._id)}
-                                  className="inline-flex items-center gap-1 bg-emerald-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-xl hover:bg-emerald-700 transition-all cursor-pointer"
+                                  className="inline-flex items-center gap-1 bg-[#10B981] text-white text-[10px] font-bold px-3 py-1.5 rounded-xl hover:bg-[#059669] transition-all cursor-pointer"
                                 >
                                   <Check className="h-3.5 w-3.5" />
                                   <span>Publish MCQ</span>
@@ -1606,7 +1606,7 @@ export default function QuestionsManager() {
                                 value={editingDraftData.question}
                                 onChange={(e) => handleDraftFieldChange("question", e.target.value)}
                                 rows="2"
-                                className="w-full rounded border border-slate-200 px-3 py-1.5 text-xs bg-white outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 leading-relaxed"
+                                className="w-full rounded border border-slate-200 px-3 py-1.5 text-xs bg-white outline-none focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/10 leading-relaxed"
                               />
                             </div>
 
@@ -1654,14 +1654,14 @@ export default function QuestionsManager() {
                                     type="text"
                                     value={opt}
                                     onChange={(e) => handleDraftOptionChange(oIdx, e.target.value)}
-                                    className="flex-1 rounded-lg border border-slate-200 px-3 py-1.5 text-xs bg-white outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10"
+                                    className="flex-1 rounded-lg border border-slate-200 px-3 py-1.5 text-xs bg-white outline-none focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/10"
                                   />
                                   <input
                                     type="radio"
                                     name={`draft_correct_${draft._id}`}
                                     checked={editingDraftData.correctAnswer === oIdx}
                                     onChange={() => handleDraftFieldChange("correctAnswer", oIdx)}
-                                    className="h-4 w-4 text-teal-650 focus:ring-teal-500 cursor-pointer"
+                                    className="h-4 w-4 text-[#2765A4] focus:ring-[#00E5FF] cursor-pointer"
                                   />
                                 </div>
                               ))}
@@ -1674,7 +1674,7 @@ export default function QuestionsManager() {
                                 type="text"
                                 value={editingDraftData.explanation}
                                 onChange={(e) => handleDraftFieldChange("explanation", e.target.value)}
-                                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs bg-white outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10"
+                                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs bg-white outline-none focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/10"
                               />
                             </div>
 
@@ -1686,7 +1686,7 @@ export default function QuestionsManager() {
                                   type="text"
                                   value={editingDraftData.subject}
                                   onChange={(e) => handleDraftFieldChange("subject", e.target.value)}
-                                  className="w-full rounded-lg border border-slate-200 px-3 py-1 text-xs bg-white outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10"
+                                  className="w-full rounded-lg border border-slate-200 px-3 py-1 text-xs bg-white outline-none focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/10"
                                 />
                               </div>
                               <div>
@@ -1694,7 +1694,7 @@ export default function QuestionsManager() {
                                 <select
                                   value={editingDraftData.difficulty}
                                   onChange={(e) => handleDraftFieldChange("difficulty", e.target.value)}
-                                  className="w-full rounded-lg border border-slate-200 px-3 py-1 text-xs bg-white outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10"
+                                  className="w-full rounded-lg border border-slate-200 px-3 py-1 text-xs bg-white outline-none focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/10"
                                 >
                                   <option value="Easy">Easy</option>
                                   <option value="Medium">Medium</option>
@@ -1707,7 +1707,7 @@ export default function QuestionsManager() {
                                   type="text"
                                   value={editingDraftData.tags}
                                   onChange={(e) => handleDraftFieldChange("tags", e.target.value)}
-                                  className="w-full rounded-lg border border-slate-200 px-3 py-1 text-xs bg-white outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10"
+                                  className="w-full rounded-lg border border-slate-200 px-3 py-1 text-xs bg-white outline-none focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/10"
                                   placeholder="ECG, Cardiology"
                                 />
                               </div>
@@ -1723,7 +1723,7 @@ export default function QuestionsManager() {
                               </button>
                               <button
                                 onClick={() => handleSaveSingleDraft(draft._id)}
-                                className="inline-flex items-center gap-1.5 rounded-lg bg-teal-650 px-4.5 py-2 text-xs font-bold text-white hover:bg-teal-700 shadow-md shadow-teal-600/10 transition-all cursor-pointer active:scale-98"
+                                className="inline-flex items-center gap-1.5 rounded-lg bg-[#2765A4] px-4.5 py-2 text-xs font-bold text-white hover:bg-[#1F548C] shadow-md shadow-[#2E76C0]/10 transition-all cursor-pointer active:scale-98"
                               >
                                 <Save className="h-3.5 w-3.5" />
                                 <span>Save Changes</span>
@@ -1752,7 +1752,7 @@ export default function QuestionsManager() {
               <select
                 value={selectedPdfFilter}
                 onChange={(e) => setSelectedPdfFilter(e.target.value)}
-                className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs bg-white focus:border-teal-500 outline-none"
+                className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs bg-white focus:border-[#00E5FF] outline-none"
               >
                 <option value="">All Uploaded Booklets</option>
                 {pdfNames.map((name, i) => (
@@ -1764,7 +1764,7 @@ export default function QuestionsManager() {
 
           {loadingAnalytics || !analytics ? (
             <div className="flex flex-col items-center justify-center p-20 premium-card bg-white border border-slate-200">
-              <RefreshCw className="h-8 w-8 text-teal-600 animate-spin mb-2" />
+              <RefreshCw className="h-8 w-8 text-[#2E76C0] animate-spin mb-2" />
               <span className="text-xs font-semibold text-slate-500">Loading Booklet Run Analytics...</span>
             </div>
           ) : (
@@ -1772,8 +1772,8 @@ export default function QuestionsManager() {
               {/* Stats Grid */}
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {/* Total parsed */}
-                <div className="premium-card p-5 bg-white flex items-center gap-4 border border-slate-200 border-l-4 border-l-teal-600 shadow-xs">
-                  <div className="p-2.5 bg-teal-50 rounded-xl text-teal-600 shrink-0">
+                <div className="premium-card p-5 bg-white flex items-center gap-4 border border-slate-200 border-l-4 border-l-[#2E76C0] shadow-xs">
+                  <div className="p-2.5 bg-teal-50 rounded-xl text-[#2E76C0] shrink-0">
                     <FileQuestion className="h-5 w-5" />
                   </div>
                   <div>
@@ -1783,7 +1783,7 @@ export default function QuestionsManager() {
                 </div>
 
                 {/* Skipped */}
-                <div className="premium-card p-5 bg-white flex items-center gap-4 border border-slate-200 border-l-4 border-l-amber-500 shadow-xs">
+                <div className="premium-card p-5 bg-white flex items-center gap-4 border border-slate-200 border-l-4 border-l-[#F59E0B] shadow-xs">
                   <div className="p-2.5 bg-amber-50 rounded-xl text-amber-600 shrink-0">
                     <AlertCircle className="h-5 w-5" />
                   </div>
@@ -1794,8 +1794,8 @@ export default function QuestionsManager() {
                 </div>
 
                 {/* Auto Approved */}
-                <div className="premium-card p-5 bg-white flex items-center gap-4 border border-slate-200 border-l-4 border-l-emerald-500 shadow-xs">
-                  <div className="p-2.5 bg-emerald-50 rounded-xl text-emerald-600 shrink-0">
+                <div className="premium-card p-5 bg-white flex items-center gap-4 border border-slate-200 border-l-4 border-l-[#10B981]/100 shadow-xs">
+                  <div className="p-2.5 bg-[#10B981]/10 rounded-xl text-[#10B981] shrink-0">
                     <CheckCircle2 className="h-5 w-5" />
                   </div>
                   <div>
@@ -1819,7 +1819,7 @@ export default function QuestionsManager() {
               {/* Strategy Breakdown Card */}
               <div className="premium-card p-6 bg-white border border-slate-200 space-y-4">
                 <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider border-b pb-2 flex items-center gap-1.5">
-                  <Sparkles className="h-4.5 w-4.5 text-teal-650" />
+                  <Sparkles className="h-4.5 w-4.5 text-[#2765A4]" />
                   Answer Key Detection Strategy Analysis
                 </h3>
 
@@ -1849,8 +1849,8 @@ export default function QuestionsManager() {
                       };
 
                       const strategyColors = {
-                        plus_symbol: "bg-teal-500",
-                        checkmark_symbol: "bg-emerald-500",
+                        plus_symbol: "bg-[#00E5FF]",
+                        checkmark_symbol: "bg-[#10B981]/100",
                         asterisk_symbol: "bg-yellow-500",
                         bold_option: "bg-slate-700",
                         colored_option: "bg-purple-500",
@@ -1872,7 +1872,7 @@ export default function QuestionsManager() {
                           </div>
                           <div className="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden">
                             <div
-                              className={`h-full rounded-full transition-all duration-500 ${strategyColors[strategy] || "bg-teal-500"}`}
+                              className={`h-full rounded-full transition-all duration-500 ${strategyColors[strategy] || "bg-[#00E5FF]"}`}
                               style={{ width: `${percentage}%` }}
                             />
                           </div>
@@ -1893,7 +1893,7 @@ export default function QuestionsManager() {
           <div className="bg-white rounded-2xl shadow-2xl border max-w-3xl w-full max-h-[85vh] flex flex-col animate-scale-up text-left">
             {/* Wizard Header */}
             <div className="p-5 border-b border-slate-150 bg-slate-50 rounded-t-2xl flex items-start gap-3">
-              <Sparkles className="h-6 w-6 text-amber-500 mt-0.5 shrink-0" />
+              <Sparkles className="h-6 w-6 text-[#F59E0B] mt-0.5 shrink-0" />
               <div>
                 <h3 className="text-sm font-black text-slate-900">Extraction Pattern Training Wizard</h3>
                 <p className="text-2xs text-slate-500 mt-0.5 leading-normal">
@@ -1919,7 +1919,7 @@ export default function QuestionsManager() {
                     value={wizardTemplateName}
                     onChange={(e) => setWizardTemplateName(e.target.value)}
                     placeholder="e.g. Allen Medical Institute"
-                    className="w-full rounded border border-teal-200 px-3 py-1 text-xs bg-white outline-none focus:border-teal-500"
+                    className="w-full rounded border border-teal-200 px-3 py-1 text-xs bg-white outline-none focus:border-[#00E5FF]"
                   />
                 </div>
               </div>
@@ -1950,7 +1950,7 @@ export default function QuestionsManager() {
                               name={`wizard_radio_${sample._id}`}
                               checked={isChosen}
                               onChange={() => setWizardAnswers(prev => ({ ...prev, [sample._id]: oIdx }))}
-                              className="h-4.5 w-4.5 text-teal-650 focus:ring-teal-500 cursor-pointer"
+                              className="h-4.5 w-4.5 text-[#2765A4] focus:ring-[#00E5FF] cursor-pointer"
                             />
                             <div className="flex-1">
                               <span className="font-bold text-slate-400 mr-1.5">{String.fromCharCode(65 + oIdx)})</span>
@@ -1991,7 +1991,7 @@ export default function QuestionsManager() {
                 <button
                   onClick={handleWizardSubmit}
                   disabled={wizardSubmitting || Object.keys(wizardAnswers).length < wizardSamples.length || !wizardTemplateName.trim()}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-teal-650 px-5 py-2 text-xs font-bold text-white hover:bg-teal-700 disabled:opacity-50 cursor-pointer"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#2765A4] px-5 py-2 text-xs font-bold text-white hover:bg-[#1F548C] disabled:opacity-50 cursor-pointer"
                 >
                   {wizardSubmitting ? (
                     <>

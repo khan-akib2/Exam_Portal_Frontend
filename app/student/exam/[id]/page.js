@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef, use } from "react";
+import { useEffect, useState, useRef, use, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { 
   ShieldAlert, Clock, ChevronRight, ChevronLeft, 
@@ -82,7 +82,7 @@ export default function ExamPortalPage({ params }) {
     };
     startSession();
   }, [examId, router]);
-  const triggerSecurityViolation = async (type, details) => {
+  const triggerSecurityViolation = useCallback(async (type, details) => {
     // 1. Increment local warnings count
     setWarnings((w) => {
       const nextWarnings = w + 1;
@@ -107,9 +107,9 @@ export default function ExamPortalPage({ params }) {
     } catch (err) {
       console.error("Failed to log warning in DB:", err);
     }
-  };
+  }, [attemptId]);
 
-  const handleSubmitExam = async () => {
+  const handleSubmitExam = useCallback(async () => {
     setSubmitting(true);
     setTimerActive(false);
 
@@ -133,12 +133,12 @@ export default function ExamPortalPage({ params }) {
       showAlert("Submission Error: " + err.message, "Error");
       setSubmitting(false);
     }
-  };
+  }, [attemptId, router, showAlert]);
 
-  const handleAutoSubmit = () => {
+  const handleAutoSubmit = useCallback(() => {
     showAlert("Time has run out! Your exam is being submitted automatically.", "Time Out");
     handleSubmitExam();
-  };
+  }, [showAlert, handleSubmitExam]);
 
   // Countdown timer effect
   useEffect(() => {
@@ -205,7 +205,7 @@ export default function ExamPortalPage({ params }) {
   };
 
   // Auto-Save Answer selection state
-  const handleSaveAnswerState = async (qId, selectedOpt, marked, isVisit = false) => {
+  const handleSaveAnswerState = useCallback(async (qId, selectedOpt, marked, isVisit = false) => {
     try {
       const token = localStorage.getItem("token");
       await fetch(`/api/attempts/${attemptId}/save`, {
@@ -224,10 +224,10 @@ export default function ExamPortalPage({ params }) {
     } catch (err) {
       console.error("Failed to save answer state:", err);
     }
-  };
+  }, [attemptId]);
 
   // UI Selection changes
-  const handleSelectOption = (oIdx) => {
+  const handleSelectOption = useCallback((oIdx) => {
     const qId = questions[currentIndex]._id;
     
     // Update local state
@@ -241,9 +241,9 @@ export default function ExamPortalPage({ params }) {
       // Save in background
       handleSaveAnswerState(qId, oIdx, updated[ansIdx].isMarkedForReview, true);
     }
-  };
+  }, [currentIndex, questions, answers, handleSaveAnswerState]);
 
-  const handleClearResponse = () => {
+  const handleClearResponse = useCallback(() => {
     const qId = questions[currentIndex]._id;
     const updated = [...answers];
     const ansIdx = updated.findIndex((a) => a.question.toString() === qId.toString());
@@ -253,9 +253,9 @@ export default function ExamPortalPage({ params }) {
       setAnswers(updated);
       handleSaveAnswerState(qId, null, updated[ansIdx].isMarkedForReview, true);
     }
-  };
+  }, [currentIndex, questions, answers, handleSaveAnswerState]);
 
-  const handleToggleMarkForReview = () => {
+  const handleToggleMarkForReview = useCallback(() => {
     const qId = questions[currentIndex]._id;
     const updated = [...answers];
     const ansIdx = updated.findIndex((a) => a.question.toString() === qId.toString());
@@ -266,9 +266,9 @@ export default function ExamPortalPage({ params }) {
       setAnswers(updated);
       handleSaveAnswerState(qId, updated[ansIdx].selectedOption, nextMarked, true);
     }
-  };
+  }, [currentIndex, questions, answers, handleSaveAnswerState]);
 
-  const handleNavigate = (idx) => {
+  const handleNavigate = useCallback((idx) => {
     if (idx < 0 || idx >= questions.length) return;
     
     const qId = questions[idx]._id;
@@ -283,19 +283,19 @@ export default function ExamPortalPage({ params }) {
     }
 
     setCurrentIndex(idx);
-  };
+  }, [questions, answers, handleSaveAnswerState]);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     if (currentIndex < questions.length - 1) {
       handleNavigate(currentIndex + 1);
     }
-  };
+  }, [currentIndex, questions.length, handleNavigate]);
 
-  const handlePrev = () => {
+  const handlePrev = useCallback(() => {
     if (currentIndex > 0) {
       handleNavigate(currentIndex - 1);
     }
-  };
+  }, [currentIndex, handleNavigate]);
 
   // Keyboard Event Listener for student exam taking console
   useEffect(() => {
@@ -368,7 +368,7 @@ export default function ExamPortalPage({ params }) {
     return (
       <div className="flex h-screen items-center justify-center bg-slate-900 text-white">
         <div className="flex flex-col items-center gap-3">
-          <RefreshCw className="h-8 w-8 animate-spin text-teal-500" />
+          <RefreshCw className="h-8 w-8 animate-spin text-[#00E5FF]" />
           <span className="text-sm font-semibold">Initializing exam console...</span>
         </div>
       </div>
@@ -401,7 +401,7 @@ export default function ExamPortalPage({ params }) {
     let baseClass = "h-10 w-10 rounded-lg flex items-center justify-center font-bold text-xs border transition-all ";
 
     if (isActive) {
-      baseClass += "ring-2 ring-teal-500 ring-offset-2 ring-offset-slate-900 ";
+      baseClass += "ring-2 ring-[#00E5FF] ring-offset-2 ring-offset-slate-900 ";
     }
 
     if (!ans) return baseClass + "bg-slate-800 border-slate-700 text-slate-400";
@@ -410,7 +410,7 @@ export default function ExamPortalPage({ params }) {
       return baseClass + "bg-purple-600 border-purple-500 text-white"; // Marked
     }
     if (ans.selectedOption !== null) {
-      return baseClass + "bg-emerald-600 border-emerald-500 text-white"; // Answered
+      return baseClass + "bg-[#10B981] border-[#10B981] text-white"; // Answered
     }
     if (ans.visited) {
       return baseClass + "bg-slate-700 border-slate-600 text-slate-300"; // Visited but skipped
@@ -538,13 +538,13 @@ export default function ExamPortalPage({ params }) {
                     onClick={() => handleSelectOption(oIdx)}
                     className={`w-full flex items-center gap-4 rounded-xl border p-4 text-left transition-all ${
                       isSelected
-                        ? "bg-teal-950/30 border-teal-500 text-teal-300 ring-2 ring-teal-500/20"
+                        ? "bg-teal-950/30 border-[#00E5FF] text-teal-300 ring-2 ring-[#00E5FF]/20"
                         : "bg-slate-900/50 border-slate-800 text-slate-350 hover:bg-slate-900 hover:border-slate-700"
                     }`}
                   >
                     <span className={`h-6 w-6 rounded-full flex items-center justify-center font-bold text-xs border shrink-0 ${
                       isSelected 
-                        ? "bg-teal-650 border-teal-500 text-white" 
+                        ? "bg-[#2765A4] border-[#00E5FF] text-white" 
                         : "bg-slate-855 border-slate-700 text-slate-400"
                     }`}>
                       {String.fromCharCode(65 + oIdx)}
@@ -611,11 +611,11 @@ export default function ExamPortalPage({ params }) {
               <button
                 onClick={handleNext}
                 disabled={currentIndex === questions.length - 1}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-teal-600 px-4 py-2 text-xs font-bold text-white hover:bg-teal-700 transition-colors disabled:opacity-30"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-[#2E76C0] px-4 py-2 text-xs font-bold text-white hover:bg-[#1F548C] transition-colors disabled:opacity-30"
               >
                 <span>Save & Next</span>
                 <ChevronRight className="h-4 w-4" />
-                <span className="keycap text-4xs px-1 py-0.5 ml-1 bg-teal-700 border-teal-800 text-teal-200 hidden md:inline-flex">→ / N</span>
+                <span className="keycap text-4xs px-1 py-0.5 ml-1 bg-[#1F548C] border-teal-800 text-teal-200 hidden md:inline-flex">→ / N</span>
               </button>
             </div>
           </footer>
@@ -656,7 +656,7 @@ export default function ExamPortalPage({ params }) {
                 <span>Skipped</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="h-4 w-4 rounded bg-emerald-600 border border-emerald-500" />
+                <span className="h-4 w-4 rounded bg-[#10B981] border border-[#10B981]" />
                 <span>Answered ({totalAnswered})</span>
               </div>
               <div className="flex items-center gap-2">
@@ -738,7 +738,7 @@ export default function ExamPortalPage({ params }) {
                 <span>Flagged for Review:</span>
                 <span className="font-bold text-purple-400">{totalMarked} questions</span>
               </div>
-              <div className="flex justify-between text-amber-500 font-semibold">
+              <div className="flex justify-between text-[#F59E0B] font-semibold">
                 <span>Security Warnings:</span>
                 <span>{warnings} warnings</span>
               </div>
@@ -825,7 +825,7 @@ export default function ExamPortalPage({ params }) {
                   <span>Skipped</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="h-4 w-4 rounded bg-emerald-600 border border-emerald-500" />
+                  <span className="h-4 w-4 rounded bg-[#10B981] border border-[#10B981]" />
                   <span>Answered ({totalAnswered})</span>
                 </div>
                 <div className="flex items-center gap-2">

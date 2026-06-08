@@ -72,7 +72,7 @@ export default function StudentDashboard() {
     return (
       <div className="flex h-screen items-center justify-center bg-slate-50">
         <div className="flex flex-col items-center gap-3">
-          <RefreshCw className="h-8 w-8 animate-spin text-teal-600" />
+          <RefreshCw className="h-8 w-8 animate-spin text-[#2E76C0]" />
           <p className="text-sm font-semibold text-slate-500">Preparing clinical command dashboard...</p>
         </div>
       </div>
@@ -85,10 +85,10 @@ export default function StudentDashboard() {
   
   const levelMap = {
     Intern: { min: 0, max: 200, next: "Resident", bg: "bg-blue-500/10 text-blue-600 border-blue-200", badge: "Intern", iconColor: "text-blue-500" },
-    Resident: { min: 200, max: 500, next: "Senior Resident", bg: "bg-teal-500/10 text-teal-600 border-teal-200", badge: "Resident", iconColor: "text-teal-500" },
+    Resident: { min: 200, max: 500, next: "Senior Resident", bg: "bg-[#00E5FF]/10 text-[#2E76C0] border-teal-200", badge: "Resident", iconColor: "text-[#00E5FF]" },
     "Senior Resident": { min: 500, max: 1000, next: "Consultant", bg: "bg-indigo-500/10 text-indigo-600 border-indigo-200", badge: "Senior Resident", iconColor: "text-indigo-500" },
     Consultant: { min: 1000, max: 2000, next: "Master", bg: "bg-pink-500/10 text-pink-600 border-pink-200", badge: "Consultant", iconColor: "text-pink-500" },
-    Master: { min: 2000, max: 5000, next: "Max Tier", bg: "bg-amber-500/10 text-amber-600 border-amber-200", badge: "Master Specialist", iconColor: "text-amber-500" }
+    Master: { min: 2000, max: 5000, next: "Max Tier", bg: "bg-[#F59E0B]/10 text-amber-600 border-amber-200", badge: "Master Specialist", iconColor: "text-[#F59E0B]" }
   };
 
   let levelName = "Intern";
@@ -143,7 +143,7 @@ export default function StudentDashboard() {
             {/* Custom Bar progress indicator */}
             <div className="h-2 w-full rounded-full bg-slate-200 overflow-hidden">
               <div 
-                className="h-full rounded-full bg-gradient-to-r from-teal-650 to-blue-500 transition-all duration-1000"
+                className="h-full rounded-full bg-gradient-to-r from-[#2765A4] to-[#00E5FF] transition-all duration-1000"
                 style={{ width: `${progressPercent}%` }}
               />
             </div>
@@ -158,7 +158,7 @@ export default function StudentDashboard() {
       {/* Gamification Dashboard Grid */}
       <div className="grid gap-6 md:grid-cols-4">
         {/* Total Attempts Card */}
-        <div className="premium-card p-5 flex items-center gap-4 bg-white">
+        <div className="premium-card p-4 md:p-5 flex items-center gap-4 bg-white">
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600 border border-blue-100">
             <ShieldCheck className="h-5.5 w-5.5" />
           </div>
@@ -169,8 +169,8 @@ export default function StudentDashboard() {
         </div>
 
         {/* Average Accuracy Card */}
-        <div className="premium-card p-5 flex items-center gap-4 bg-white">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-655 border border-emerald-105">
+        <div className="premium-card p-4 md:p-5 flex items-center gap-4 bg-white">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-[#10B981] border border-emerald-105">
             <TrendingUp className="h-5.5 w-5.5" />
           </div>
           <div>
@@ -182,7 +182,7 @@ export default function StudentDashboard() {
         {/* Total XP Card */}
         <div className="premium-card p-5 flex items-center gap-4 bg-white">
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600 border border-amber-100">
-            <Zap className="h-5.5 w-5.5 fill-amber-500/20 text-amber-500" />
+            <Zap className="h-5.5 w-5.5 fill-[#F59E0B]/20 text-[#F59E0B]" />
           </div>
           <div>
             <p className="text-2xs font-bold text-slate-400 uppercase tracking-wider">XP Earned</p>
@@ -206,7 +206,7 @@ export default function StudentDashboard() {
       {/* Main Grid: Analysis, Standings & Announcements */}
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Subject Performance Analysis (Col span 2 on large screens) */}
-        <div className="premium-card p-6 lg:col-span-2 bg-white">
+        <div className="premium-card p-4 md:p-6 lg:col-span-2 bg-white">
           <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
             <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
               Subject Accuracy & Performance
@@ -239,10 +239,10 @@ export default function StudentDashboard() {
         </div>
 
         {/* Announcements Widget */}
-        <div className="premium-card p-6 bg-white flex flex-col justify-between">
+        <div className="premium-card p-4 md:p-6 bg-white flex flex-col justify-between">
           <div className="space-y-4">
             <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3 uppercase tracking-wider">
-              <Bell className="h-4.5 w-4.5 text-teal-600" />
+              <Bell className="h-4.5 w-4.5 text-[#2E76C0]" />
               Cohort Updates
             </h3>
             {notifications.length === 0 ? (
@@ -262,7 +262,7 @@ export default function StudentDashboard() {
               </div>
             )}
           </div>
-          <Link href="/student/announcements" className="text-xs font-bold text-teal-600 hover:text-teal-800 mt-4 flex items-center gap-0.5 justify-end group">
+          <Link href="/student/announcements" className="text-xs font-bold text-[#2E76C0] hover:text-teal-800 mt-4 flex items-center gap-0.5 justify-end group">
             <span>View All Releases</span>
             <ChevronRight className="h-3.5 w-3.5 transform group-hover:translate-x-0.5 transition-transform" />
           </Link>
@@ -270,10 +270,10 @@ export default function StudentDashboard() {
       </div>
 
       {/* Leaderboard Standings */}
-      <div className="premium-card p-6 bg-white">
+      <div className="premium-card p-4 md:p-6 bg-white">
         <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
           <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2 uppercase tracking-wider">
-            <Trophy className="h-4.5 w-4.5 text-amber-500 fill-amber-500/10" />
+            <Trophy className="h-4.5 w-4.5 text-[#F59E0B] fill-[#F59E0B]/10" />
             Top Performers Standings
           </h3>
           <span className="text-3xs text-slate-400 font-semibold uppercase tracking-wider">Active Cohort</span>
@@ -313,7 +313,7 @@ export default function StudentDashboard() {
                   </div>
 
                   <div className="flex items-center justify-between border-t border-slate-100 pt-2.5 mt-3">
-                    <span className="text-xs font-black text-teal-700">{student.xp} XP</span>
+                    <span className="text-xs font-black text-[#1F548C]">{student.xp} XP</span>
                     {student.streak > 0 && (
                       <span className="text-3xs text-orange-655 font-bold flex items-center gap-0.5">
                         <Flame className="h-3 w-3 fill-orange-500 text-orange-500" /> {student.streak}d
@@ -328,13 +328,13 @@ export default function StudentDashboard() {
       </div>
 
       {/* Available Exams Shortcut */}
-      <div className="premium-card p-6 bg-white">
+      <div className="premium-card p-4 md:p-6 bg-white">
         <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
           <div>
             <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Assigned Simulative Examinations</h3>
             <p className="text-3xs text-slate-400 font-medium mt-0.5">Mock exams available for your batch ({currentUser.batch})</p>
           </div>
-          <Link href="/student/exams" className="text-xs font-bold text-teal-600 hover:text-teal-800 flex items-center gap-0.5">
+          <Link href="/student/exams" className="text-xs font-bold text-[#2E76C0] hover:text-teal-800 flex items-center gap-0.5">
             <span>Browse All Exams</span>
             <ChevronRight className="h-3.5 w-3.5" />
           </Link>
@@ -360,7 +360,7 @@ export default function StudentDashboard() {
                   <span className="text-2xs text-slate-500 font-bold">Duration: {exam.duration} mins</span>
                   <Link 
                     href={`/student/exams`} 
-                    className="inline-flex items-center gap-0.5 rounded-lg bg-teal-600 px-3.5 py-1.5 text-2xs font-bold text-white hover:bg-teal-700 shadow-md shadow-teal-600/10 transition-colors"
+                    className="inline-flex items-center gap-0.5 rounded-lg bg-[#2E76C0] px-3.5 py-1.5 text-2xs font-bold text-white hover:bg-[#1F548C] shadow-md shadow-[#2E76C0]/10 transition-colors"
                   >
                     <span>Attempt Exam</span>
                     <ChevronRight className="h-3 w-3" />

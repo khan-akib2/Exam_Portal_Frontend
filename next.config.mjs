@@ -3,7 +3,10 @@ const nextConfig = {
   reactCompiler: true,
   experimental: {
     proxyClientMaxBodySize: "50mb",
+    workerThreads: false,
+    cpus: 1,
   },
+  turbopack: {},
   async rewrites() {
     return [
       {

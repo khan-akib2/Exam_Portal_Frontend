@@ -75,7 +75,7 @@ export default function ExamResultPage({ params }) {
     return (
       <div className="flex h-screen items-center justify-center bg-slate-50">
         <div className="flex flex-col items-center gap-3">
-          <RefreshCw className="h-8 w-8 animate-spin text-teal-600" />
+          <RefreshCw className="h-8 w-8 animate-spin text-[#2E76C0]" />
           <p className="text-sm font-semibold text-slate-500">Grading mock response booklet...</p>
         </div>
       </div>
@@ -87,7 +87,7 @@ export default function ExamResultPage({ params }) {
       <div className="premium-card p-12 text-center text-slate-500 animate-fade-in">
         <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-3" />
         <p className="font-semibold text-lg">Result Record Not Found</p>
-        <Link href="/student" className="text-sm text-teal-655 hover:underline mt-2 inline-block">
+        <Link href="/student" className="text-sm text-[#2765A4] hover:underline mt-2 inline-block">
           Return to Dashboard
         </Link>
       </div>
@@ -175,7 +175,7 @@ export default function ExamResultPage({ params }) {
 
       {/* Main Scorecard Header with custom Gamification overlay */}
       <div className="premium-card p-6 bg-gradient-to-br from-slate-900 via-slate-850 to-teal-950 text-white flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative">
-        <div className="absolute right-0 top-0 -mr-12 -mt-12 h-36 w-36 rounded-full bg-teal-500/10 blur-2xl pointer-events-none" />
+        <div className="absolute right-0 top-0 -mr-12 -mt-12 h-36 w-36 rounded-full bg-[#00E5FF]/10 blur-2xl pointer-events-none" />
         
         <div className="space-y-2">
           <span className="text-2xs text-teal-300 font-extrabold uppercase tracking-wider block">Exam Assessment Scorecard</span>
@@ -239,7 +239,7 @@ export default function ExamResultPage({ params }) {
       {/* Advanced Chart Analysis & Weakness clinical topic Recommendations */}
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Subject accuracy charts bar */}
-        <div className="premium-card p-6 lg:col-span-2 bg-white">
+        <div className="premium-card p-4 md:p-6 lg:col-span-2 bg-white">
           <div className="border-b border-slate-100 pb-3 mb-4 flex justify-between items-center">
             <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Subject accuracy breakdown</h3>
             <span className="text-3xs text-slate-400 font-semibold uppercase tracking-widest">Performance metrics</span>
@@ -268,7 +268,7 @@ export default function ExamResultPage({ params }) {
         </div>
 
         {/* Clinical Weakness Recommendations Indicator */}
-        <div className="premium-card p-6 bg-white flex flex-col justify-between">
+        <div className="premium-card p-4 md:p-6 bg-white flex flex-col justify-between">
           <div className="space-y-4">
             <div className="border-b border-slate-100 pb-3">
               <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2 uppercase tracking-wider">
@@ -279,7 +279,7 @@ export default function ExamResultPage({ params }) {
 
             {weakSubjects.length === 0 ? (
               <div className="text-center text-slate-400 py-12 text-xs flex flex-col items-center justify-center">
-                <Award className="h-10 w-10 text-emerald-500 mb-2 fill-emerald-50" />
+                <Award className="h-10 w-10 text-[#10B981] mb-2 fill-[#10B981]" />
                 <p className="font-bold text-slate-700">All Tiers Proficient</p>
                 <p className="text-2xs text-slate-455 mt-1">Excellent diagnostic precision across all tested clinical subjects!</p>
               </div>
@@ -322,7 +322,7 @@ export default function ExamResultPage({ params }) {
             return (
               <div 
                 key={index} 
-                className={`premium-card p-6 border-t-4 bg-white ${
+                className={`premium-card p-4 md:p-6 border-t-4 bg-white ${
                   isSkipped ? "border-slate-300 bg-slate-50/50" :
                   isCorrect ? "border-green-500" : "border-red-400"
                 }`}
@@ -386,7 +386,7 @@ export default function ExamResultPage({ params }) {
                 {/* Explanation text */}
                 {q?.explanation && (
                   <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs text-slate-700 leading-relaxed">
-                    <p className="font-bold text-slate-900 mb-1 flex items-center gap-1 text-teal-700">
+                    <p className="font-bold text-slate-900 mb-1 flex items-center gap-1 text-[#1F548C]">
                       <Sparkles className="h-4 w-4" />
                       Clinical Rationale & Explanation
                     </p>

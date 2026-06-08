@@ -16,7 +16,10 @@ import {
   UserCheck,
   User,
   X,
+  ChevronRight,
+  LogOut,
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -90,81 +93,135 @@ export default function Sidebar() {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="w-64 border-r border-slate-200 bg-white p-5 hidden md:block sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto">
-        <nav className="flex flex-col gap-1.5">
-          <p className="px-3 text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">
-            Navigation Menu
-          </p>
-          
-          {links.map((link) => {
-            const Icon = link.icon;
-            // Handle matching exact or nested sub-pages
-            const isActive = pathname === link.href || (link.href !== "/admin" && link.href !== "/student" && link.href !== "/superadmin" && pathname.startsWith(link.href));
+      <motion.aside 
+        initial={{ x: -20, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        className="w-[260px] border-r border-slate-200 bg-[#FAFAFB] p-6 hidden md:flex flex-col sticky top-16 h-[calc(100vh-4rem)] z-30"
+      >
+        <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+          <nav className="flex flex-col gap-1.5">
+            <p className="px-3 text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400 mb-4 mt-2">
+              Main Menu
+            </p>
+            
+            {links.map((link) => {
+              const Icon = link.icon;
+              const isActive = pathname === link.href || (link.href !== "/admin" && link.href !== "/student" && link.href !== "/superadmin" && pathname.startsWith(link.href));
 
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-xs font-bold transition-all duration-200 border-l-4 ${
-                  isActive
-                    ? "bg-teal-500/5 border-teal-650 text-teal-700 shadow-3xs"
-                    : "border-transparent text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                }`}
-              >
-                <Icon className={`h-4.5 w-4.5 shrink-0 ${isActive ? "text-teal-650" : "text-slate-400"}`} />
-                <span>{link.name}</span>
-              </Link>
-            );
-          })}
-        </nav>
-      </aside>
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="relative group"
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="active-bg"
+                      className="absolute inset-0 bg-white border border-slate-200 rounded-xl shadow-sm"
+                      initial={false}
+                      transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                    />
+                  )}
+                  <div className={`relative flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[13px] font-semibold transition-colors duration-200 ${
+                    isActive
+                      ? "text-slate-900"
+                      : "text-slate-500 hover:text-slate-800 hover:bg-slate-100/50"
+                  }`}>
+                    <div className="flex items-center gap-3">
+                      <Icon className={`h-[18px] w-[18px] shrink-0 transition-colors duration-200 ${isActive ? "text-[#2E76C0]" : "text-slate-400 group-hover:text-slate-600"}`} />
+                      <span>{link.name}</span>
+                    </div>
+                    {isActive && <ChevronRight className="h-4 w-4 text-slate-300" />}
+                  </div>
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+        
+        {/* User Mini Profile at bottom */}
+        <div className="mt-auto pt-4 border-t border-slate-200">
+           <div className="flex items-center gap-3 px-3 py-2 rounded-xl bg-white border border-slate-200 shadow-sm">
+              <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-[#2E76C0] to-[#00E5FF] flex items-center justify-center text-white font-bold text-xs shadow-inner">
+                {currentUser.name ? currentUser.name.charAt(0).toUpperCase() : "U"}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-bold text-slate-900 truncate">{currentUser.name}</p>
+                <p className="text-[10px] text-slate-500 capitalize">{role.replace('_', ' ')}</p>
+              </div>
+           </div>
+        </div>
+      </motion.aside>
 
       {/* Mobile Drawer */}
-      {isOpen && (
-        <div className="fixed inset-0 z-50 flex md:hidden">
-          {/* Backdrop */}
-          <div 
-            className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs animate-fade-in"
-            onClick={() => setIsOpen(false)}
-          />
-          {/* Drawer Content */}
-          <aside className="relative flex w-64 max-w-xs flex-col bg-white p-5 shadow-2xl animate-slide-right h-full overflow-y-auto z-50">
-            <div className="flex items-center justify-between mb-5 border-b border-slate-100 pb-3">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                Navigation Menu
-              </p>
-              <button 
-                onClick={() => setIsOpen(false)}
-                className="rounded-lg p-1.5 hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-            <nav className="flex flex-col gap-1.5">
-              {links.map((link) => {
-                const Icon = link.icon;
-                const isActive = pathname === link.href || (link.href !== "/admin" && link.href !== "/student" && link.href !== "/superadmin" && pathname.startsWith(link.href));
+      <AnimatePresence>
+        {isOpen && (
+          <div className="fixed inset-0 z-50 flex md:hidden">
+            {/* Backdrop */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm"
+              onClick={() => setIsOpen(false)}
+            />
+            {/* Drawer Content */}
+            <motion.aside 
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="relative flex w-[280px] max-w-[80vw] flex-col bg-white p-6 shadow-2xl h-full z-50"
+            >
+              <div className="flex items-center justify-between mb-8 border-b border-slate-100 pb-4">
+                <div className="flex items-center gap-2">
+                  <div className="h-8 w-8 bg-[#2E76C0] rounded-lg flex items-center justify-center">
+                    <Activity className="h-4 w-4 text-white" />
+                  </div>
+                  <span className="font-bold text-slate-900 tracking-tight">MedExam</span>
+                </div>
+                <button 
+                  onClick={() => setIsOpen(false)}
+                  className="rounded-full p-2 hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              <div className="flex-1 overflow-y-auto">
+                <nav className="flex flex-col gap-1.5">
+                  <p className="px-3 text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">
+                    Menu
+                  </p>
+                  {links.map((link) => {
+                    const Icon = link.icon;
+                    const isActive = pathname === link.href || (link.href !== "/admin" && link.href !== "/student" && link.href !== "/superadmin" && pathname.startsWith(link.href));
 
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={handleLinkClick}
-                    className={`flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-xs font-bold transition-all duration-200 border-l-4 ${
-                      isActive
-                        ? "bg-teal-500/5 border-teal-650 text-teal-700 shadow-3xs"
-                        : "border-transparent text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                    }`}
-                  >
-                    <Icon className={`h-4.5 w-4.5 shrink-0 ${isActive ? "text-teal-650" : "text-slate-400"}`} />
-                    <span>{link.name}</span>
-                  </Link>
-                );
-              })}
-            </nav>
-          </aside>
-        </div>
-      )}
+                    return (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        onClick={handleLinkClick}
+                        className={`flex items-center justify-between rounded-xl px-3.5 py-3 text-[13px] font-bold transition-all duration-200 ${
+                          isActive
+                            ? "bg-[#F4F7FB] text-slate-900"
+                            : "bg-transparent text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <Icon className={`h-[18px] w-[18px] shrink-0 ${isActive ? "text-[#2E76C0]" : "text-slate-400"}`} />
+                          <span>{link.name}</span>
+                        </div>
+                        {isActive && <ChevronRight className="h-4 w-4 text-slate-300" />}
+                      </Link>
+                    );
+                  })}
+                </nav>
+              </div>
+            </motion.aside>
+          </div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
