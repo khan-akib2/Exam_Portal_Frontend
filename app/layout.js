@@ -2,7 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { DialogProvider } from "@/components/DialogProvider";
 import SessionStorageBridge from "@/components/SessionStorageBridge";
-import { ReactLenis } from '@studio-freight/react-lenis';
+import { ReactLenis } from 'lenis/react';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
