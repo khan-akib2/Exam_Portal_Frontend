@@ -20,6 +20,17 @@
   --color-green-brand: #10B981; /* Healthcare Green */
   --color-slate-brand: #0F172A; /* Deep Professional Slate */
   
+  /* Extra custom colors used across pages */
+  --color-slate-150: #EEF2F6;
+  --color-slate-205: #E2E8F0;
+  --color-slate-350: #94A3B8;
+  --color-slate-450: #64748B;
+  --color-teal-355: #2DD4BF;
+  --color-teal-650: #0D9488;
+  --color-teal-655: #0F766E;
+  --color-teal-750: #115E59;
+  --color-red-505: #DC2626;
+
   --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   --animate-fade-in: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   --animate-slide-up: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);

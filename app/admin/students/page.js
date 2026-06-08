@@ -713,16 +713,25 @@ export default function StudentsManager() {
               <div className="flex items-center justify-end gap-2 px-6 py-4 bg-slate-50 border-t border-slate-200">
                 <button
                   type="button"
+                  disabled={loading}
                   onClick={() => setModalOpen(false)}
-                  className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors"
+                  className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors disabled:opacity-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="rounded-lg bg-[#2E76C0] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1F548C] shadow-md shadow-[#2E76C0]/10 transition-colors"
+                  disabled={loading}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#2E76C0] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1F548C] shadow-md shadow-[#2E76C0]/10 transition-colors disabled:opacity-50 cursor-pointer"
                 >
-                  Create & Email Credentials
+                  {loading ? (
+                    <>
+                      <RefreshCw className="h-4 w-4 animate-spin" />
+                      <span>Creating...</span>
+                    </>
+                  ) : (
+                    <span>Create & Email Credentials</span>
+                  )}
                 </button>
               </div>
             </form>
@@ -761,16 +770,25 @@ export default function StudentsManager() {
               <div className="flex items-center justify-end gap-2 px-6 py-4 bg-slate-50 border-t border-slate-200">
                 <button
                   type="button"
+                  disabled={loading}
                   onClick={() => setEditingStudent(null)}
-                  className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors"
+                  className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors disabled:opacity-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="rounded-lg bg-[#2E76C0] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1F548C] shadow-md shadow-[#2E76C0]/10 transition-colors"
+                  disabled={loading}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#2E76C0] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1F548C] shadow-md shadow-[#2E76C0]/10 transition-colors disabled:opacity-50 cursor-pointer"
                 >
-                  Save Batch
+                  {loading ? (
+                    <>
+                      <RefreshCw className="h-4 w-4 animate-spin" />
+                      <span>Saving...</span>
+                    </>
+                  ) : (
+                    <span>Save Batch</span>
+                  )}
                 </button>
               </div>
             </form>
@@ -847,17 +865,25 @@ export default function StudentsManager() {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
+                  disabled={loading}
                   onClick={() => setBulkModalOpen(false)}
-                  className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors"
+                  className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors disabled:opacity-50"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleBulkUpload}
-                  disabled={bulkPreview.length === 0}
-                  className="rounded-lg bg-[#2E76C0] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1F548C] shadow-md shadow-[#2E76C0]/10 transition-colors disabled:opacity-50"
+                  disabled={bulkPreview.length === 0 || loading}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#2E76C0] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1F548C] shadow-md shadow-[#2E76C0]/10 transition-colors disabled:opacity-50 cursor-pointer"
                 >
-                  Import & Trigger Welcome Mails
+                  {loading ? (
+                    <>
+                      <RefreshCw className="h-4 w-4 animate-spin" />
+                      <span>Importing...</span>
+                    </>
+                  ) : (
+                    <span>Import & Trigger Welcome Mails</span>
+                  )}
                 </button>
               </div>
             </div>
