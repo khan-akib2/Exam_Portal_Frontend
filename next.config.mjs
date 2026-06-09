@@ -8,7 +8,12 @@ const nextConfig = {
   },
   turbopack: {},
   async rewrites() {
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    // Automatically use localhost in development, and the Render URL in production
+    const isDev = process.env.NODE_ENV !== "production";
+    const backendUrl = isDev 
+      ? "http://localhost:5000" 
+      : (process.env.NEXT_PUBLIC_API_URL || "https://exam-portal-backend-fh56.onrender.com");
+      
     return [
       {
         source: "/api/:path*",

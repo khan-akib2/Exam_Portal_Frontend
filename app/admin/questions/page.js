@@ -369,13 +369,20 @@ export default function QuestionsManager() {
         formData.append("templateId", selectedTemplateId);
       }
 
-      const res = await fetch("/api/questions/upload-pdf", {
+      const API_BASE = process.env.NODE_ENV === "development" ? "http://localhost:5000" : "";
+      const res = await fetch(`${API_BASE}/api/questions/upload-pdf`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
 
-      const data = await res.json();
+      let data;
+      try {
+        data = await res.json();
+      } catch (e) {
+        throw new Error(res.status === 500 ? "Server timed out or crashed while processing PDF." : "Invalid response from server.");
+      }
+      
       if (!res.ok) throw new Error(data.error || "Failed to process PDF.");
 
       setParsingStep(6); // 6 = Finalized
