@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Zap, Mail, Lock, ShieldCheck, RefreshCw, Activity, ArrowRight, Building, Users } from "lucide-react";
+import { Mail, Lock, ShieldCheck, RefreshCw, Activity, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function LoginPage() {
@@ -156,140 +156,116 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-white">
-      {/* Left Panel: Branding & Trust (Hidden on Mobile) */}
-      <div className="hidden lg:flex w-1/2 flex-col justify-between bg-gradient-to-br from-[#03122E] via-[#062459] to-[#1157CF] p-12 relative overflow-hidden text-white">
-        {/* Subtle Background Pattern */}
-        <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
-        
-        {/* Top: Logo */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-10 flex items-center gap-3"
-        >
-          <div className="h-10 w-10 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-sm border border-white/20">
-            <Activity className="h-6 w-6 text-white" />
+    <div className="relative min-h-screen flex flex-col justify-between bg-[#FAFBFC] overflow-hidden selection:bg-[#1157CF]/10 selection:text-[#1157CF]">
+      {/* Top Navbar Header (ClickUp style) */}
+      <header className="relative z-20 flex items-center justify-between px-6 py-5 md:px-12 md:py-6 w-full max-w-7xl mx-auto">
+        <div className="flex items-center gap-3">
+          <div className="h-9 w-9 bg-[#1157CF] rounded-xl flex items-center justify-center text-white shadow-sm shadow-[#1157CF]/20">
+            <Activity className="h-5 w-5" />
           </div>
-          <span className="text-2xl font-black tracking-tight">MedAssess Pro</span>
-        </motion.div>
-
-        {/* Center: Hero Messaging */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-10 max-w-lg mt-16"
-        >
-          <h1 className="text-5xl font-extrabold tracking-tight leading-[1.1] mb-6">
-            Assessment Infrastructure for Medical Excellence.
-          </h1>
-          <p className="text-lg text-blue-100/80 leading-relaxed font-medium">
-            The enterprise-grade platform trusted by leading universities and examination boards worldwide to deliver secure, scalable, and precise assessments.
-          </p>
-        </motion.div>
-
-        {/* Bottom: Trust Indicators */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-10 grid grid-cols-2 gap-8 pt-12 border-t border-white/10"
-        >
-          <div>
-            <div className="flex items-center gap-2 mb-2 text-white/90 font-bold">
-              <Building className="h-5 w-5 text-blue-300" />
-              <span>500+ Institutions</span>
-            </div>
-            <p className="text-sm text-blue-200/60 font-medium">Deploying world-class exams globally.</p>
+          <span className="text-xl font-bold tracking-tight text-[#03122E]">MedAssess Pro</span>
+        </div>
+        {!showReset && (
+          <div className="flex items-center gap-3">
+            <span className="hidden sm:inline text-sm font-medium text-slate-500">Don&apos;t have an account?</span>
+            <button
+              onClick={() => router.push("/signup")}
+              className="px-4 py-2 text-sm font-semibold rounded-lg bg-[#EEF4FF] text-[#1157CF] hover:bg-[#DCE9FD] active:scale-98 transition-all cursor-pointer shadow-xs"
+            >
+              Sign up
+            </button>
           </div>
-          <div>
-            <div className="flex items-center gap-2 mb-2 text-white/90 font-bold">
-              <ShieldCheck className="h-5 w-5 text-blue-300" />
-              <span>Bank-Grade Security</span>
-            </div>
-            <p className="text-sm text-blue-200/60 font-medium">Advanced proctoring & data protection.</p>
-          </div>
-        </motion.div>
-      </div>
+        )}
+      </header>
 
-      {/* Right Panel: Authentication Form */}
-      <div className="flex w-full lg:w-1/2 flex-col items-center justify-center p-8 sm:p-12 lg:p-24 bg-[#FAFBFC] relative">
-        <motion.div 
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full max-w-[420px]"
+      {/* Main Container */}
+      <main className="flex-1 flex items-center justify-center px-4 py-12 relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="w-full max-w-[460px] bg-white rounded-2xl border border-slate-100 shadow-[0_12px_40px_rgba(3,18,46,0.06)] p-8 md:p-10"
         >
           {showReset ? (
+            /* Secure Password Reset Flow */
             <>
-              <div className="mb-8">
-                <div className="h-12 w-12 bg-amber-100 rounded-2xl flex items-center justify-center mb-6 border border-amber-200/50 shadow-sm">
-                  <Lock className="h-6 w-6 text-amber-600" />
-                </div>
-                <h2 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">Secure Your Account</h2>
-                <p className="text-[15px] text-slate-500 font-medium leading-relaxed">
-                  As part of our security protocol, please establish a new, strong password to finalize your profile.
+              <div className="mb-6 text-center">
+                <h2 className="text-2xl font-extrabold tracking-tight text-slate-900 mb-2">
+                  Secure Your Account
+                </h2>
+                <p className="text-[14px] text-slate-500 leading-relaxed font-medium">
+                  Establish a strong password to finalize your profile setup.
                 </p>
               </div>
 
               <form className="space-y-5" onSubmit={handleResetSubmit}>
                 {error && (
-                  <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="rounded-xl bg-red-50 p-4 text-sm font-semibold text-red-700 border border-red-200 flex items-center gap-3 shadow-sm">
-                    <ShieldCheck className="h-5 w-5 text-red-500 shrink-0" />
+                  <motion.div
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="rounded-xl bg-red-50 p-4 text-xs font-semibold text-red-700 border border-red-200 flex items-center gap-2.5 shadow-xs"
+                  >
+                    <ShieldCheck className="h-4.5 w-4.5 text-red-500 shrink-0" />
                     <span>{error}</span>
                   </motion.div>
                 )}
 
                 <div className="space-y-4">
-                  <div>
-                    <label className="block text-[13px] font-bold text-slate-700 mb-2">NEW PASSWORD</label>
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-bold text-slate-500 tracking-wide uppercase">
+                      New Password
+                    </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
-                        <Lock className="h-4.5 w-4.5" />
+                        <Lock className="h-4 w-4" />
                       </div>
                       <input
                         type="password"
                         required
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
-                        className="block w-full rounded-xl border border-slate-200 py-3 pl-11 pr-4 text-[15px] placeholder-slate-400 outline-none transition-all focus:border-[#1157CF] focus:ring-4 focus:ring-[#1157CF]/10 bg-white shadow-xs"
+                        className="block w-full rounded-xl border border-slate-200 py-3 pl-10 pr-4 text-sm placeholder-slate-400 outline-none transition-all focus:border-[#1157CF] focus:ring-4 focus:ring-[#1157CF]/10 bg-white"
                         placeholder="••••••••"
                       />
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-[13px] font-bold text-slate-700 mb-2">CONFIRM PASSWORD</label>
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-bold text-slate-500 tracking-wide uppercase">
+                      Confirm Password
+                    </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
-                        <Lock className="h-4.5 w-4.5" />
+                        <Lock className="h-4 w-4" />
                       </div>
                       <input
                         type="password"
                         required
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="block w-full rounded-xl border border-slate-200 py-3 pl-11 pr-4 text-[15px] placeholder-slate-400 outline-none transition-all focus:border-[#1157CF] focus:ring-4 focus:ring-[#1157CF]/10 bg-white shadow-xs"
+                        className="block w-full rounded-xl border border-slate-200 py-3 pl-10 pr-4 text-sm placeholder-slate-400 outline-none transition-all focus:border-[#1157CF] focus:ring-4 focus:ring-[#1157CF]/10 bg-white"
                         placeholder="••••••••"
                       />
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-4 space-y-3">
+                <div className="pt-2 space-y-3">
                   <button
                     type="submit"
                     disabled={loading}
-                    className="flex w-full items-center justify-center rounded-xl bg-[#1157CF] px-4 py-3 text-[15px] font-bold text-white shadow-md hover:bg-[#0D46A8] transition-all disabled:opacity-50"
+                    className="flex w-full items-center justify-center rounded-xl bg-[#1157CF] hover:bg-[#0D46A8] active:scale-[0.99] px-4 py-3.5 text-sm font-bold text-white shadow-md shadow-[#1157CF]/10 transition-all disabled:opacity-50 cursor-pointer"
                   >
-                    {loading ? <RefreshCw className="h-5 w-5 animate-spin" /> : "Update Password & Sign In"}
+                    {loading ? (
+                      <RefreshCw className="h-5 w-5 animate-spin" />
+                    ) : (
+                      "Update Password & Sign In"
+                    )}
                   </button>
                   <button
                     type="button"
                     onClick={handleCancelReset}
-                    className="w-full text-center text-sm text-slate-500 hover:text-slate-800 font-semibold py-2 transition-colors"
+                    className="w-full text-center text-xs text-slate-400 hover:text-slate-600 font-semibold py-2 transition-colors cursor-pointer"
                   >
                     Return to Sign In
                   </button>
@@ -297,97 +273,155 @@ export default function LoginPage() {
               </form>
             </>
           ) : (
+            /* Standard Login Flow */
             <>
-              {/* Mobile Logo Only */}
-              <div className="flex lg:hidden items-center gap-3 mb-10">
-                <div className="h-10 w-10 bg-[#1157CF] rounded-xl flex items-center justify-center shadow-md">
-                  <Activity className="h-6 w-6 text-white" />
-                </div>
-                <span className="text-2xl font-black tracking-tight text-slate-900">MedAssess</span>
-              </div>
-
-              <div className="mb-8">
-                <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 mb-2">Welcome Back</h2>
-                <p className="text-[15px] text-slate-500 font-medium">Sign in to your account to continue.</p>
+              <div className="mb-6 text-center">
+                <h2 className="text-2xl font-extrabold tracking-tight text-[#03122E] mb-1.5">
+                  Welcome back!
+                </h2>
+                <p className="text-sm text-slate-400 font-medium">
+                  Enter your credentials to access the medical portal.
+                </p>
               </div>
 
               <form className="space-y-5" onSubmit={handleSubmit}>
                 {error && (
-                  <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="rounded-xl bg-red-50 p-4 text-sm font-semibold text-red-700 border border-red-200 flex items-center gap-3 shadow-sm">
-                    <ShieldCheck className="h-5 w-5 text-red-500 shrink-0" />
+                  <motion.div
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="rounded-xl bg-red-50 p-4 text-xs font-semibold text-red-700 border border-red-200 flex items-center gap-2.5 shadow-xs"
+                  >
+                    <ShieldCheck className="h-4.5 w-4.5 text-red-500 shrink-0" />
                     <span>{error}</span>
                   </motion.div>
                 )}
 
                 <div className="space-y-4">
-                  <div>
-                    <label className="block text-[13px] font-bold text-slate-700 mb-2">EMAIL ADDRESS</label>
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-bold text-slate-500 tracking-wide uppercase">
+                      Email
+                    </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
-                        <Mail className="h-4.5 w-4.5" />
+                        <Mail className="h-4 w-4" />
                       </div>
                       <input
                         type="email"
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="block w-full rounded-xl border border-slate-200 py-3 pl-11 pr-4 text-[15px] placeholder-slate-400 outline-none transition-all focus:border-[#1157CF] focus:ring-4 focus:ring-[#1157CF]/10 bg-white shadow-xs"
-                        placeholder="name@institution.edu"
+                        className="block w-full rounded-xl border border-slate-200 py-3 pl-10 pr-4 text-sm placeholder-slate-400 outline-none transition-all focus:border-[#1157CF] focus:ring-4 focus:ring-[#1157CF]/10 bg-white"
+                        placeholder="Enter your email"
                       />
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-[13px] font-bold text-slate-700 mb-2">PASSWORD</label>
+                  <div className="space-y-1.5">
+                    <div className="flex justify-between items-center">
+                      <label className="block text-xs font-bold text-slate-500 tracking-wide uppercase">
+                        Password
+                      </label>
+                      <a
+                        href="#"
+                        className="text-xs font-bold text-[#1157CF] hover:text-[#0D46A8] hover:underline transition-colors"
+                      >
+                        Forgot Password?
+                      </a>
+                    </div>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
-                        <Lock className="h-4.5 w-4.5" />
+                        <Lock className="h-4 w-4" />
                       </div>
                       <input
                         type="password"
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="block w-full rounded-xl border border-slate-200 py-3 pl-11 pr-4 text-[15px] placeholder-slate-400 outline-none transition-all focus:border-[#1157CF] focus:ring-4 focus:ring-[#1157CF]/10 bg-white shadow-xs"
-                        placeholder="••••••••"
+                        className="block w-full rounded-xl border border-slate-200 py-3 pl-10 pr-4 text-sm placeholder-slate-400 outline-none transition-all focus:border-[#1157CF] focus:ring-4 focus:ring-[#1157CF]/10 bg-white"
+                        placeholder="Enter password"
                       />
                     </div>
                   </div>
-                </div>
-
-                <div className="flex items-center justify-between pt-1">
-                  <label className="flex items-center gap-2 cursor-pointer group">
-                    <input type="checkbox" className="w-4 h-4 rounded border-slate-300 text-[#1157CF] focus:ring-[#1157CF] transition-colors" />
-                    <span className="text-sm font-medium text-slate-600 group-hover:text-slate-900 transition-colors">Remember me</span>
-                  </label>
-                  <a href="#" className="text-sm font-bold text-[#1157CF] hover:text-[#0D46A8] transition-colors">Forgot password?</a>
                 </div>
 
                 <div className="pt-2">
                   <button
                     type="submit"
                     disabled={loading}
-                    className="group flex w-full items-center justify-center gap-2 rounded-xl bg-[#1157CF] px-4 py-3.5 text-[15px] font-bold text-white shadow-md shadow-[#1157CF]/20 hover:bg-[#0D46A8] transition-all disabled:opacity-50"
+                    className="group flex w-full items-center justify-center gap-2 rounded-xl bg-[#1157CF] hover:bg-[#0D46A8] active:scale-[0.99] px-4 py-3.5 text-sm font-bold text-white shadow-md shadow-[#1157CF]/15 transition-all disabled:opacity-50 cursor-pointer"
                   >
                     {loading ? (
                       <RefreshCw className="h-5 w-5 animate-spin" />
                     ) : (
                       <>
-                        Sign In
-                        <ArrowRight className="h-4.5 w-4.5 group-hover:translate-x-1 transition-transform" />
+                        Log In
+                        <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
                       </>
                     )}
                   </button>
                 </div>
               </form>
+
+              <div className="mt-6 flex flex-col items-center justify-center gap-3 text-center border-t border-slate-100 pt-6">
+                <a
+                  href="#"
+                  className="text-xs font-semibold text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  or login with SSO
+                </a>
+                <span className="sm:hidden text-xs font-medium text-slate-500">
+                  Don&apos;t have an account?{" "}
+                  <button
+                    onClick={() => router.push("/signup")}
+                    className="font-bold text-[#1157CF] hover:underline cursor-pointer"
+                  >
+                    Sign up
+                  </button>
+                </span>
+              </div>
             </>
           )}
-          
-          <div className="mt-12 text-center">
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Powered by MedAssess Infrastructure</p>
-          </div>
         </motion.div>
+      </main>
+
+      {/* Decorative Wave Background (ClickUp inspired, using MedAssess Pro theme colors) */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <svg
+          className="absolute bottom-0 left-0 w-full h-[35vh] lg:h-[45vh]"
+          viewBox="0 0 1440 320"
+          preserveAspectRatio="none"
+        >
+          <defs>
+            <linearGradient id="wave-grad-1" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#1157CF" />
+              <stop offset="100%" stopColor="#2E6FE0" />
+            </linearGradient>
+            <linearGradient id="wave-grad-2" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#03122E" />
+              <stop offset="50%" stopColor="#062459" />
+              <stop offset="100%" stopColor="#1157CF" />
+            </linearGradient>
+          </defs>
+          {/* Back wavy decoration */}
+          <path
+            fill="url(#wave-grad-1)"
+            opacity="0.12"
+            d="M0,160 C320,80 640,240 960,192 C1120,168 1280,120 1440,144 L1440,320 L0,320 Z"
+          />
+          {/* Main front wave */}
+          <path
+            fill="url(#wave-grad-2)"
+            d="M0,224 C240,160 480,96 720,192 C960,288 1200,224 1440,160 L1440,320 L0,320 Z"
+          />
+        </svg>
       </div>
+
+      {/* Small clean footer branding */}
+      <footer className="relative z-10 w-full py-6 text-center">
+        <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest">
+          Powered by MedAssess Infrastructure
+        </p>
+      </footer>
     </div>
   );
 }
