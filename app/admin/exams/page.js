@@ -225,7 +225,7 @@ export default function ExamsManager() {
 
         <button
           onClick={() => setModalOpen(true)}
-          className="inline-flex items-center gap-2 rounded-xl bg-[#2E76C0] px-5 py-2.5 text-[13px] font-bold text-white shadow-md shadow-[#2E76C0]/20 hover:bg-[#2765A4] transition-all active:scale-95 shrink-0 self-start sm:self-center"
+          className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 text-[13px] font-black text-white shadow-lg shadow-blue-500/30 hover:shadow-blue-500/40 hover:-translate-y-0.5 transition-all active:scale-95 shrink-0 self-start sm:self-center"
         >
           <Plus className="h-4 w-4" />
           <span>Build Assessment</span>
@@ -246,7 +246,7 @@ export default function ExamsManager() {
           </p>
         </div>
       ) : (
-        <div className="premium-card overflow-hidden border border-slate-200 shadow-sm">
+        <div className="bg-white/70 backdrop-blur-xl border border-slate-200 rounded-3xl overflow-hidden shadow-sm">
           <div className="overflow-x-auto w-full pb-2">
             <table className="w-full text-left border-collapse min-w-[700px]">
               <thead>
@@ -345,8 +345,8 @@ export default function ExamsManager() {
 
       {/* CREATE EXAM MODAL */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="w-full max-w-3xl bg-white rounded-2xl border border-slate-200 shadow-2xl overflow-hidden my-8 animate-slide-up text-left">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-md p-4 overflow-y-auto">
+          <div className="w-full max-w-3xl bg-white/95 backdrop-blur-2xl rounded-3xl border border-white/20 shadow-2xl overflow-hidden my-8 animate-slide-up text-left ring-1 ring-slate-200">
             <div className="flex items-center justify-between px-6 py-4 border-b border-slate-250 bg-slate-50">
               <h2 className="text-sm font-black text-slate-900 flex items-center gap-2">
                 <Settings className="h-4.5 w-4.5 text-teal-600" />
@@ -373,11 +373,11 @@ export default function ExamsManager() {
                 { step: 5, label: "Deploy" }
               ].map((s) => (
                 <div key={s.step} className="flex items-center gap-2 shrink-0">
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-[11px] border transition-all ${
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center font-black text-[12px] border-2 transition-all ${
                     wizardStep === s.step 
-                      ? "bg-[#2E76C0] border-[#2E76C0] text-white shadow-md shadow-[#2E76C0]/20" 
+                      ? "bg-gradient-to-br from-blue-500 to-indigo-600 border-transparent text-white shadow-lg shadow-blue-500/30 scale-110" 
                       : wizardStep > s.step 
-                      ? "bg-[#E6EEF7] border-[#C7DBEE] text-[#2E76C0]" 
+                      ? "bg-blue-50 border-blue-200 text-blue-600" 
                       : "bg-white border-slate-200 text-slate-400"
                   }`}>
                     {wizardStep > s.step ? "✓" : s.step}
@@ -713,7 +713,7 @@ export default function ExamsManager() {
                   ) : (
                     <button
                       type="submit"
-                      className="inline-flex items-center gap-2 rounded-xl bg-[#2E76C0] px-6 py-2.5 text-[13px] font-bold text-white hover:bg-[#2765A4] shadow-md shadow-[#2E76C0]/20 transition-all active:scale-95 cursor-pointer"
+                      className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-2.5 text-[13px] font-black text-white hover:shadow-lg hover:shadow-blue-500/30 hover:-translate-y-0.5 transition-all active:scale-95 cursor-pointer"
                     >
                       <Check className="h-4 w-4" />
                       <span>Deploy Assessment</span>

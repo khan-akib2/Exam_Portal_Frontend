@@ -74,37 +74,46 @@ export default function GlobalSettingsManager() {
   }
 
   return (
-    <div className="space-y-6 max-w-2xl animate-fade-in text-left">
-      <div className="border-b border-slate-150 pb-4">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">Global Settings</h1>
-        <p className="text-sm text-slate-500">Configure platform behaviors, anti-cheat defaults, and student reward parameters.</p>
+    <div className="space-y-6 max-w-3xl animate-fade-in text-left">
+      <div className="border-b border-slate-150 pb-5">
+        <h1 className="text-3xl font-black tracking-tight text-slate-900 flex items-center gap-2">
+          <Settings className="h-7 w-7 text-teal-650" />
+          Global Settings
+        </h1>
+        <p className="text-sm text-slate-500 mt-1 font-medium">Configure platform behaviors, anti-cheat defaults, and student reward parameters.</p>
       </div>
 
       {success && (
-        <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-4 text-xs font-bold text-emerald-700 flex items-center gap-2 shadow-3xs animate-slide-down">
+        <div className="rounded-xl bg-emerald-50/80 backdrop-blur-md border border-emerald-200/50 p-4 text-xs font-bold text-emerald-700 flex items-center gap-2 shadow-sm animate-slide-down">
           <CheckCircle className="h-5 w-5 text-emerald-600" />
           <span>System settings updated successfully!</span>
         </div>
       )}
 
-      <form onSubmit={handleSave} className="premium-card p-6 space-y-6 bg-white border border-slate-200 rounded-2xl shadow-xs">
+      <form onSubmit={handleSave} className="glass-panel p-6 sm:p-8 space-y-8 rounded-2xl relative overflow-hidden group">
+        <div className="absolute -top-24 -right-24 w-64 h-64 bg-teal-400/10 rounded-full blur-3xl group-hover:bg-teal-400/20 transition-colors duration-700 pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-indigo-400/10 rounded-full blur-3xl group-hover:bg-indigo-400/20 transition-colors duration-700 pointer-events-none" />
+
         {/* Toggle 1: Maintenance Mode */}
-        <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-5">
-          <div className="space-y-1">
-            <label className="block text-sm font-black text-slate-900 leading-tight">Global Maintenance Mode</label>
-            <span className="block text-xs text-slate-500 leading-normal max-w-lg">
+        <div className="flex items-start justify-between gap-6 border-b border-slate-100/50 pb-6 relative z-10">
+          <div className="space-y-1.5">
+            <label className="block text-sm font-black text-slate-900 leading-tight flex items-center gap-2">
+              <AlertTriangle className="h-4.5 w-4.5 text-red-500" />
+              Global Maintenance Mode
+            </label>
+            <span className="block text-xs text-slate-500 leading-relaxed max-w-lg font-medium">
               When enabled, students will see a maintenance page and cannot attempt exams or browse results. Admins and Super Admins retain full access.
             </span>
           </div>
           <button
             type="button"
             onClick={() => setSettings({ ...settings, maintenanceMode: !settings.maintenanceMode })}
-            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-              settings.maintenanceMode ? "bg-red-600" : "bg-slate-200"
+            className={`relative mt-1 inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 ${
+              settings.maintenanceMode ? "bg-red-500 shadow-[0_0_12px_rgba(239,68,68,0.4)]" : "bg-slate-200 hover:bg-slate-300"
             }`}
           >
             <span
-              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+              className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md ring-0 transition-transform duration-300 ease-in-out ${
                 settings.maintenanceMode ? "translate-x-5" : "translate-x-0"
               }`}
             />
@@ -112,25 +121,25 @@ export default function GlobalSettingsManager() {
         </div>
 
         {/* Toggle 2: Anti-Cheat Toggle */}
-        <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-5">
-          <div className="space-y-1">
-            <label className="block text-sm font-black text-slate-900 flex items-center gap-1.5 leading-tight">
-              <ShieldAlert className="h-4 w-4 text-teal-655" />
+        <div className="flex items-start justify-between gap-6 border-b border-slate-100/50 pb-6 relative z-10">
+          <div className="space-y-1.5">
+            <label className="block text-sm font-black text-slate-900 flex items-center gap-2 leading-tight">
+              <ShieldAlert className="h-4.5 w-4.5 text-teal-600" />
               Strict Anti-Cheat Engine
             </label>
-            <span className="block text-xs text-slate-500 leading-normal max-w-lg">
-              Enables active browser window focus monitoring, copy-paste block, and right-click intercept. Focus loss will log warnings to user attempts and pop up warnings.
+            <span className="block text-xs text-slate-500 leading-relaxed max-w-lg font-medium">
+              Enables active browser window focus monitoring, copy-paste block, and right-click intercept. Focus loss will log warnings to user attempts.
             </span>
           </div>
           <button
             type="button"
             onClick={() => setSettings({ ...settings, antiCheatEnabled: !settings.antiCheatEnabled })}
-            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-              settings.antiCheatEnabled ? "bg-teal-650" : "bg-slate-200"
+            className={`relative mt-1 inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:ring-offset-2 ${
+              settings.antiCheatEnabled ? "bg-teal-600 shadow-[0_0_12px_rgba(13,148,136,0.4)]" : "bg-slate-200 hover:bg-slate-300"
             }`}
           >
             <span
-              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+              className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md ring-0 transition-transform duration-300 ease-in-out ${
                 settings.antiCheatEnabled ? "translate-x-5" : "translate-x-0"
               }`}
             />
@@ -138,45 +147,48 @@ export default function GlobalSettingsManager() {
         </div>
 
         {/* Numeric parameters */}
-        <div className="space-y-4 pt-2">
-          <h3 className="text-xs font-black text-slate-900 uppercase tracking-wider">Gamification Parameters</h3>
+        <div className="space-y-5 pt-2 relative z-10">
+          <h3 className="text-xs font-black text-teal-700 uppercase tracking-widest flex items-center gap-2">
+            <span className="h-px w-6 bg-teal-200 rounded-full"></span>
+            Gamification Parameters
+          </h3>
           
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase">XP Per Correct Answer</label>
+          <div className="grid gap-6 sm:grid-cols-2">
+            <div className="group/input">
+              <label className="block text-[10px] font-extrabold text-slate-600 mb-2 uppercase tracking-wider">XP Per Correct Answer</label>
               <input
                 type="number"
                 min="0"
                 max="100"
                 value={settings.xpPerCorrectAnswer}
                 onChange={(e) => setSettings({ ...settings, xpPerCorrectAnswer: parseInt(e.target.value) || 0 })}
-                className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-xs outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 font-semibold text-slate-800"
+                className="w-full rounded-xl border-2 border-slate-200/60 bg-white/50 px-4 py-3 text-sm outline-none transition-all duration-300 focus:border-teal-500 focus:bg-white focus:ring-4 focus:ring-teal-500/10 font-bold text-slate-800 hover:border-slate-300"
               />
-              <span className="block text-4xs text-slate-400 mt-1.5 uppercase font-bold">Standard reward is 10 XP</span>
+              <span className="block text-[10px] text-slate-400 mt-2 uppercase font-bold tracking-wide">Standard reward is 10 XP</span>
             </div>
 
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase">Streak Bonus XP</label>
+            <div className="group/input">
+              <label className="block text-[10px] font-extrabold text-slate-600 mb-2 uppercase tracking-wider">Streak Bonus XP</label>
               <input
                 type="number"
                 min="0"
                 max="200"
                 value={settings.streakBonusXp}
                 onChange={(e) => setSettings({ ...settings, streakBonusXp: parseInt(e.target.value) || 0 })}
-                className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-xs outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 font-semibold text-slate-800"
+                className="w-full rounded-xl border-2 border-slate-200/60 bg-white/50 px-4 py-3 text-sm outline-none transition-all duration-300 focus:border-teal-500 focus:bg-white focus:ring-4 focus:ring-teal-500/10 font-bold text-slate-800 hover:border-slate-300"
               />
-              <span className="block text-4xs text-slate-400 mt-1.5 uppercase font-bold">Extra daily streaking points</span>
+              <span className="block text-[10px] text-slate-400 mt-2 uppercase font-bold tracking-wide">Extra daily streaking points</span>
             </div>
           </div>
         </div>
 
         {/* Warning Indicator */}
         {settings.maintenanceMode && (
-          <div className="rounded-xl bg-amber-50 border border-amber-200 p-4 text-xs text-amber-800 flex items-start gap-2.5 shadow-3xs animate-pulse">
-            <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+          <div className="rounded-xl bg-amber-500/10 border border-amber-500/20 p-5 text-xs text-amber-900 flex items-start gap-3 shadow-sm animate-pulse relative z-10 backdrop-blur-sm">
+            <AlertTriangle className="h-6 w-6 text-amber-600 shrink-0 mt-0.5" />
             <div>
-              <span className="font-extrabold block">Maintenance Mode is Active</span>
-              <span className="block mt-0.5 leading-normal text-slate-650 font-medium">
+              <span className="font-black text-sm block mb-1">Maintenance Mode is Active</span>
+              <span className="block leading-relaxed text-amber-800/80 font-medium">
                 Students will be locked out of the exam room and dashboards until this switch is turned off.
               </span>
             </div>
@@ -184,13 +196,13 @@ export default function GlobalSettingsManager() {
         )}
 
         {/* Save button */}
-        <div className="flex justify-end pt-4 border-t border-slate-100">
+        <div className="flex justify-end pt-6 border-t border-slate-100/50 relative z-10">
           <button
             type="submit"
             disabled={saving}
-            className="inline-flex items-center gap-2 rounded-xl bg-teal-650 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-teal-600/10 hover:bg-teal-700 transition-all cursor-pointer active:scale-98 disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-600 to-teal-500 px-6 py-3 text-sm font-black text-white shadow-lg shadow-teal-500/30 hover:shadow-teal-500/50 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer active:scale-95 disabled:opacity-50 disabled:pointer-events-none"
           >
-            {saving ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+            {saving ? <RefreshCw className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
             <span>Save Settings</span>
           </button>
         </div>

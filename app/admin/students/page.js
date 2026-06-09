@@ -266,13 +266,13 @@ export default function StudentsManager() {
               setBulkModalOpen(true);
               setBulkResult(null);
             }}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-white border border-slate-200 text-slate-700 text-xs font-bold rounded-lg hover:bg-slate-50 transition-colors shadow-sm"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 text-slate-700 text-xs font-black rounded-xl hover:bg-slate-50 hover:shadow-md transition-all active:scale-95"
           >
-            <Upload className="h-4 w-4 text-slate-500" /> Bulk Import
+            <Upload className="h-4 w-4 text-[#1157CF]" /> Bulk Import
           </button>
           <button
             onClick={() => setModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#1157CF] text-white text-xs font-bold rounded-lg hover:bg-[#0D46A8] transition-colors shadow-sm"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#1157CF] to-blue-500 text-white text-xs font-black rounded-xl hover:shadow-lg hover:shadow-blue-500/30 hover:-translate-y-0.5 transition-all active:scale-95"
           >
             <UserPlus className="h-4 w-4" /> Add Student
           </button>
@@ -280,38 +280,41 @@ export default function StudentsManager() {
       </div>
 
       {/* Top Statistics Row */}
-      <div className="grid grid-cols-3 gap-4">
-        <div className="premium-card p-4 flex items-center justify-between">
-          <div>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Enrolled</p>
-            <p className="text-2xl font-black text-slate-900 tracking-tight">{students.length}</p>
+      <div className="grid grid-cols-3 gap-5">
+        <div className="bg-white/70 backdrop-blur-xl border border-slate-200 p-5 rounded-3xl flex items-center justify-between shadow-sm hover:shadow-md transition-all hover:-translate-y-1 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/5 rounded-full blur-2xl pointer-events-none group-hover:bg-blue-500/10 transition-colors duration-500" />
+          <div className="relative z-10">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Total Enrolled</p>
+            <p className="text-3xl font-black text-slate-900 tracking-tight">{students.length}</p>
           </div>
-          <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center">
-            <Users className="h-5 w-5 text-slate-500" />
-          </div>
-        </div>
-        <div className="premium-card p-4 flex items-center justify-between">
-          <div>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Active Accounts</p>
-            <p className="text-2xl font-black text-slate-900 tracking-tight">{activeCount}</p>
-          </div>
-          <div className="h-10 w-10 rounded-full bg-[#DCFAED] flex items-center justify-center">
-            <Shield className="h-5 w-5 text-[#0F7B3E]" />
+          <div className="h-12 w-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center relative z-10 shadow-sm">
+            <Users className="h-6 w-6 text-[#1157CF]" />
           </div>
         </div>
-        <div className="premium-card p-4 flex items-center justify-between">
-          <div>
-            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Active Batches</p>
-            <p className="text-2xl font-black text-slate-900 tracking-tight">{uniqueBatches.length}</p>
+        <div className="bg-white/70 backdrop-blur-xl border border-slate-200 p-5 rounded-3xl flex items-center justify-between shadow-sm hover:shadow-md transition-all hover:-translate-y-1 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none group-hover:bg-emerald-500/10 transition-colors duration-500" />
+          <div className="relative z-10">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Active Accounts</p>
+            <p className="text-3xl font-black text-slate-900 tracking-tight">{activeCount}</p>
           </div>
-          <div className="h-10 w-10 rounded-full bg-[#EEF4FF] flex items-center justify-center">
-            <Calendar className="h-5 w-5 text-[#1157CF]" />
+          <div className="h-12 w-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center relative z-10 shadow-sm">
+            <Shield className="h-6 w-6 text-emerald-600" />
+          </div>
+        </div>
+        <div className="bg-white/70 backdrop-blur-xl border border-slate-200 p-5 rounded-3xl flex items-center justify-between shadow-sm hover:shadow-md transition-all hover:-translate-y-1 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/5 rounded-full blur-2xl pointer-events-none group-hover:bg-indigo-500/10 transition-colors duration-500" />
+          <div className="relative z-10">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Active Batches</p>
+            <p className="text-3xl font-black text-slate-900 tracking-tight">{uniqueBatches.length}</p>
+          </div>
+          <div className="h-12 w-12 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center relative z-10 shadow-sm">
+            <Calendar className="h-6 w-6 text-indigo-600" />
           </div>
         </div>
       </div>
 
       {/* Main Data Grid */}
-      <div className="premium-card bg-white flex flex-col overflow-hidden shadow-sm">
+      <div className="bg-white/70 backdrop-blur-xl border border-slate-200 rounded-3xl flex flex-col overflow-hidden shadow-sm">
         
         {/* Toolbar */}
         <div className="p-4 border-b border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4 bg-slate-50/50">
@@ -442,11 +445,11 @@ export default function StudentsManager() {
                       </td>
                       <td className="px-4 py-4">
                         {student.status === "active" ? (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold text-[#0F7B3E] bg-[#DCFAED] uppercase tracking-wider border border-[#0F7B3E]/20">
-                            <div className="w-1.5 h-1.5 rounded-full bg-[#0F7B3E]" /> Active
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black text-emerald-700 bg-emerald-50 uppercase tracking-widest border border-emerald-200 shadow-sm">
+                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Active
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold text-slate-600 bg-slate-100 uppercase tracking-wider border border-slate-200">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black text-slate-600 bg-slate-100 uppercase tracking-widest border border-slate-200 shadow-sm">
                             <div className="w-1.5 h-1.5 rounded-full bg-slate-400" /> Suspended
                           </span>
                         )}

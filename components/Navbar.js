@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
 import { LogOut, Zap, Flame, ShieldAlert, ChevronRight, Menu } from "lucide-react";
 
 export default function Navbar() {
@@ -41,7 +42,8 @@ export default function Navbar() {
   const breadcrumbs = paths.map((path, index) => {
     const isLast = index === paths.length - 1;
     const title = path.charAt(0).toUpperCase() + path.slice(1).replace(/-/g, ' ');
-    return { title, isLast };
+    const href = '/' + paths.slice(0, index + 1).join('/');
+    return { title, isLast, href };
   });
 
   return (
@@ -60,9 +62,15 @@ export default function Navbar() {
           {breadcrumbs.map((crumb, idx) => (
             <div key={idx} className="flex items-center">
               {idx > 0 && <ChevronRight className="h-4 w-4 mx-2 text-slate-300" />}
-              <span className={crumb.isLast ? "text-slate-900 font-semibold" : ""}>
-                {crumb.title}
-              </span>
+              {crumb.isLast ? (
+                <span className="text-slate-900 font-semibold">
+                  {crumb.title}
+                </span>
+              ) : (
+                <Link href={crumb.href} className="hover:text-slate-800 transition-colors cursor-pointer">
+                  {crumb.title}
+                </Link>
+              )}
             </div>
           ))}
           {breadcrumbs.length === 0 && (

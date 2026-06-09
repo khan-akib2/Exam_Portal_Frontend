@@ -95,28 +95,17 @@ export default function Sidebar() {
       <motion.aside
         initial={{ x: -20, opacity: 0 }}
         animate={{ x: 0, opacity: 1, width: expanded ? 260 : 72 }}
-        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ type: "spring", bounce: 0, duration: 0.4 }}
         onMouseEnter={() => isCollapsed && setIsHovered(true)}
         onMouseLeave={() => isCollapsed && setIsHovered(false)}
         className="bg-[#03122E] border-r border-[#1e293b]/50 hidden md:flex flex-col sticky top-0 h-screen z-50 text-slate-300"
       >
-        <div className="flex items-center h-16 px-4 justify-between border-b border-white/5">
-          <div className="flex items-center gap-3 overflow-hidden whitespace-nowrap">
+        <div className="relative flex items-center h-16 border-b border-white/5 w-full shrink-0">
+          <div className={`absolute left-4 flex items-center gap-3 overflow-hidden whitespace-nowrap transition-all duration-400 ease-in-out ${expanded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4 pointer-events-none'}`}>
             <div className="h-8 w-8 min-w-[32px] bg-gradient-to-tr from-[#1157CF] to-[#5B93EE] rounded-lg flex items-center justify-center shadow-md">
               <Activity className="h-4 w-4 text-white" />
             </div>
-            <AnimatePresence>
-              {expanded && (
-                <motion.span
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -10 }}
-                  className="font-bold text-white tracking-tight"
-                >
-                  MedAssess Pro
-                </motion.span>
-              )}
-            </AnimatePresence>
+            <span className="font-bold text-white tracking-tight">MedAssess Pro</span>
           </div>
           
           <button 
@@ -124,9 +113,9 @@ export default function Sidebar() {
               setIsCollapsed(!isCollapsed);
               setIsHovered(false);
             }}
-            className="hidden md:flex text-slate-500 hover:text-white transition-colors"
+            className={`absolute flex items-center justify-center text-slate-500 hover:text-white transition-all duration-400 ease-in-out p-2 rounded-lg hover:bg-white/5 ${expanded ? 'right-2' : 'left-1/2 -translate-x-1/2'}`}
           >
-            {isCollapsed ? <Menu className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+            {isCollapsed ? <Menu className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
           </button>
         </div>
 

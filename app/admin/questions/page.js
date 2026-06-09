@@ -239,10 +239,10 @@ export default function QuestionReviewWorkspace() {
                   <div 
                     key={q._id} 
                     onClick={() => setActiveQuestion(q)}
-                    className={`p-3 cursor-pointer transition-colors border-l-2 ${
+                    className={`p-4 cursor-pointer transition-all border-l-4 ${
                       activeQuestion?._id === q._id 
-                        ? 'bg-[#1157CF]/5 border-[#1157CF]' 
-                        : 'border-transparent hover:bg-slate-50'
+                        ? 'bg-gradient-to-r from-blue-50 to-white border-blue-600 shadow-sm relative z-10' 
+                        : 'border-transparent hover:bg-slate-50/80'
                     }`}
                   >
                     <div className={`text-xs font-bold line-clamp-2 leading-relaxed ${activeQuestion?._id === q._id ? 'text-[#1157CF]' : 'text-slate-700'}`}>
@@ -297,18 +297,18 @@ export default function QuestionReviewWorkspace() {
                     {editorData.options.map((opt, idx) => (
                       <div 
                         key={idx} 
-                        className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
+                        className={`flex items-center gap-3 p-3.5 rounded-2xl border-2 transition-all focus-within:ring-4 focus-within:ring-blue-500/10 focus-within:border-blue-400 group ${
                           editorData.correctAnswer === idx 
-                            ? 'border-[#0F7B3E] bg-[#DCFAED]/30 shadow-sm' 
+                            ? 'border-emerald-500 bg-emerald-50/50 shadow-sm' 
                             : 'border-slate-200 bg-white hover:border-slate-300'
                         }`}
                       >
                         <button 
                           onClick={() => setEditorData({...editorData, correctAnswer: idx})}
-                          className={`flex items-center justify-center h-6 w-6 rounded-full border shrink-0 transition-colors ${
+                          className={`flex items-center justify-center h-6 w-6 rounded-full border-2 shrink-0 transition-all ${
                             editorData.correctAnswer === idx 
-                              ? 'border-[#0F7B3E] bg-[#0F7B3E] text-white' 
-                              : 'border-slate-300 text-slate-400 hover:border-slate-400'
+                              ? 'border-emerald-500 bg-emerald-500 text-white shadow-md shadow-emerald-500/30' 
+                              : 'border-slate-300 text-slate-400 hover:border-slate-400 group-focus-within:border-blue-400'
                           }`}
                         >
                           {editorData.correctAnswer === idx ? <Check className="h-3.5 w-3.5" /> : <span className="text-[10px] font-bold">{String.fromCharCode(65 + idx)}</span>}
