@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Zap, Mail, Lock, ShieldCheck, RefreshCw, Award, Activity, Flame, GraduationCap, CheckCircle } from "lucide-react";
+import { Zap, Mail, Lock, ShieldCheck, RefreshCw, Activity, ArrowRight, Building, Users } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -28,19 +29,16 @@ export default function LoginPage() {
   }, [router]);
 
   useEffect(() => {
-    // Check if we need to force logout (e.g. from welcome email link)
     const params = new URLSearchParams(window.location.search);
     if (params.get("logout") === "true") {
       localStorage.removeItem("user");
       localStorage.removeItem("token");
       document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-      // Sync navbar
       window.dispatchEvent(new Event("storage"));
       router.replace("/login");
       return;
     }
 
-    // Check force reset query
     if (params.get("forceReset") === "true") {
       const stored = localStorage.getItem("user");
       if (stored) {
@@ -53,7 +51,6 @@ export default function LoginPage() {
       }
     }
 
-    // Redirect if already logged in and doesn't need password reset
     const stored = localStorage.getItem("user");
     if (stored) {
       try {
@@ -85,18 +82,14 @@ export default function LoginPage() {
         throw new Error(data.error || "Login failed");
       }
 
-      // Save token and user details
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
-
-      // Trigger standard storage event for navbar to sync
       window.dispatchEvent(new Event("storage"));
 
       if (data.user.needsPasswordReset) {
         setTempPassword(password);
         setShowReset(true);
       } else {
-        // Redirect
         redirectUser(data.user.role);
       }
     } catch (err) {
@@ -129,7 +122,7 @@ export default function LoginPage() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          currentPassword: tempPassword || password, // fallback to password if state cleared
+          currentPassword: tempPassword || password,
           newPassword,
         }),
       });
@@ -140,10 +133,8 @@ export default function LoginPage() {
         throw new Error(data.error || "Failed to reset password.");
       }
 
-      // Save updated token and user details
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
-
       window.dispatchEvent(new Event("storage"));
       redirectUser(data.user.role);
     } catch (err) {
@@ -165,299 +156,237 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="grid min-h-screen grid-cols-1 lg:grid-cols-12 bg-slate-50">
-      {/* LEFT COLUMN: BRAND PROMOTION (Hidden on mobile) */}
-      <div className="hidden lg:flex lg:col-span-5 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-950 text-white flex-col justify-between p-12 relative overflow-hidden">
-        {/* Abstract background decorative blobs */}
-        <div className="absolute top-0 right-0 -mt-24 -mr-24 w-96 h-96 rounded-full bg-teal-500/10 blur-3xl" />
-        <div className="absolute bottom-0 left-0 -mb-24 -ml-24 w-96 h-96 rounded-full bg-blue-500/10 blur-3xl" />
+    <div className="flex min-h-screen bg-white">
+      {/* Left Panel: Branding & Trust (Hidden on Mobile) */}
+      <div className="hidden lg:flex w-1/2 flex-col justify-between bg-gradient-to-br from-[#03122E] via-[#062459] to-[#1157CF] p-12 relative overflow-hidden text-white">
+        {/* Subtle Background Pattern */}
+        <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
         
-        {/* Branding header */}
-        <div className="flex items-center gap-3 relative z-10">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-500 text-white shadow-lg shadow-teal-500/20">
-            <Zap className="h-5 w-5" />
+        {/* Top: Logo */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="relative z-10 flex items-center gap-3"
+        >
+          <div className="h-10 w-10 bg-white/10 rounded-xl flex items-center justify-center backdrop-blur-sm border border-white/20">
+            <Activity className="h-6 w-6 text-white" />
+          </div>
+          <span className="text-2xl font-black tracking-tight">MedAssess Pro</span>
+        </motion.div>
+
+        {/* Center: Hero Messaging */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="relative z-10 max-w-lg mt-16"
+        >
+          <h1 className="text-5xl font-extrabold tracking-tight leading-[1.1] mb-6">
+            Assessment Infrastructure for Medical Excellence.
+          </h1>
+          <p className="text-lg text-blue-100/80 leading-relaxed font-medium">
+            The enterprise-grade platform trusted by leading universities and examination boards worldwide to deliver secure, scalable, and precise assessments.
+          </p>
+        </motion.div>
+
+        {/* Bottom: Trust Indicators */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="relative z-10 grid grid-cols-2 gap-8 pt-12 border-t border-white/10"
+        >
+          <div>
+            <div className="flex items-center gap-2 mb-2 text-white/90 font-bold">
+              <Building className="h-5 w-5 text-blue-300" />
+              <span>500+ Institutions</span>
+            </div>
+            <p className="text-sm text-blue-200/60 font-medium">Deploying world-class exams globally.</p>
           </div>
           <div>
-            <h1 className="text-lg font-black tracking-tight text-white">MedExam Portal</h1>
-            <p className="text-3xs font-semibold text-teal-400 uppercase tracking-widest">Clinical Assessor</p>
+            <div className="flex items-center gap-2 mb-2 text-white/90 font-bold">
+              <ShieldCheck className="h-5 w-5 text-blue-300" />
+              <span>Bank-Grade Security</span>
+            </div>
+            <p className="text-sm text-blue-200/60 font-medium">Advanced proctoring & data protection.</p>
           </div>
-        </div>
-
-        {/* Dynamic platform mockups / showcases */}
-        <div className="space-y-8 relative z-10 my-auto">
-          <div className="space-y-3">
-            <h2 className="text-3xl font-extrabold tracking-tight text-white leading-tight">
-              Unlock Clinical Excellence with Gamified Mock Papers
-            </h2>
-            <p className="text-sm text-slate-350 max-w-md leading-relaxed">
-              Designed for medical professionals. Practice NEET PG, FMGE, and university courses in a structured, high-stakes testing environment.
-            </p>
-          </div>
-
-          {/* Interactive Floating Gamification Showcase */}
-          <div className="glass-panel rounded-2xl border border-white/10 p-5 bg-white/5 shadow-2xl space-y-4 max-w-sm">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <div className="h-9 w-9 rounded-xl bg-indigo-500/20 flex items-center justify-center border border-indigo-400/20">
-                  <GraduationCap className="h-5 w-5 text-indigo-400" />
-                </div>
-                <div>
-                  <span className="block text-xs font-bold">Dr. Sarah Jenkins</span>
-                  <span className="block text-4xs text-slate-400 font-semibold uppercase tracking-wider">Clinical Intern</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-1 text-orange-400 bg-orange-400/10 border border-orange-400/20 px-2 py-0.5 rounded-full text-3xs font-bold animate-pulse-slow">
-                <Flame className="h-3 w-3 fill-orange-400" />
-                <span>12 Day Streak</span>
-              </div>
-            </div>
-
-            {/* Level & XP bar */}
-            <div className="space-y-1.5">
-              <div className="flex justify-between text-3xs font-semibold text-slate-300">
-                <span>Current Level: 14</span>
-                <span>8,420 / 10,000 XP</span>
-              </div>
-              <div className="h-2 w-full rounded-full bg-white/10 overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-teal-400 to-blue-500 rounded-full" style={{ width: "84.2%" }} />
-              </div>
-            </div>
-
-            {/* Quick stats mini-row */}
-            <div className="grid grid-cols-3 gap-2.5 pt-2 border-t border-white/5 text-center">
-              <div>
-                <span className="block text-4xs text-slate-400 uppercase tracking-wider">Accuracy</span>
-                <span className="block text-xs font-black text-emerald-400 mt-0.5">87.5%</span>
-              </div>
-              <div>
-                <span className="block text-4xs text-slate-400 uppercase tracking-wider">Exam Rank</span>
-                <span className="block text-xs font-black text-amber-400 mt-0.5">Top 2%</span>
-              </div>
-              <div>
-                <span className="block text-4xs text-slate-400 uppercase tracking-wider">MCQs Done</span>
-                <span className="block text-xs font-black text-blue-400 mt-0.5">1,240</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Quick core benefits list */}
-          <div className="space-y-3.5 text-sm text-slate-300">
-            <div className="flex items-center gap-2.5">
-              <CheckCircle className="h-4 w-4 text-teal-400 shrink-0" />
-              <span>Simulated High-Stakes Proctored Timers</span>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <CheckCircle className="h-4 w-4 text-teal-400 shrink-0" />
-              <span>Automatic PDF Ingestion & OCR Drafting</span>
-            </div>
-            <div className="flex items-center gap-2.5">
-              <CheckCircle className="h-4 w-4 text-teal-400 shrink-0" />
-              <span>AI-assisted Clinical Revision Recommendations</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="relative z-10 text-3xs text-slate-500 flex items-center justify-between border-t border-white/5 pt-4">
-          <span>&copy; {new Date().getFullYear()} MedExam Systems.</span>
-          <span className="flex items-center gap-1 text-slate-400">
-            <ShieldCheck className="h-3.5 w-3.5 text-teal-500" /> Secure Clinical Registry
-          </span>
-        </div>
+        </motion.div>
       </div>
 
-      {/* RIGHT COLUMN: LOGIN FORM PANEL */}
-      <div className="flex lg:col-span-7 min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-        <div className="w-full max-w-md space-y-8 relative">
+      {/* Right Panel: Authentication Form */}
+      <div className="flex w-full lg:w-1/2 flex-col items-center justify-center p-8 sm:p-12 lg:p-24 bg-[#FAFBFC] relative">
+        <motion.div 
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="w-full max-w-[420px]"
+        >
+          {showReset ? (
+            <>
+              <div className="mb-8">
+                <div className="h-12 w-12 bg-amber-100 rounded-2xl flex items-center justify-center mb-6 border border-amber-200/50 shadow-sm">
+                  <Lock className="h-6 w-6 text-amber-600" />
+                </div>
+                <h2 className="text-3xl font-bold tracking-tight text-slate-900 mb-2">Secure Your Account</h2>
+                <p className="text-[15px] text-slate-500 font-medium leading-relaxed">
+                  As part of our security protocol, please establish a new, strong password to finalize your profile.
+                </p>
+              </div>
+
+              <form className="space-y-5" onSubmit={handleResetSubmit}>
+                {error && (
+                  <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="rounded-xl bg-red-50 p-4 text-sm font-semibold text-red-700 border border-red-200 flex items-center gap-3 shadow-sm">
+                    <ShieldCheck className="h-5 w-5 text-red-500 shrink-0" />
+                    <span>{error}</span>
+                  </motion.div>
+                )}
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-[13px] font-bold text-slate-700 mb-2">NEW PASSWORD</label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                        <Lock className="h-4.5 w-4.5" />
+                      </div>
+                      <input
+                        type="password"
+                        required
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        className="block w-full rounded-xl border border-slate-200 py-3 pl-11 pr-4 text-[15px] placeholder-slate-400 outline-none transition-all focus:border-[#1157CF] focus:ring-4 focus:ring-[#1157CF]/10 bg-white shadow-xs"
+                        placeholder="••••••••"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[13px] font-bold text-slate-700 mb-2">CONFIRM PASSWORD</label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                        <Lock className="h-4.5 w-4.5" />
+                      </div>
+                      <input
+                        type="password"
+                        required
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className="block w-full rounded-xl border border-slate-200 py-3 pl-11 pr-4 text-[15px] placeholder-slate-400 outline-none transition-all focus:border-[#1157CF] focus:ring-4 focus:ring-[#1157CF]/10 bg-white shadow-xs"
+                        placeholder="••••••••"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-4 space-y-3">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="flex w-full items-center justify-center rounded-xl bg-[#1157CF] px-4 py-3 text-[15px] font-bold text-white shadow-md hover:bg-[#0D46A8] transition-all disabled:opacity-50"
+                  >
+                    {loading ? <RefreshCw className="h-5 w-5 animate-spin" /> : "Update Password & Sign In"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCancelReset}
+                    className="w-full text-center text-sm text-slate-500 hover:text-slate-800 font-semibold py-2 transition-colors"
+                  >
+                    Return to Sign In
+                  </button>
+                </div>
+              </form>
+            </>
+          ) : (
+            <>
+              {/* Mobile Logo Only */}
+              <div className="flex lg:hidden items-center gap-3 mb-10">
+                <div className="h-10 w-10 bg-[#1157CF] rounded-xl flex items-center justify-center shadow-md">
+                  <Activity className="h-6 w-6 text-white" />
+                </div>
+                <span className="text-2xl font-black tracking-tight text-slate-900">MedAssess</span>
+              </div>
+
+              <div className="mb-8">
+                <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 mb-2">Welcome Back</h2>
+                <p className="text-[15px] text-slate-500 font-medium">Sign in to your account to continue.</p>
+              </div>
+
+              <form className="space-y-5" onSubmit={handleSubmit}>
+                {error && (
+                  <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="rounded-xl bg-red-50 p-4 text-sm font-semibold text-red-700 border border-red-200 flex items-center gap-3 shadow-sm">
+                    <ShieldCheck className="h-5 w-5 text-red-500 shrink-0" />
+                    <span>{error}</span>
+                  </motion.div>
+                )}
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-[13px] font-bold text-slate-700 mb-2">EMAIL ADDRESS</label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                        <Mail className="h-4.5 w-4.5" />
+                      </div>
+                      <input
+                        type="email"
+                        required
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="block w-full rounded-xl border border-slate-200 py-3 pl-11 pr-4 text-[15px] placeholder-slate-400 outline-none transition-all focus:border-[#1157CF] focus:ring-4 focus:ring-[#1157CF]/10 bg-white shadow-xs"
+                        placeholder="name@institution.edu"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[13px] font-bold text-slate-700 mb-2">PASSWORD</label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
+                        <Lock className="h-4.5 w-4.5" />
+                      </div>
+                      <input
+                        type="password"
+                        required
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="block w-full rounded-xl border border-slate-200 py-3 pl-11 pr-4 text-[15px] placeholder-slate-400 outline-none transition-all focus:border-[#1157CF] focus:ring-4 focus:ring-[#1157CF]/10 bg-white shadow-xs"
+                        placeholder="••••••••"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between pt-1">
+                  <label className="flex items-center gap-2 cursor-pointer group">
+                    <input type="checkbox" className="w-4 h-4 rounded border-slate-300 text-[#1157CF] focus:ring-[#1157CF] transition-colors" />
+                    <span className="text-sm font-medium text-slate-600 group-hover:text-slate-900 transition-colors">Remember me</span>
+                  </label>
+                  <a href="#" className="text-sm font-bold text-[#1157CF] hover:text-[#0D46A8] transition-colors">Forgot password?</a>
+                </div>
+
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="group flex w-full items-center justify-center gap-2 rounded-xl bg-[#1157CF] px-4 py-3.5 text-[15px] font-bold text-white shadow-md shadow-[#1157CF]/20 hover:bg-[#0D46A8] transition-all disabled:opacity-50"
+                  >
+                    {loading ? (
+                      <RefreshCw className="h-5 w-5 animate-spin" />
+                    ) : (
+                      <>
+                        Sign In
+                        <ArrowRight className="h-4.5 w-4.5 group-hover:translate-x-1 transition-transform" />
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+            </>
+          )}
           
-          {/* Reset password card or traditional login form */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300">
-            {showReset ? (
-              <>
-                <div className="text-center">
-                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500 text-white shadow-lg shadow-amber-500/20">
-                    <Lock className="h-6 w-6 animate-pulse" />
-                  </div>
-                  <h2 className="mt-6 text-2xl font-extrabold tracking-tight text-slate-900">
-                    Reset Password Required
-                  </h2>
-                  <p className="mt-2 text-xs text-slate-550 leading-relaxed">
-                    Choose a secure new password to finalize your profile and log in.
-                  </p>
-                </div>
-
-                <form className="mt-8 space-y-5" onSubmit={handleResetSubmit}>
-                  {error && (
-                    <div className="rounded-xl bg-red-50 p-4 text-xs font-semibold text-red-700 border border-red-200 flex items-center gap-2">
-                      <ShieldCheck className="h-5 w-5 text-red-500 shrink-0" />
-                      <span>{error}</span>
-                    </div>
-                  )}
-
-                  <div className="space-y-4">
-                    {/* New Password */}
-                    <div>
-                      <label htmlFor="new-password" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                        New Password
-                      </label>
-                      <div className="relative">
-                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-450">
-                          <Lock className="h-4 w-4" />
-                        </div>
-                        <input
-                          id="new-password"
-                          name="new-password"
-                          type="password"
-                          required
-                          value={newPassword}
-                          onChange={(e) => setNewPassword(e.target.value)}
-                          className="block w-full rounded-lg border border-slate-200 py-2.5 pl-10 pr-3 text-sm placeholder-slate-400 outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10"
-                          placeholder="••••••••"
-                          suppressHydrationWarning
-                        />
-                      </div>
-                    </div>
-
-                    {/* Confirm New Password */}
-                    <div>
-                      <label htmlFor="confirm-password" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                        Confirm New Password
-                      </label>
-                      <div className="relative">
-                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-450">
-                          <Lock className="h-4 w-4" />
-                        </div>
-                        <input
-                          id="confirm-password"
-                          name="confirm-password"
-                          type="password"
-                          required
-                          value={confirmPassword}
-                          onChange={(e) => setConfirmPassword(e.target.value)}
-                          className="block w-full rounded-lg border border-slate-200 py-2.5 pl-10 pr-3 text-sm placeholder-slate-400 outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10"
-                          placeholder="••••••••"
-                          suppressHydrationWarning
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-2 pt-2">
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="group relative flex w-full justify-center items-center rounded-lg bg-teal-600 px-4 py-2.5 text-xs font-bold text-white shadow-md shadow-teal-600/10 hover:bg-teal-700 transition-colors focus:outline-none disabled:opacity-50"
-                      suppressHydrationWarning
-                    >
-                      {loading ? (
-                        <RefreshCw className="h-4 w-4 animate-spin mr-2" />
-                      ) : (
-                        "Update Password & Log In"
-                      )}
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={handleCancelReset}
-                      className="w-full text-center text-xs text-slate-500 hover:text-slate-800 transition-colors py-1.5 font-semibold"
-                    >
-                      Back to Sign In
-                    </button>
-                  </div>
-                </form>
-              </>
-            ) : (
-              <>
-                <div className="text-center">
-                  <div className="mx-auto flex lg:hidden h-12 w-12 items-center justify-center rounded-2xl bg-teal-600 text-white shadow-lg shadow-teal-500/20 mb-4">
-                    <Zap className="h-6 w-6" />
-                  </div>
-                  <h2 className="text-2xl font-black tracking-tight text-slate-900">
-                    Welcome Back
-                  </h2>
-                  <p className="mt-1.5 text-xs text-slate-500">
-                    Sign in to access your exam hall, reports, and leaderboards.
-                  </p>
-                </div>
-
-                <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
-                  {error && (
-                    <div className="rounded-xl bg-red-50 p-4 text-xs font-semibold text-red-700 border border-red-200 flex items-center gap-2">
-                      <ShieldCheck className="h-5 w-5 text-red-500 shrink-0" />
-                      <span>{error}</span>
-                    </div>
-                  )}
-
-                  <div className="space-y-4">
-                    {/* Email Field */}
-                    <div>
-                      <label htmlFor="email" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                        Email Address
-                      </label>
-                      <div className="relative">
-                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-450">
-                          <Mail className="h-4 w-4" />
-                        </div>
-                        <input
-                          id="email"
-                          name="email"
-                          type="email"
-                          autoComplete="email"
-                          required
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className="block w-full rounded-lg border border-slate-200 py-2.5 pl-10 pr-3 text-sm placeholder-slate-400 outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10"
-                          placeholder="name@university.edu"
-                          suppressHydrationWarning
-                        />
-                      </div>
-                    </div>
-
-                    {/* Password Field */}
-                    <div>
-                      <label htmlFor="password" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-                        Password
-                      </label>
-                      <div className="relative">
-                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-450">
-                          <Lock className="h-4 w-4" />
-                        </div>
-                        <input
-                          id="password"
-                          name="password"
-                          type="password"
-                          autoComplete="current-password"
-                          required
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          className="block w-full rounded-lg border border-slate-200 py-2.5 pl-10 pr-3 text-sm placeholder-slate-400 outline-none transition-all focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10"
-                          placeholder="••••••••"
-                          suppressHydrationWarning
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="pt-2">
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="group relative flex w-full justify-center items-center rounded-lg bg-teal-600 px-4 py-2.5 text-xs font-bold text-white shadow-md shadow-teal-500/15 hover:bg-teal-700 transition-all focus:outline-none disabled:opacity-50 cursor-pointer"
-                      suppressHydrationWarning
-                    >
-                      {loading ? (
-                        <RefreshCw className="h-4 w-4 animate-spin mr-2" />
-                      ) : (
-                        "Sign In"
-                      )}
-                    </button>
-                  </div>
-                </form>
-              </>
-            )}
+          <div className="mt-12 text-center">
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Powered by MedAssess Infrastructure</p>
           </div>
-          
-        </div>
+        </motion.div>
       </div>
     </div>
   );

@@ -18,13 +18,17 @@ import {
   X,
   ChevronRight,
   LogOut,
+  ChevronLeft,
+  Menu
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Sidebar() {
   const pathname = usePathname();
   const [currentUser, setCurrentUser] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const loadUser = () => {
@@ -39,10 +43,7 @@ export default function Sidebar() {
     };
     loadUser();
 
-    // Listen for mobile sidebar drawer toggle
-    const handleToggle = () => {
-      setIsOpen((prev) => !prev);
-    };
+    const handleToggle = () => setIsMobileOpen((prev) => !prev);
     window.addEventListener("toggle-sidebar", handleToggle);
     return () => window.removeEventListener("toggle-sidebar", handleToggle);
   }, []);
@@ -52,9 +53,7 @@ export default function Sidebar() {
   const role = currentUser.role;
   const permissions = currentUser.permissions || [];
 
-  // Generate links based on roles and permissions
   const links = [];
-
   if (role === "super_admin") {
     links.push(
       { name: "Dashboard", href: "/superadmin", icon: LayoutDashboard },
@@ -65,7 +64,6 @@ export default function Sidebar() {
     );
   } else if (role === "admin") {
     links.push({ name: "Dashboard", href: "/admin", icon: LayoutDashboard });
-
     if (permissions.includes("manage_users")) {
       links.push({ name: "Manage Students", href: "/admin/students", icon: Users });
     }
@@ -86,25 +84,54 @@ export default function Sidebar() {
     );
   }
 
-  const handleLinkClick = () => {
-    setIsOpen(false);
-  };
+  const handleLinkClick = () => setIsMobileOpen(false);
+
+  // Determine if sidebar is expanded based on collapse state and hover
+  const expanded = !isCollapsed || isHovered;
 
   return (
     <>
-      {/* Desktop Sidebar */}
-      <motion.aside 
+      {/* Desktop Sidebar - Enterprise Navy */}
+      <motion.aside
         initial={{ x: -20, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="w-[260px] border-r border-slate-200 bg-[#FAFAFB] p-6 hidden md:flex flex-col sticky top-16 h-[calc(100vh-4rem)] z-30"
+        animate={{ x: 0, opacity: 1, width: expanded ? 260 : 72 }}
+        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        onMouseEnter={() => isCollapsed && setIsHovered(true)}
+        onMouseLeave={() => isCollapsed && setIsHovered(false)}
+        className="bg-[#03122E] border-r border-[#1e293b]/50 hidden md:flex flex-col sticky top-0 h-screen z-50 text-slate-300"
       >
-        <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+        <div className="flex items-center h-16 px-4 justify-between border-b border-white/5">
+          <div className="flex items-center gap-3 overflow-hidden whitespace-nowrap">
+            <div className="h-8 w-8 min-w-[32px] bg-gradient-to-tr from-[#1157CF] to-[#5B93EE] rounded-lg flex items-center justify-center shadow-md">
+              <Activity className="h-4 w-4 text-white" />
+            </div>
+            <AnimatePresence>
+              {expanded && (
+                <motion.span
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  className="font-bold text-white tracking-tight"
+                >
+                  MedAssess Pro
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </div>
+          
+          <button 
+            onClick={() => {
+              setIsCollapsed(!isCollapsed);
+              setIsHovered(false);
+            }}
+            className="hidden md:flex text-slate-500 hover:text-white transition-colors"
+          >
+            {isCollapsed ? <Menu className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto py-6 hide-scrollbar px-3">
           <nav className="flex flex-col gap-1.5">
-            <p className="px-3 text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400 mb-4 mt-2">
-              Main Menu
-            </p>
-            
             {links.map((link) => {
               const Icon = link.icon;
               const isActive = pathname === link.href || (link.href !== "/admin" && link.href !== "/student" && link.href !== "/superadmin" && pathname.startsWith(link.href));
@@ -113,86 +140,99 @@ export default function Sidebar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="relative group"
+                  className="relative group block"
+                  title={!expanded ? link.name : ""}
                 >
-                  {isActive && (
-                    <motion.div
-                      layoutId="active-bg"
-                      className="absolute inset-0 bg-white border border-slate-200 rounded-xl shadow-sm"
-                      initial={false}
-                      transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                    />
-                  )}
-                  <div className={`relative flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[13px] font-semibold transition-colors duration-200 ${
+                  <div className={`relative flex items-center ${expanded ? 'px-3' : 'justify-center'} py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                     isActive
-                      ? "text-slate-900"
-                      : "text-slate-500 hover:text-slate-800 hover:bg-slate-100/50"
+                      ? "bg-[#1157CF] text-white shadow-sm"
+                      : "text-slate-400 hover:text-white hover:bg-white/10"
                   }`}>
-                    <div className="flex items-center gap-3">
-                      <Icon className={`h-[18px] w-[18px] shrink-0 transition-colors duration-200 ${isActive ? "text-[#2E76C0]" : "text-slate-400 group-hover:text-slate-600"}`} />
-                      <span>{link.name}</span>
-                    </div>
-                    {isActive && <ChevronRight className="h-4 w-4 text-slate-300" />}
+                    <Icon className={`h-[18px] w-[18px] shrink-0 transition-colors duration-200 ${isActive ? "text-white" : "text-slate-400 group-hover:text-white"}`} />
+                    
+                    <AnimatePresence>
+                      {expanded && (
+                        <motion.span 
+                          initial={{ opacity: 0, width: 0 }}
+                          animate={{ opacity: 1, width: "auto" }}
+                          exit={{ opacity: 0, width: 0 }}
+                          className="ml-3 truncate flex-1"
+                        >
+                          {link.name}
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </Link>
               );
             })}
           </nav>
         </div>
-        
-        {/* User Mini Profile at bottom */}
-        <div className="mt-auto pt-4 border-t border-slate-200">
-           <div className="flex items-center gap-3 px-3 py-2 rounded-xl bg-white border border-slate-200 shadow-sm">
-              <div className="h-8 w-8 rounded-full bg-gradient-to-tr from-[#2E76C0] to-[#00E5FF] flex items-center justify-center text-white font-bold text-xs shadow-inner">
-                {currentUser.name ? currentUser.name.charAt(0).toUpperCase() : "U"}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-bold text-slate-900 truncate">{currentUser.name}</p>
-                <p className="text-[10px] text-slate-500 capitalize">{role.replace('_', ' ')}</p>
-              </div>
-           </div>
+
+        {/* User Mini Profile */}
+        <div className="p-3 border-t border-white/5">
+          <div className={`flex items-center ${expanded ? 'gap-3 px-3 py-2' : 'justify-center p-2'} rounded-lg hover:bg-white/5 transition-colors cursor-pointer`}
+               onClick={() => {
+                 if (currentUser.role === "student") window.location.href = "/student/profile";
+                 else if (currentUser.role === "admin") window.location.href = "/admin/profile";
+                 else window.location.href = "/superadmin/profile";
+               }}>
+            <div className="h-8 w-8 min-w-[32px] rounded-full bg-slate-800 flex items-center justify-center text-white font-bold text-xs shadow-inner border border-white/10">
+              {currentUser.name ? currentUser.name.charAt(0).toUpperCase() : "U"}
+            </div>
+            
+            <AnimatePresence>
+              {expanded && (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex-1 min-w-0"
+                >
+                  <p className="text-xs font-bold text-white truncate">{currentUser.name}</p>
+                  <p className="text-[10px] text-slate-400 capitalize">{role.replace('_', ' ')}</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </motion.aside>
 
       {/* Mobile Drawer */}
       <AnimatePresence>
-        {isOpen && (
-          <div className="fixed inset-0 z-50 flex md:hidden">
-            {/* Backdrop */}
+        {isMobileOpen && (
+          <div className="fixed inset-0 z-[100] flex md:hidden">
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm"
-              onClick={() => setIsOpen(false)}
+              className="fixed inset-0 bg-[#03122E]/80 backdrop-blur-md"
+              onClick={() => setIsMobileOpen(false)}
             />
-            {/* Drawer Content */}
             <motion.aside 
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="relative flex w-[280px] max-w-[80vw] flex-col bg-white p-6 shadow-2xl h-full z-50"
+              className="relative flex w-[280px] max-w-[80vw] flex-col bg-[#03122E] p-4 shadow-2xl h-full z-[101] border-r border-white/10"
             >
-              <div className="flex items-center justify-between mb-8 border-b border-slate-100 pb-4">
-                <div className="flex items-center gap-2">
-                  <div className="h-8 w-8 bg-[#2E76C0] rounded-lg flex items-center justify-center">
+              <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/5">
+                <div className="flex items-center gap-3">
+                  <div className="h-8 w-8 bg-[#1157CF] rounded-lg flex items-center justify-center">
                     <Activity className="h-4 w-4 text-white" />
                   </div>
-                  <span className="font-bold text-slate-900 tracking-tight">MedExam</span>
+                  <span className="font-bold text-white tracking-tight">MedAssess</span>
                 </div>
                 <button 
-                  onClick={() => setIsOpen(false)}
-                  className="rounded-full p-2 hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors"
+                  onClick={() => setIsMobileOpen(false)}
+                  className="rounded-full p-2 hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
                 >
                   <X className="h-5 w-5" />
                 </button>
               </div>
-              <div className="flex-1 overflow-y-auto">
-                <nav className="flex flex-col gap-1.5">
-                  <p className="px-3 text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">
-                    Menu
-                  </p>
+              
+              <div className="flex-1 overflow-y-auto hide-scrollbar">
+                <nav className="flex flex-col gap-1">
                   {links.map((link) => {
                     const Icon = link.icon;
                     const isActive = pathname === link.href || (link.href !== "/admin" && link.href !== "/student" && link.href !== "/superadmin" && pathname.startsWith(link.href));
@@ -202,17 +242,14 @@ export default function Sidebar() {
                         key={link.href}
                         href={link.href}
                         onClick={handleLinkClick}
-                        className={`flex items-center justify-between rounded-xl px-3.5 py-3 text-[13px] font-bold transition-all duration-200 ${
+                        className={`flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium transition-all duration-200 ${
                           isActive
-                            ? "bg-[#F4F7FB] text-slate-900"
-                            : "bg-transparent text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                            ? "bg-[#1157CF] text-white"
+                            : "text-slate-400 hover:bg-white/10 hover:text-white"
                         }`}
                       >
-                        <div className="flex items-center gap-3">
-                          <Icon className={`h-[18px] w-[18px] shrink-0 ${isActive ? "text-[#2E76C0]" : "text-slate-400"}`} />
-                          <span>{link.name}</span>
-                        </div>
-                        {isActive && <ChevronRight className="h-4 w-4 text-slate-300" />}
+                        <Icon className={`h-5 w-5 shrink-0 ${isActive ? "text-white" : "text-slate-400"}`} />
+                        <span>{link.name}</span>
                       </Link>
                     );
                   })}

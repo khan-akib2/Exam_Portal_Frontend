@@ -2,28 +2,27 @@
 
 import { useEffect, useState } from "react";
 import { 
-  Users, UserPlus, FileDown, Upload, X, Check, Mail, 
+  Users, UserPlus, Upload, X, Check, Mail, 
   Phone, Calendar, Shield, Trash2, Key, RefreshCw,
-  Search, CheckSquare, Square, ChevronRight, ShieldAlert
+  Search, CheckSquare, Square, MoreHorizontal, Download, Filter
 } from "lucide-react";
 import { useDialog } from "@/components/DialogProvider";
+import { motion } from "framer-motion";
 
 export default function StudentsManager() {
   const { showAlert, showConfirm } = useDialog();
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   
-  // Single User Modal
+  // Modals
   const [modalOpen, setModalOpen] = useState(false);
   const [newStudent, setNewStudent] = useState({ name: "", email: "", phone: "", batch: "General" });
   
-  // Bulk CSV Modal
   const [bulkModalOpen, setBulkModalOpen] = useState(false);
   const [csvContent, setCsvContent] = useState("");
   const [bulkPreview, setBulkPreview] = useState([]);
   const [bulkResult, setBulkResult] = useState(null);
   
-  // Edit user state
   const [editingStudent, setEditingStudent] = useState(null);
 
   // Search & Filters State
@@ -51,17 +50,30 @@ export default function StudentsManager() {
     }
   };
 
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
   const handleStudentSelectToggle = (id) => {
     setSelectedStudentIds((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
-  const handleSelectAllFilteredStudents = (filteredIds) => {
-    if (selectedStudentIds.length === filteredIds.length) {
+  const filteredStudents = students.filter((student) => {
+    const matchesSearch = 
+      student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      student.email.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesBatch = batchFilter === "" || student.batch === batchFilter;
+    const matchesStatus = statusFilter === "" || student.status === statusFilter;
+    return matchesSearch && matchesBatch && matchesStatus;
+  });
+
+  const handleSelectAllFilteredStudents = () => {
+    if (selectedStudentIds.length === filteredStudents.length) {
       setSelectedStudentIds([]);
     } else {
-      setSelectedStudentIds(filteredIds);
+      setSelectedStudentIds(filteredStudents.map(s => s._id));
     }
   };
 
@@ -166,12 +178,6 @@ export default function StudentsManager() {
     }
   };
 
-  useEffect(() => {
-    setTimeout(() => {
-      fetchStudents();
-    }, 0);
-  }, []);
-
   const handleAddStudent = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -218,29 +224,8 @@ export default function StudentsManager() {
     }
   };
 
-  const handleResetPassword = async (id, name) => {
-    const confirmed = await showConfirm(`Are you sure you want to reset the password for student "${name}"? They will receive an email with their new password.`, "Reset Password?");
-    if (!confirmed) return;
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`/api/admin/users/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ resetPassword: true }),
-      });
-      if (res.ok) {
-        showAlert("Password reset successfully. Check student mailbox.", "Success");
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   const handleDeleteStudent = async (id, name) => {
-    const confirmed = await showConfirm(`Are you sure you want to permanently delete student "${name}"? This action cannot be undone.`, "Delete Student?");
+    const confirmed = await showConfirm(`Are you sure you want to permanently delete student "${name}"?`, "Delete Student?");
     if (!confirmed) return;
     try {
       const token = localStorage.getItem("token");
@@ -254,642 +239,316 @@ export default function StudentsManager() {
     }
   };
 
-  const handleEditStudentBatch = async (e) => {
-    e.preventDefault();
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`/api/admin/users/${editingStudent._id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ batch: editingStudent.batch }),
-      });
-      if (res.ok) {
-        setEditingStudent(null);
-        fetchStudents();
-      }
-    } catch (err) {
-      console.error(err);
-    }
+  const getInitials = (name) => {
+    return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
   };
 
-  // Parse CSV client-side for immediate preview
-  const handleParseCsv = (content) => {
-    setCsvContent(content);
-    const rows = content.split("\n").map(r => r.trim()).filter(r => r.length > 0);
-    
-    // Format should be: Name,Email,Phone,Batch
-    const parsed = [];
-    for (let i = 0; i < rows.length; i++) {
-      // Skip header row if it contains 'email'
-      if (i === 0 && rows[i].toLowerCase().includes("email")) continue;
-
-      const cols = rows[i].split(",").map(c => c.trim());
-      if (cols.length >= 2) {
-        parsed.push({
-          name: cols[0],
-          email: cols[1],
-          phone: cols[2] || "",
-          batch: cols[3] || "General",
-        });
-      }
-    }
-    setBulkPreview(parsed);
-  };
-
-  const handleBulkUpload = async () => {
-    if (bulkPreview.length === 0) return;
-    setLoading(true);
-    setBulkResult(null);
-
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("/api/admin/users/bulk", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ users: bulkPreview }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Bulk upload failed.");
-
-      setBulkResult(data.summary);
-      setBulkPreview([]);
-      setCsvContent("");
-      fetchStudents();
-    } catch (err) {
-      showAlert(err.message, "Import Error");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const uniqueBatches = Array.from(new Set(students.map(s => s.batch))).filter(Boolean);
+  const activeCount = students.filter(s => s.status === 'active').length;
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      className="space-y-6 w-full max-w-[1200px] mx-auto text-left"
+    >
       {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Manage Students</h1>
-          <p className="text-sm text-slate-500">Add individual student records or upload batches instantly via CSV.</p>
+          <h1 className="text-2xl font-black text-slate-900 tracking-tight">Student Management</h1>
+          <p className="text-sm text-slate-500 font-medium mt-1">Manage enrollments, statuses, and student credentials.</p>
         </div>
 
-        <div className="flex items-center gap-2">
-          {/* Bulk Button */}
+        <div className="flex items-center gap-3">
           <button
             onClick={() => {
               setBulkModalOpen(true);
               setBulkResult(null);
             }}
-            className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50 transition-colors"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-white border border-slate-200 text-slate-700 text-xs font-bold rounded-lg hover:bg-slate-50 transition-colors shadow-sm"
           >
-            <Upload className="h-4 w-4 text-slate-500" />
-            <span>Bulk CSV Upload</span>
+            <Upload className="h-4 w-4 text-slate-500" /> Bulk Import
           </button>
-
-          {/* Add Student Button */}
           <button
             onClick={() => setModalOpen(true)}
-            className="inline-flex items-center gap-2 rounded-lg bg-[#2E76C0] px-4 py-2 text-sm font-semibold text-white shadow-md shadow-[#2E76C0]/10 hover:bg-[#1F548C] transition-colors"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#1157CF] text-white text-xs font-bold rounded-lg hover:bg-[#0D46A8] transition-colors shadow-sm"
           >
-            <UserPlus className="h-4 w-4" />
-            <span>Add Student</span>
+            <UserPlus className="h-4 w-4" /> Add Student
           </button>
         </div>
       </div>
 
-      {/* Bulk Results Alert */}
-      {bulkResult && (
-        <div className="rounded-xl bg-teal-50 border border-teal-200 p-5 space-y-2">
-          <h3 className="font-bold text-teal-800 flex items-center gap-2">
-            <Check className="h-4 w-4 bg-[#2E76C0] text-white rounded-full p-0.5" />
-            Bulk Import Completed!
-          </h3>
-          <p className="text-sm text-[#1F548C] leading-relaxed">
-            CSV roster processed: <strong>{bulkResult.created}</strong> students enrolled. 
-            {bulkResult.duplicates > 0 && ` (${bulkResult.duplicates} duplicates skipped).`}
-            {bulkResult.errors > 0 && ` (${bulkResult.errors} formatting errors found).`}
-          </p>
+      {/* Top Statistics Row */}
+      <div className="grid grid-cols-3 gap-4">
+        <div className="premium-card p-4 flex items-center justify-between">
+          <div>
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Total Enrolled</p>
+            <p className="text-2xl font-black text-slate-900 tracking-tight">{students.length}</p>
+          </div>
+          <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center">
+            <Users className="h-5 w-5 text-slate-500" />
+          </div>
         </div>
-      )}
-
-      {/* Search & Filters Row */}
-      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200/60">
-        <div className="flex-1 relative">
-          <Search className="absolute left-3 top-2.5 h-4.5 w-4.5 text-slate-400" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search students by name or email..."
-            className="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-200 text-sm bg-white outline-none focus:border-[#00E5FF]"
-          />
+        <div className="premium-card p-4 flex items-center justify-between">
+          <div>
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Active Accounts</p>
+            <p className="text-2xl font-black text-slate-900 tracking-tight">{activeCount}</p>
+          </div>
+          <div className="h-10 w-10 rounded-full bg-[#DCFAED] flex items-center justify-center">
+            <Shield className="h-5 w-5 text-[#0F7B3E]" />
+          </div>
         </div>
-
-        <div className="flex flex-wrap items-center gap-3">
-          {/* Batch Filter */}
-          <select
-            value={batchFilter}
-            onChange={(e) => setBatchFilter(e.target.value)}
-            className="rounded-lg border border-slate-200 px-3 py-2 text-xs bg-white focus:border-[#00E5FF] outline-none"
-          >
-            <option value="">All Batches</option>
-            {Array.from(new Set(students.map(s => s.batch))).filter(Boolean).map(b => (
-              <option key={b} value={b}>{b}</option>
-            ))}
-          </select>
-
-          {/* Status Filter */}
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="rounded-lg border border-slate-200 px-3 py-2 text-xs bg-white focus:border-[#00E5FF] outline-none"
-          >
-            <option value="">All Statuses</option>
-            <option value="active">Active</option>
-            <option value="suspended">Suspended</option>
-          </select>
-
-          {(searchQuery || batchFilter || statusFilter) && (
-            <button
-              onClick={() => {
-                setSearchQuery("");
-                setBatchFilter("");
-                setStatusFilter("");
-              }}
-              className="text-xs font-semibold text-red-650 hover:underline"
-            >
-              Clear Filters
-            </button>
-          )}
+        <div className="premium-card p-4 flex items-center justify-between">
+          <div>
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Active Batches</p>
+            <p className="text-2xl font-black text-slate-900 tracking-tight">{uniqueBatches.length}</p>
+          </div>
+          <div className="h-10 w-10 rounded-full bg-[#EEF4FF] flex items-center justify-center">
+            <Calendar className="h-5 w-5 text-[#1157CF]" />
+          </div>
         </div>
       </div>
 
-      {/* Bulk Actions Drawer */}
-      {selectedStudentIds.length > 0 && (
-        <div className="premium-card p-4 border-l-4 border-[#2765A4] bg-teal-50/10 space-y-3 animate-slide-down">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
-            <div>
-              <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Bulk Cohort Management</h4>
-              <span className="text-3xs text-slate-500">Perform changes on {selectedStudentIds.length} selected student accounts.</span>
+      {/* Main Data Grid */}
+      <div className="premium-card bg-white flex flex-col overflow-hidden shadow-sm">
+        
+        {/* Toolbar */}
+        <div className="p-4 border-b border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4 bg-slate-50/50">
+          <div className="relative w-full md:w-80">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search name or email..."
+              className="w-full pl-9 pr-4 py-2 rounded-lg border border-slate-200 text-xs font-medium bg-white focus:outline-none focus:border-[#1157CF] focus:ring-1 focus:ring-[#1157CF] transition-shadow"
+            />
+          </div>
+
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            <div className="relative flex-1 md:w-40">
+              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+              <select
+                value={batchFilter}
+                onChange={(e) => setBatchFilter(e.target.value)}
+                className="w-full pl-8 pr-4 py-2 rounded-lg border border-slate-200 text-xs font-bold bg-white focus:outline-none focus:border-[#1157CF] appearance-none"
+              >
+                <option value="">All Batches</option>
+                {uniqueBatches.map(b => (
+                  <option key={b} value={b}>{b}</option>
+                ))}
+              </select>
+            </div>
+            <div className="relative flex-1 md:w-40">
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="w-full px-4 py-2 rounded-lg border border-slate-200 text-xs font-bold bg-white focus:outline-none focus:border-[#1157CF] appearance-none"
+              >
+                <option value="">All Statuses</option>
+                <option value="active">Active</option>
+                <option value="suspended">Suspended</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        {/* Bulk Action Toolbar */}
+        {selectedStudentIds.length > 0 && (
+          <div className="bg-[#1157CF]/5 border-b border-[#1157CF]/10 px-4 py-3 flex items-center justify-between animate-fade-in">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-[#1157CF] bg-[#1157CF]/10 px-2 py-0.5 rounded">
+                {selectedStudentIds.length} Selected
+              </span>
             </div>
             <div className="flex items-center gap-2">
-              <button
-                onClick={() => handleBulkStatusChange("active")}
-                className="bg-[#10B981] text-white font-bold text-2xs px-3 py-1.5 rounded-lg hover:bg-[#059669] transition-colors"
-              >
-                Activate Accounts
+              <button onClick={() => handleBulkStatusChange("active")} className="text-[10px] font-bold text-[#0F7B3E] bg-white border border-[#0F7B3E]/20 hover:bg-[#DCFAED] px-3 py-1.5 rounded transition-colors shadow-sm">
+                Activate
               </button>
-              <button
-                onClick={() => handleBulkStatusChange("suspended")}
-                className="bg-[#F59E0B] text-white font-bold text-2xs px-3 py-1.5 rounded-lg hover:bg-amber-600 transition-colors"
-              >
-                Suspend Accounts
+              <button onClick={() => handleBulkStatusChange("suspended")} className="text-[10px] font-bold text-[#B45309] bg-white border border-[#B45309]/20 hover:bg-[#FEF3CD] px-3 py-1.5 rounded transition-colors shadow-sm">
+                Suspend
               </button>
-              <button
-                onClick={handleBulkDeleteStudents}
-                className="bg-red-650 text-white font-bold text-2xs px-3 py-1.5 rounded-lg hover:bg-red-700 transition-colors"
-              >
-                Delete Accounts
-              </button>
-              <button
-                onClick={() => setShowBulkPanel(!showBulkPanel)}
-                className="border border-slate-200 bg-white text-slate-700 font-bold text-2xs px-3 py-1.5 rounded-lg hover:bg-slate-50"
-              >
-                {showBulkPanel ? "Hide Batch Move" : "Move to Batch"}
+              <button onClick={handleBulkDeleteStudents} className="text-[10px] font-bold text-[#C0152A] bg-white border border-[#C0152A]/20 hover:bg-[#FDEAEC] px-3 py-1.5 rounded transition-colors shadow-sm">
+                Delete
               </button>
             </div>
           </div>
+        )}
 
-          {showBulkPanel && (
-            <form onSubmit={handleBulkChangeBatch} className="flex items-end gap-3 max-w-sm animate-slide-down">
-              <div className="flex-1">
-                <label className="block text-4xs font-bold text-slate-500 uppercase mb-1">Target Batch Name</label>
-                <input
-                  type="text"
-                  required
-                  value={bulkBatch}
-                  onChange={(e) => setBulkBatch(e.target.value)}
-                  placeholder="e.g. NEET-2026-B"
-                  className="w-full rounded border border-slate-200 px-3 py-1.5 text-xs bg-white"
-                />
-              </div>
-              <button
-                type="submit"
-                className="bg-[#2765A4] text-white text-xs font-bold px-4 py-1.5 rounded-lg hover:bg-teal-750"
-              >
-                Change Batch
-              </button>
-            </form>
-          )}
-        </div>
-      )}
-
-      {/* Table Section */}
-      {loading ? (
-        <div className="flex h-48 items-center justify-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-[#2E76C0]" />
-        </div>
-      ) : students.length === 0 ? (
-        <div className="premium-card p-12 text-center text-slate-500">
-          <Users className="h-12 w-12 text-slate-300 mx-auto mb-3" />
-          <p className="font-semibold text-lg">No students registered yet.</p>
-          <p className="text-sm mt-1">Enroll your class roster using manual creation or import a CSV file.</p>
-        </div>
-      ) : (
-        <div className="premium-card overflow-hidden">
-          <div className="overflow-x-auto w-full pb-2">
-            <table className="w-full text-left border-collapse min-w-[800px]">
-              <thead>
-                <tr className="bg-slate-50 border-b border-slate-200 text-xs font-semibold uppercase tracking-wider text-slate-500">
-                  <th className="px-6 py-4 w-12">
-                    <button
-                      type="button"
-                      onClick={() => handleSelectAllFilteredStudents(
-                        students.filter((student) => {
-                          const matchesSearch = 
-                            student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            student.email.toLowerCase().includes(searchQuery.toLowerCase());
-                          const matchesBatch = batchFilter === "" || student.batch === batchFilter;
-                          const matchesStatus = statusFilter === "" || student.status === statusFilter;
-                          return matchesSearch && matchesBatch && matchesStatus;
-                        }).map(s => s._id)
-                      )}
-                      className="text-slate-450 hover:text-teal-655"
-                    >
-                      {selectedStudentIds.length === students.filter((student) => {
-                        const matchesSearch = 
-                          student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          student.email.toLowerCase().includes(searchQuery.toLowerCase());
-                        const matchesBatch = batchFilter === "" || student.batch === batchFilter;
-                        const matchesStatus = statusFilter === "" || student.status === statusFilter;
-                        return matchesSearch && matchesBatch && matchesStatus;
-                      }).length && students.length > 0 ? (
-                        <CheckSquare className="h-4.5 w-4.5 text-[#2E76C0]" />
-                      ) : (
-                        <Square className="h-4.5 w-4.5" />
-                      )}
-                    </button>
-                  </th>
-                  <th className="px-6 py-4">Student</th>
-                  <th className="px-6 py-4">Contact</th>
-                  <th className="px-6 py-4">Batch</th>
-                  <th className="px-6 py-4">XP Status</th>
-                  <th className="px-6 py-4">Status</th>
-                  <th className="px-6 py-4 text-right">Actions</th>
+        {/* Data Grid */}
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-slate-50 border-b border-slate-200">
+                <th className="px-4 py-3 w-12 text-center">
+                  <button onClick={handleSelectAllFilteredStudents} className="text-slate-400 hover:text-[#1157CF] flex items-center justify-center w-full">
+                    {selectedStudentIds.length === filteredStudents.length && filteredStudents.length > 0 ? (
+                      <CheckSquare className="h-4.5 w-4.5 text-[#1157CF]" />
+                    ) : (
+                      <Square className="h-4.5 w-4.5" />
+                    )}
+                  </button>
+                </th>
+                <th className="px-4 py-3 text-[10px] uppercase tracking-widest font-bold text-slate-500">Student Profile</th>
+                <th className="px-4 py-3 text-[10px] uppercase tracking-widest font-bold text-slate-500">Batch</th>
+                <th className="px-4 py-3 text-[10px] uppercase tracking-widest font-bold text-slate-500">Status</th>
+                <th className="px-4 py-3 text-[10px] uppercase tracking-widest font-bold text-slate-500 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {loading ? (
+                <tr>
+                  <td colSpan={5} className="px-4 py-12 text-center text-sm font-medium text-slate-500">
+                    <RefreshCw className="h-5 w-5 animate-spin mx-auto mb-2 text-[#1157CF]" />
+                    Loading grid...
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-200 text-sm text-slate-700 font-medium">
-                {students.filter((student) => {
-                  const matchesSearch = 
-                    student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    student.email.toLowerCase().includes(searchQuery.toLowerCase());
-                  const matchesBatch = batchFilter === "" || student.batch === batchFilter;
-                  const matchesStatus = statusFilter === "" || student.status === statusFilter;
-                  return matchesSearch && matchesBatch && matchesStatus;
-                }).map((student) => {
-                  const isRowSelected = selectedStudentIds.includes(student._id);
+              ) : filteredStudents.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-4 py-12 text-center text-sm font-medium text-slate-500">
+                    No students found matching filters.
+                  </td>
+                </tr>
+              ) : (
+                filteredStudents.map((student) => {
+                  const isSelected = selectedStudentIds.includes(student._id);
                   return (
-                    <tr key={student._id} className={`hover:bg-slate-50/50 transition-colors ${isRowSelected ? "bg-teal-50/10" : ""}`}>
-                      <td className="px-6 py-4">
-                        <button
-                          type="button"
-                          onClick={() => handleStudentSelectToggle(student._id)}
-                          className="text-slate-400 hover:text-[#2E76C0]"
-                        >
-                          {isRowSelected ? (
-                            <CheckSquare className="h-4.5 w-4.5 text-[#2E76C0]" />
+                    <tr key={student._id} className={`hover:bg-slate-50 transition-colors ${isSelected ? "bg-[#1157CF]/5" : ""}`}>
+                      <td className="px-4 py-4 text-center">
+                        <button onClick={() => handleStudentSelectToggle(student._id)} className="text-slate-400 hover:text-[#1157CF] flex items-center justify-center w-full">
+                          {isSelected ? (
+                            <CheckSquare className="h-4.5 w-4.5 text-[#1157CF]" />
                           ) : (
                             <Square className="h-4.5 w-4.5" />
                           )}
                         </button>
                       </td>
-                      <td className="px-6 py-4 font-bold text-slate-900">{student.name}</td>
-                      <td className="px-6 py-4">
-                        <div className="flex flex-col font-normal text-slate-600">
-                          <span className="flex items-center gap-1 text-xs"><Mail className="h-3 w-3" /> {student.email}</span>
-                          {student.phone && <span className="flex items-center gap-1 text-2xs text-slate-400 mt-0.5"><Phone className="h-2.5 w-2.5" /> {student.phone}</span>}
+                      <td className="px-4 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="h-9 w-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-xs font-black text-slate-600 shrink-0">
+                            {getInitials(student.name)}
+                          </div>
+                          <div>
+                            <div className="text-sm font-bold text-slate-900">{student.name}</div>
+                            <div className="text-xs text-slate-500 font-medium mt-0.5">{student.email}</div>
+                          </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
-                        <span className="inline-flex items-center gap-1 text-xs bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded-full font-medium">
-                          <Calendar className="h-3 w-3 text-slate-400" />
+                      <td className="px-4 py-4">
+                        <span className="inline-flex items-center px-2 py-1 rounded bg-slate-100 border border-slate-200 text-[10px] font-bold text-slate-700 uppercase tracking-wider">
                           {student.batch}
                         </span>
-                        <button
-                          onClick={() => setEditingStudent(student)}
-                          className="text-xs text-[#2765A4] hover:text-teal-800 font-bold ml-2.5"
-                        >
-                          Edit
-                        </button>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="flex flex-col">
-                          <span className="font-bold text-slate-800">{student.xp} XP</span>
-                          <span className="text-2xs text-slate-400 font-normal">Level: {student.level} | Streak: {student.streak} days</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-4">
                         {student.status === "active" ? (
-                          <span className="inline-flex items-center text-xs font-semibold bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full">
-                            Active
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold text-[#0F7B3E] bg-[#DCFAED] uppercase tracking-wider border border-[#0F7B3E]/20">
+                            <div className="w-1.5 h-1.5 rounded-full bg-[#0F7B3E]" /> Active
                           </span>
                         ) : (
-                          <span className="inline-flex items-center text-xs font-semibold bg-red-50 text-red-700 px-2.5 py-0.5 rounded-full">
-                            Suspended
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold text-slate-600 bg-slate-100 uppercase tracking-wider border border-slate-200">
+                            <div className="w-1.5 h-1.5 rounded-full bg-slate-400" /> Suspended
                           </span>
                         )}
                       </td>
-                      <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          {/* Toggle Status Suspension */}
-                          <button
-                            onClick={() => handleToggleStatus(student._id, student.status)}
-                            className={`p-1.5 rounded-lg border transition-colors ${
-                              student.status === "active"
-                                ? "border-amber-100 text-amber-600 hover:bg-amber-50"
-                                : "border-green-100 text-green-600 hover:bg-green-50"
-                            }`}
-                            title={student.status === "active" ? "Suspend Account" : "Activate Account"}
-                          >
+                      <td className="px-4 py-4 text-right">
+                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity" style={{ opacity: 1 }}>
+                          <button onClick={() => handleToggleStatus(student._id, student.status)} className="p-1.5 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded transition-colors" title="Toggle Status">
                             <Shield className="h-4 w-4" />
                           </button>
-
-                          {/* Reset Password */}
-                          <button
-                            onClick={() => handleResetPassword(student._id, student.name)}
-                            className="p-1.5 rounded-lg border border-teal-100 text-[#2E76C0] hover:bg-teal-50 transition-colors"
-                            title="Reset Password & Email student"
-                          >
-                            <Key className="h-4 w-4" />
-                          </button>
-
-                          {/* Delete Student */}
-                          <button
-                            onClick={() => handleDeleteStudent(student._id, student.name)}
-                            className="p-1.5 rounded-lg border border-red-100 text-red-600 hover:bg-red-50 transition-colors"
-                            title="Delete Student"
-                          >
+                          <button onClick={() => handleDeleteStudent(student._id, student.name)} className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors" title="Delete">
                             <Trash2 className="h-4 w-4" />
+                          </button>
+                          <button className="p-1.5 text-slate-400 hover:text-[#1157CF] hover:bg-[#EEF4FF] rounded transition-colors" title="More Options">
+                            <MoreHorizontal className="h-4 w-4" />
                           </button>
                         </div>
                       </td>
                     </tr>
                   );
-                })}
-              </tbody>
-            </table>
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+        
+        {/* Pagination placeholder */}
+        <div className="p-4 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-slate-500 bg-slate-50/50">
+          <div>Showing {filteredStudents.length} results</div>
+          <div className="flex gap-1">
+            <button className="px-2.5 py-1 rounded border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-50" disabled>Prev</button>
+            <button className="px-2.5 py-1 rounded border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-50" disabled>Next</button>
           </div>
         </div>
-      )}
+      </div>
 
-      {/* CREATE STUDENT MODAL */}
+      {/* Add Student Modal */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md bg-white rounded-2xl border border-slate-200 shadow-2xl overflow-hidden animate-slide-up">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
-              <h2 className="text-md font-bold text-slate-900 flex items-center gap-2">
-                <UserPlus className="h-5 w-5 text-[#2E76C0]" />
-                Enroll New Student
-              </h2>
-              <button onClick={() => setModalOpen(false)} className="text-slate-400 hover:text-slate-600">
-                <X className="h-5 w-5" />
+          <div className="w-full max-w-md bg-white rounded-xl border border-slate-200 shadow-2xl overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-slate-50">
+              <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Enroll Student</h2>
+              <button onClick={() => setModalOpen(false)} className="text-slate-400 hover:text-slate-600 p-1 hover:bg-slate-200 rounded">
+                <X className="h-4 w-4" />
               </button>
             </div>
-
             <form onSubmit={handleAddStudent}>
-              <div className="p-6 space-y-4">
+              <div className="p-5 space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1">Full Name</label>
-                  <input
-                    type="text"
-                    required
-                    value={newStudent.name}
-                    onChange={(e) => setNewStudent({ ...newStudent, name: e.target.value })}
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none transition-all focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/20"
-                    placeholder="Siddharth Roy"
-                  />
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Full Name</label>
+                  <input type="text" required value={newStudent.name} onChange={(e) => setNewStudent({...newStudent, name: e.target.value})} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-[#1157CF] focus:ring-1 focus:ring-[#1157CF]" placeholder="John Doe" />
                 </div>
-
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1">Email Address</label>
-                  <input
-                    type="email"
-                    required
-                    value={newStudent.email}
-                    onChange={(e) => setNewStudent({ ...newStudent, email: e.target.value })}
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none transition-all focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/20"
-                    placeholder="siddharth@medcollege.edu"
-                  />
+                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Email Address</label>
+                  <input type="email" required value={newStudent.email} onChange={(e) => setNewStudent({...newStudent, email: e.target.value})} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-[#1157CF] focus:ring-1 focus:ring-[#1157CF]" placeholder="john@example.com" />
                 </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1">Phone Number (Optional)</label>
-                  <input
-                    type="text"
-                    value={newStudent.phone}
-                    onChange={(e) => setNewStudent({ ...newStudent, phone: e.target.value })}
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none transition-all focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/20"
-                    placeholder="+91 9998887770"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1">Batch / Class</label>
-                  <input
-                    type="text"
-                    value={newStudent.batch}
-                    onChange={(e) => setNewStudent({ ...newStudent, batch: e.target.value })}
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none transition-all focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/20"
-                    placeholder="NEET-2026-A"
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-end gap-2 px-6 py-4 bg-slate-50 border-t border-slate-200">
-                <button
-                  type="button"
-                  disabled={loading}
-                  onClick={() => setModalOpen(false)}
-                  className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors disabled:opacity-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#2E76C0] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1F548C] shadow-md shadow-[#2E76C0]/10 transition-colors disabled:opacity-50 cursor-pointer"
-                >
-                  {loading ? (
-                    <>
-                      <RefreshCw className="h-4 w-4 animate-spin" />
-                      <span>Creating...</span>
-                    </>
-                  ) : (
-                    <span>Create & Email Credentials</span>
-                  )}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* EDIT BATCH MODAL */}
-      {editingStudent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md bg-white rounded-2xl border border-slate-200 shadow-2xl overflow-hidden animate-slide-up">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
-              <h2 className="text-md font-bold text-slate-900">Edit Student Batch</h2>
-              <button onClick={() => setEditingStudent(null)} className="text-slate-400 hover:text-slate-600">
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleEditStudentBatch}>
-              <div className="p-6">
-                <p className="text-sm text-slate-600 mb-4">
-                  Update batch assignment for <strong>{editingStudent.name}</strong> ({editingStudent.email}).
-                </p>
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1">Batch / Class</label>
-                  <input
-                    type="text"
-                    required
-                    value={editingStudent.batch}
-                    onChange={(e) => setEditingStudent({ ...editingStudent, batch: e.target.value })}
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none transition-all focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/20"
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-end gap-2 px-6 py-4 bg-slate-50 border-t border-slate-200">
-                <button
-                  type="button"
-                  disabled={loading}
-                  onClick={() => setEditingStudent(null)}
-                  className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors disabled:opacity-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#2E76C0] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1F548C] shadow-md shadow-[#2E76C0]/10 transition-colors disabled:opacity-50 cursor-pointer"
-                >
-                  {loading ? (
-                    <>
-                      <RefreshCw className="h-4 w-4 animate-spin" />
-                      <span>Saving...</span>
-                    </>
-                  ) : (
-                    <span>Save Batch</span>
-                  )}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* BULK CSV IMPORT MODAL */}
-      {bulkModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
-          <div className="w-full max-w-2xl bg-white rounded-2xl border border-slate-200 shadow-2xl overflow-hidden animate-slide-up">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
-              <h2 className="text-md font-bold text-slate-900 flex items-center gap-2">
-                <Upload className="h-5 w-5 text-[#2E76C0]" />
-                Bulk CSV Roster Enrollment
-              </h2>
-              <button onClick={() => setBulkModalOpen(false)} className="text-slate-400 hover:text-slate-600">
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <div className="p-6 space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1 uppercase tracking-wider">CSV Data Format (No Headers required)</label>
-                <p className="text-2xs text-slate-500 mb-2">Input format: <code>Name, Email, Phone, Batch</code> (one record per line). Phone/Batch are optional.</p>
-                <textarea
-                  value={csvContent}
-                  onChange={(e) => handleParseCsv(e.target.value)}
-                  rows="6"
-                  className="w-full rounded-lg border border-slate-200 p-3 font-mono text-xs outline-none transition-all focus:border-[#00E5FF] focus:ring-2 focus:ring-[#00E5FF]/20"
-                  placeholder="Aman Sharma, aman@university.com, 9876543210, Batch-A&#10;Priya Patel, priya@university.com,, Batch-B"
-                />
-              </div>
-
-              {/* Parsed Preview Table */}
-              {bulkPreview.length > 0 && (
-                <div className="space-y-2">
-                  <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider">Preview Parsed Roster ({bulkPreview.length} students)</h3>
-                  <div className="border border-slate-200 rounded-lg overflow-hidden max-h-40 overflow-y-auto">
-                    <table className="w-full text-left border-collapse text-xs">
-                      <thead>
-                        <tr className="bg-slate-50 border-b border-slate-200 font-semibold text-slate-500">
-                          <th className="p-2">Name</th>
-                          <th className="p-2">Email</th>
-                          <th className="p-2">Phone</th>
-                          <th className="p-2">Batch</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-100 text-slate-600">
-                        {bulkPreview.slice(0, 10).map((p, index) => (
-                          <tr key={index}>
-                            <td className="p-2 font-medium text-slate-800">{p.name}</td>
-                            <td className="p-2">{p.email}</td>
-                            <td className="p-2">{p.phone || "-"}</td>
-                            <td className="p-2">{p.batch}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                    {bulkPreview.length > 10 && (
-                      <p className="p-2 bg-slate-50 text-2xs text-slate-400 text-center font-medium border-t border-slate-100">
-                        Showing top 10 rows. +{bulkPreview.length - 10} more rows parsed.
-                      </p>
-                    )}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Phone (Optional)</label>
+                    <input type="text" value={newStudent.phone} onChange={(e) => setNewStudent({...newStudent, phone: e.target.value})} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-[#1157CF] focus:ring-1 focus:ring-[#1157CF]" placeholder="+1 555 1234" />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Batch</label>
+                    <input type="text" value={newStudent.batch} onChange={(e) => setNewStudent({...newStudent, batch: e.target.value})} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-[#1157CF] focus:ring-1 focus:ring-[#1157CF]" placeholder="Fall 2026" />
                   </div>
                 </div>
-              )}
-            </div>
-
-            <div className="flex items-center justify-between px-6 py-4 bg-slate-50 border-t border-slate-200">
-              <span className="text-xs font-semibold text-slate-500">
-                {bulkPreview.length} valid rows parsed.
-              </span>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  disabled={loading}
-                  onClick={() => setBulkModalOpen(false)}
-                  className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 transition-colors disabled:opacity-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleBulkUpload}
-                  disabled={bulkPreview.length === 0 || loading}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#2E76C0] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1F548C] shadow-md shadow-[#2E76C0]/10 transition-colors disabled:opacity-50 cursor-pointer"
-                >
-                  {loading ? (
-                    <>
-                      <RefreshCw className="h-4 w-4 animate-spin" />
-                      <span>Importing...</span>
-                    </>
-                  ) : (
-                    <span>Import & Trigger Welcome Mails</span>
-                  )}
+              </div>
+              <div className="p-5 border-t border-slate-100 flex items-center justify-end gap-2 bg-slate-50">
+                <button type="button" onClick={() => setModalOpen(false)} className="px-4 py-2 text-xs font-bold text-slate-600 hover:text-slate-900 transition-colors">Cancel</button>
+                <button type="submit" disabled={loading} className="px-4 py-2 bg-[#1157CF] text-white text-xs font-bold rounded hover:bg-[#0D46A8] transition-colors shadow-sm disabled:opacity-50">
+                  {loading ? "Creating..." : "Create & Send Invite"}
                 </button>
               </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Bulk Import Modal */}
+      {bulkModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
+          <div className="w-full max-w-lg bg-white rounded-xl border border-slate-200 shadow-2xl overflow-hidden">
+             <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-slate-50">
+              <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Bulk Import CSV</h2>
+              <button onClick={() => setBulkModalOpen(false)} className="text-slate-400 hover:text-slate-600 p-1 hover:bg-slate-200 rounded">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <div className="p-5 text-center">
+               <div className="w-16 h-16 rounded-full bg-[#1157CF]/10 text-[#1157CF] mx-auto flex items-center justify-center mb-4">
+                 <Download className="h-6 w-6" />
+               </div>
+               <h3 className="text-sm font-bold text-slate-900 mb-1">Upload CSV Document</h3>
+               <p className="text-xs text-slate-500 mb-4">Format: Name, Email, Phone, Batch</p>
+               
+               <button className="px-4 py-2 border border-slate-200 bg-slate-50 text-slate-700 font-bold text-xs rounded hover:bg-slate-100 transition-colors">
+                 Select File from Computer
+               </button>
             </div>
           </div>
         </div>
       )}
-    </div>
+
+    </motion.div>
   );
 }

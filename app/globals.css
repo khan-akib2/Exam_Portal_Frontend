@@ -1,41 +1,82 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-sans: "Inter Variable", "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-display: "Geist", "Cal Sans", system-ui, sans-serif;
   
-  /* Stripe/Linear inspired Professional Medical SaaS colors */
-  --color-medical-50: #F4F7FB;
-  --color-medical-100: #E6EEF7;
-  --color-medical-200: #C7DBEE;
-  --color-medical-300: #A8C8E5;
-  --color-medical-400: #6B9FD2;
-  --color-medical-500: #2E76C0; /* Primary Medical Blue */
-  --color-medical-600: #2765A4;
-  --color-medical-700: #1D4C7A;
-  --color-medical-800: #15385A;
-  --color-medical-900: #0E253C;
-  
-  --color-cyan-brand: #00E5FF; /* Clinical Cyan Accent */
-  --color-green-brand: #10B981; /* Healthcare Green */
-  --color-slate-brand: #0F172A; /* Deep Professional Slate */
-  
-  /* Extra custom colors used across pages */
-  --color-slate-150: #EEF2F6;
-  --color-slate-205: #E2E8F0;
-  --color-slate-350: #94A3B8;
-  --color-slate-450: #64748B;
-  --color-teal-355: #2DD4BF;
-  --color-teal-650: #0D9488;
-  --color-teal-655: #0F766E;
-  --color-teal-750: #115E59;
-  --color-red-505: #DC2626;
+  /* MedAssess Pro Background Architecture */
+  --color-bg-primary: #FAFBFC;
+  --color-bg-surface: #FFFFFF;
+  --color-bg-elevated: #F4F6F9;
+  --color-bg-sunken: #EEF1F5;
 
+  /* Clinical Precision: Primary Medical Blue Palette */
+  --color-blue-50: #EEF4FF;
+  --color-blue-100: #DCE9FD;
+  --color-blue-200: #B8D0FA;
+  --color-blue-400: #5B93EE;
+  --color-blue-500: #2E6FE0;
+  --color-blue-600: #1157CF;
+  --color-blue-700: #0D46A8;
+  --color-blue-800: #0A3580;
+  --color-blue-900: #062459;
+  --color-blue-950: #03122E;
+
+  /* Semantic Palette */
+  --color-success: #0F7B3E;
+  --color-success-light: #DCFAED;
+  --color-warning: #B45309;
+  --color-warning-light: #FEF3CD;
+  --color-danger: #C0152A;
+  --color-danger-light: #FDEAEC;
+  
+  /* Neutral Grays - Clean & Professional */
+  --color-neutral-100: #F3F4F6;
+  --color-neutral-200: #E5E7EB;
+  --color-neutral-300: #D1D5DB;
+  --color-neutral-400: #9CA3AF;
+  --color-neutral-500: #6B7280;
+  --color-neutral-700: #374151;
+  --color-neutral-800: #1F2937;
+  --color-neutral-900: #111827;
+
+  /* Typography Scale */
+  --text-xs: 11px;
+  --text-xs--line-height: 16px;
+  --text-sm: 13px;
+  --text-sm--line-height: 20px;
+  --text-base: 14px;
+  --text-base--line-height: 22px;
+  --text-lg: 16px;
+  --text-lg--line-height: 24px;
+  --text-xl: 18px;
+  --text-xl--line-height: 28px;
+  --text-2xl: 22px;
+  --text-2xl--line-height: 30px;
+  --text-3xl: 28px;
+  --text-3xl--line-height: 36px;
+  --text-4xl: 36px;
+  --text-4xl--line-height: 44px;
+
+  /* Premium Shadows System (Linear/Stripe inspired) */
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 8px 24px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.06);
+  --shadow-focus: 0 0 0 3px rgba(17,87,207,0.18);
+
+  /* Precise Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* Motion Utilities */
   --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  --animate-fade-in: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  --animate-slide-up: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  --animate-slide-down: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  --animate-float: float 3s ease-in-out infinite;
+  --animate-fade-up: fadeUp 240ms cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-shimmer: shimmer 1.8s linear infinite;
+  --animate-slide-in: slideIn 300ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes fadeIn {
@@ -43,27 +84,27 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes slideDown {
-  from { transform: translateY(-16px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
+@keyframes slideIn {
+  from { transform: translateX(-16px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
 }
 
 :root {
-  --background: #FAFAFB; /* Very light cool gray for minimal look */
+  --background: #FAFBFC; 
   --foreground: #111827;
   --card: #FFFFFF;
   --card-foreground: #111827;
-  --primary: #2E76C0;
+  --primary: #1157CF;
   --primary-foreground: #FFFFFF;
   --border: #E5E7EB;
   --radius-premium: 12px;
@@ -74,6 +115,27 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Premium Card System */
+.premium-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-premium);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.premium-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: #D1D5DB;
+}
+
+.premium-card-active {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary), 0 8px 16px -4px rgba(17, 87, 207, 0.12);
 }
 
 /* Glassmorphism custom layouts */
@@ -81,28 +143,8 @@ body {
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(24px) saturate(160%);
   -webkit-backdrop-filter: blur(24px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 4px 24px -6px rgba(0, 0, 0, 0.03);
-}
-
-/* Custom shadow cards with interactive glow (Linear/Stripe style) */
-.premium-card {
-  background: #ffffff;
-  border: 1px solid #E5E7EB;
-  border-radius: var(--radius-premium);
-  box-shadow: 0 2px 8px -2px rgba(17, 24, 39, 0.04), 0 1px 2px -1px rgba(17, 24, 39, 0.04);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.premium-card:hover {
-  box-shadow: 0 12px 32px -4px rgba(17, 24, 39, 0.06), 0 4px 12px -2px rgba(17, 24, 39, 0.03);
-  transform: translateY(-2px);
-  border-color: #D1D5DB;
-}
-
-.premium-card-active {
-  border-color: #2E76C0;
-  box-shadow: 0 0 0 1px #2E76C0, 0 8px 16px -4px rgba(46, 118, 192, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: var(--shadow-xs);
 }
 
 /* Lenis Smooth Scroll CSS */
@@ -122,49 +164,6 @@ html.lenis, html.lenis body {
   pointer-events: none;
 }
 
-/* Timer Warning Animation */
-.timer-pulse-warning {
-  animation: timerWarning 1s infinite alternate;
-}
-
-@keyframes timerWarning {
-  0% {
-    color: #ef4444;
-    transform: scale(1);
-    background-color: rgba(239, 68, 68, 0.05);
-  }
-  100% {
-    color: #b91c1c;
-    transform: scale(1.03);
-    background-color: rgba(239, 68, 68, 0.15);
-  }
-}
-
-/* Uncopyable and non-selectable fields for anti-cheat */
-.anti-copy {
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-}
-
-/* Keyboard shortcut keycap styling */
-.keycap {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: #f1f5f9;
-  border: 1px solid #cbd5e1;
-  border-bottom-width: 2.5px;
-  border-radius: 6px;
-  padding: 2px 6px;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 750;
-  color: #475569;
-  box-shadow: 0 1px 1px rgba(0,0,0,0.05);
-}
-
 /* Extractor Step Progress Indicators */
 .step-node {
   position: relative;
@@ -181,7 +180,7 @@ html.lenis, html.lenis body {
   left: 50%;
   width: 100%;
   height: 2px;
-  background-color: #e2e8f0;
+  background-color: var(--border);
   z-index: 0;
 }
 
@@ -190,52 +189,61 @@ html.lenis, html.lenis body {
 }
 
 .step-node.active::after {
-  background-color: #0284c7;
+  background-color: var(--primary);
 }
 
 .step-circle {
   position: relative;
   z-index: 10;
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background-color: #ffffff;
-  border: 2px solid #cbd5e1;
+  border: 2px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 11px;
-  font-weight: bold;
-  transition: all 0.3s ease;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .step-node.completed .step-circle {
-  background-color: #0284c7;
-  border-color: #0284c7;
+  background-color: var(--primary);
+  border-color: var(--primary);
   color: #ffffff;
 }
 
 .step-node.active .step-circle {
-  border-color: #0284c7;
-  color: #0284c7;
-  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+  border-color: var(--primary);
+  color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(17, 87, 207, 0.1);
 }
 
 /* Custom Scrollbar for dashboards */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f8fafc;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #D1D5DB;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #9CA3AF;
+}
+
+/* Utility to hide scrollbar but keep scrollability */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

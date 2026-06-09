@@ -3,23 +3,31 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { 
-  Flame, Zap, Award, Trophy, Bell, ChevronRight, 
-  HelpCircle, CheckCircle2, AlertTriangle, ShieldCheck,
-  BookOpen, Star, RefreshCw, Calendar, TrendingUp
+  Bell, ChevronRight, Activity, BookOpen, Clock, AlertCircle, FileText, BarChart3, ChevronUp
 } from "lucide-react";
 import { 
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis, 
-  CartesianGrid, Tooltip, Legend 
+  CartesianGrid, Tooltip, Legend, LineChart, Line
 } from "recharts";
+import { motion } from "framer-motion";
 
 export default function StudentDashboard() {
   const [currentUser, setCurrentUser] = useState(null);
   const [weakTopics, setWeakTopics] = useState([]);
-  const [leaderboard, setLeaderboard] = useState([]);
   const [exams, setExams] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState(null);
+
+  // Mock performance trend data
+  const performanceTrend = [
+    { date: 'Week 1', score: 65 },
+    { date: 'Week 2', score: 68 },
+    { date: 'Week 3', score: 74 },
+    { date: 'Week 4', score: 72 },
+    { date: 'Week 5', score: 81 },
+    { date: 'Week 6', score: 85 },
+  ];
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -27,33 +35,23 @@ export default function StudentDashboard() {
         const token = localStorage.getItem("token");
         const headers = { Authorization: `Bearer ${token}` };
 
-        // 1. Get profile from localStorage
         const stored = localStorage.getItem("user");
         if (stored) {
           setCurrentUser(JSON.parse(stored));
         }
 
-        // 2. Fetch weak topics analytics
         const weakRes = await fetch("/api/analytics/weak-topics", { headers });
         const weakData = await weakRes.json();
         if (weakRes.ok) setWeakTopics(weakData.analytics || []);
 
-        // 3. Fetch leaderboard
-        const leaderRes = await fetch("/api/leaderboard", { headers });
-        const leaderData = await leaderRes.json();
-        if (leaderRes.ok) setLeaderboard((leaderData.leaderboard || []).slice(0, 5));
-
-        // 4. Fetch available exams
         const examsRes = await fetch("/api/exams", { headers });
         const examsData = await examsRes.json();
         if (examsRes.ok) setExams(examsData.exams || []);
 
-        // 5. Fetch announcements
         const announceRes = await fetch("/api/notifications", { headers });
         const announceData = await announceRes.json();
         if (announceRes.ok) setNotifications((announceData.notifications || []).slice(0, 3));
 
-        // 6. Fetch stats
         const statsRes = await fetch("/api/analytics/stats", { headers });
         const statsData = await statsRes.json();
         if (statsRes.ok) setStats(statsData.stats);
@@ -70,307 +68,203 @@ export default function StudentDashboard() {
 
   if (loading || !currentUser) {
     return (
-      <div className="flex h-screen items-center justify-center bg-slate-50">
-        <div className="flex flex-col items-center gap-3">
-          <RefreshCw className="h-8 w-8 animate-spin text-[#2E76C0]" />
-          <p className="text-sm font-semibold text-slate-500">Preparing clinical command dashboard...</p>
+      <div className="flex h-screen items-center justify-center bg-[var(--background)]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 border-4 border-slate-200 border-t-[#1157CF] rounded-full animate-spin" />
+          <p className="text-sm font-semibold text-slate-500 uppercase tracking-widest">Loading Workspace...</p>
         </div>
       </div>
     );
   }
 
-  // XP & Level calculations
-  const xp = stats?.xp || 0;
-  const streak = stats?.streak || 0;
-  
-  const levelMap = {
-    Intern: { min: 0, max: 200, next: "Resident", bg: "bg-blue-500/10 text-blue-600 border-blue-200", badge: "Intern", iconColor: "text-blue-500" },
-    Resident: { min: 200, max: 500, next: "Senior Resident", bg: "bg-[#00E5FF]/10 text-[#2E76C0] border-teal-200", badge: "Resident", iconColor: "text-[#00E5FF]" },
-    "Senior Resident": { min: 500, max: 1000, next: "Consultant", bg: "bg-indigo-500/10 text-indigo-600 border-indigo-200", badge: "Senior Resident", iconColor: "text-indigo-500" },
-    Consultant: { min: 1000, max: 2000, next: "Master", bg: "bg-pink-500/10 text-pink-600 border-pink-200", badge: "Consultant", iconColor: "text-pink-500" },
-    Master: { min: 2000, max: 5000, next: "Max Tier", bg: "bg-[#F59E0B]/10 text-amber-600 border-amber-200", badge: "Master Specialist", iconColor: "text-[#F59E0B]" }
-  };
-
-  let levelName = "Intern";
-  if (xp >= 2000) levelName = "Master";
-  else if (xp >= 1000) levelName = "Consultant";
-  else if (xp >= 500) levelName = "Senior Resident";
-  else if (xp >= 200) levelName = "Resident";
-
-  const levelInfo = levelMap[levelName];
-  const levelXpMin = levelInfo.min;
-  const levelXpMax = levelInfo.max;
-  const range = levelXpMax - levelXpMin;
-  const progressInLevel = xp - levelXpMin;
-  const progressPercent = levelName === "Master" ? 100 : Math.min(Math.round((progressInLevel / range) * 100), 100);
-
   return (
-    <div className="space-y-8 animate-fade-in text-left">
-      {/* Gamified Welcome Banner */}
-      <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-6 md:p-8 shadow-sm">
-        {/* Decorative elements */}
-        <div className="absolute right-0 top-0 -mr-16 -mt-16 h-48 w-48 rounded-full bg-teal-50/40 blur-3xl pointer-events-none" />
-        <div className="absolute left-1/3 bottom-0 -mb-12 h-32 w-32 rounded-full bg-blue-50/30 blur-2xl pointer-events-none" />
-
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${levelInfo.bg}`}>
-                <Award className={`h-3.5 w-3.5 ${levelInfo.iconColor}`} />
-                {levelInfo.badge}
-              </span>
-              {streak > 0 && (
-                <span className="inline-flex items-center gap-1 bg-orange-50 text-orange-655 border border-orange-100 px-3 py-1 rounded-full text-xs font-bold timer-pulse-warning">
-                  <Flame className="h-3.5 w-3.5 fill-orange-500 text-orange-500" />
-                  {streak} Day Streak
-                </span>
-              )}
-            </div>
-            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900">
-              Welcome back, Dr. {currentUser.name}
-            </h1>
-            <p className="text-sm text-slate-500 leading-relaxed max-w-xl">
-              Track your performance stats, review clinical recommendations, and achieve excellence in medical assessment.
-            </p>
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      className="space-y-8 text-left max-w-[1200px] mx-auto"
+    >
+      {/* Professional Welcome Banner */}
+      <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="absolute right-0 top-0 -mr-20 -mt-20 h-64 w-64 rounded-full bg-[#1157CF]/5 blur-3xl pointer-events-none" />
+        
+        <div className="space-y-2 relative z-10">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded border border-[#1157CF]/20 bg-[#1157CF]/5 text-xs font-bold text-[#1157CF] uppercase tracking-wider mb-2">
+            <Activity className="h-3.5 w-3.5" />
+            <span>Active Candidate</span>
           </div>
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
+            Welcome, Dr. {currentUser.name}
+          </h1>
+          <p className="text-sm text-slate-500 max-w-xl font-medium">
+            Clinical Examination Hub. Review upcoming assessments, track performance metrics, and analyze subject proficiency.
+          </p>
+        </div>
 
-          {/* Radial/Bar XP level controller */}
-          <div className="w-full lg:w-72 bg-slate-50/50 border border-slate-100 p-4 rounded-xl space-y-3 shrink-0">
-            <div className="flex justify-between items-center text-xs">
-              <span className="font-bold text-slate-700">XP Progress</span>
-              <span className="font-semibold text-slate-500 font-mono">{xp} / {levelXpMax} XP</span>
-            </div>
-            {/* Custom Bar progress indicator */}
-            <div className="h-2 w-full rounded-full bg-slate-200 overflow-hidden">
-              <div 
-                className="h-full rounded-full bg-gradient-to-r from-[#2765A4] to-[#00E5FF] transition-all duration-1000"
-                style={{ width: `${progressPercent}%` }}
-              />
-            </div>
-            <div className="flex justify-between items-center text-3xs font-semibold text-slate-400 uppercase tracking-wider">
-              <span>{levelName}</span>
-              <span>Next: {levelInfo.next} ({progressPercent}%)</span>
-            </div>
+        {/* Quick Stats Summary */}
+        <div className="flex items-center gap-6 relative z-10 bg-slate-50 border border-slate-200 rounded-xl p-4 shrink-0">
+          <div>
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Overall Accuracy</p>
+            <p className="text-2xl font-black text-slate-900 tracking-tight">{stats?.averageAccuracy || 0}%</p>
+          </div>
+          <div className="w-px h-10 bg-slate-200" />
+          <div>
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Exams Completed</p>
+            <p className="text-2xl font-black text-slate-900 tracking-tight">{stats?.totalExamsAttempted || 0}</p>
           </div>
         </div>
       </div>
 
-      {/* Gamification Dashboard Grid */}
-      <div className="grid gap-6 md:grid-cols-4">
-        {/* Total Attempts Card */}
-        <div className="premium-card p-4 md:p-5 flex items-center gap-4 bg-white">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600 border border-blue-100">
-            <ShieldCheck className="h-5.5 w-5.5" />
-          </div>
-          <div>
-            <p className="text-2xs font-bold text-slate-400 uppercase tracking-wider">Total Attempts</p>
-            <p className="text-xl font-bold text-slate-800 tracking-tight mt-0.5">{stats?.totalExamsAttempted || 0}</p>
-          </div>
-        </div>
-
-        {/* Average Accuracy Card */}
-        <div className="premium-card p-4 md:p-5 flex items-center gap-4 bg-white">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-[#10B981] border border-emerald-105">
-            <TrendingUp className="h-5.5 w-5.5" />
-          </div>
-          <div>
-            <p className="text-2xs font-bold text-slate-400 uppercase tracking-wider">Avg Accuracy</p>
-            <p className="text-xl font-bold text-slate-800 tracking-tight mt-0.5">{stats?.averageAccuracy || 0}%</p>
-          </div>
-        </div>
-
-        {/* Total XP Card */}
-        <div className="premium-card p-5 flex items-center gap-4 bg-white">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600 border border-amber-100">
-            <Zap className="h-5.5 w-5.5 fill-[#F59E0B]/20 text-[#F59E0B]" />
-          </div>
-          <div>
-            <p className="text-2xs font-bold text-slate-400 uppercase tracking-wider">XP Earned</p>
-            <p className="text-xl font-bold text-slate-800 tracking-tight mt-0.5">{stats?.xp || 0} XP</p>
-          </div>
-        </div>
-
-        {/* Streak Card */}
-        <div className="premium-card p-5 flex items-center gap-4 bg-white">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-orange-50 text-orange-655 border border-orange-100 relative">
-            <Flame className="h-5.5 w-5.5 fill-orange-500 text-orange-500" />
-            {streak > 0 && <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-orange-500 animate-ping" />}
-          </div>
-          <div>
-            <p className="text-2xs font-bold text-slate-400 uppercase tracking-wider">Active Streak</p>
-            <p className="text-xl font-bold text-slate-800 tracking-tight mt-0.5">{stats?.streak || 0} Days</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Grid: Analysis, Standings & Announcements */}
+      {/* Main Content Grid */}
       <div className="grid gap-6 lg:grid-cols-3">
-        {/* Subject Performance Analysis (Col span 2 on large screens) */}
-        <div className="premium-card p-4 md:p-6 lg:col-span-2 bg-white">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
-            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
-              Subject Accuracy & Performance
-            </h3>
-            <span className="text-3xs text-slate-400 font-semibold uppercase tracking-wider">Visual analytics</span>
-          </div>
+        
+        {/* Left Column (2/3): Upcoming Exams & Performance */}
+        <div className="lg:col-span-2 space-y-6">
           
-          {weakTopics.length === 0 ? (
-            <div className="text-center text-slate-400 py-24 text-xs">
-              Complete mock exams to compile subject performance metrics.
+          {/* Upcoming Exams */}
+          <div className="premium-card p-6 flex flex-col">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-[15px] font-bold text-slate-900 uppercase tracking-wider">Scheduled Assessments</h2>
+                <p className="text-xs text-slate-500 font-medium mt-1">Mock and Live exams for Batch {currentUser.batch}</p>
+              </div>
+              <Link href="/student/exams" className="text-xs font-bold text-[#1157CF] hover:text-[#0D46A8] flex items-center gap-1">
+                View Schedule <ChevronRight className="h-3.5 w-3.5" />
+              </Link>
             </div>
-          ) : (
-            <div className="h-72 w-full">
-              <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-                <BarChart data={weakTopics} layout="vertical" margin={{ left: 10, right: 10, top: 5, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                  <XAxis type="number" stroke="#94a3b8" fontSize={10} domain={[0, 'auto']} />
-                  <YAxis dataKey="subject" type="category" stroke="#94a3b8" fontSize={10} width={100} />
-                  <Tooltip 
-                    contentStyle={{ background: '#0f172a', border: 'none', borderRadius: '8px', color: '#ffffff', fontSize: '12px' }}
-                    itemStyle={{ color: '#0ea5e9' }}
-                  />
-                  <Legend wrapperStyle={{ fontSize: '10px', paddingTop: '10px' }} />
-                  <Bar dataKey="correct" fill="#0f766e" stackId="a" name="Correct" radius={[0, 4, 4, 0]} />
-                  <Bar dataKey="incorrect" fill="#ef4444" stackId="a" name="Wrong" radius={[0, 4, 4, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          )}
-        </div>
 
-        {/* Announcements Widget */}
-        <div className="premium-card p-4 md:p-6 bg-white flex flex-col justify-between">
-          <div className="space-y-4">
-            <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3 uppercase tracking-wider">
-              <Bell className="h-4.5 w-4.5 text-[#2E76C0]" />
-              Cohort Updates
-            </h3>
-            {notifications.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-center text-slate-400">
-                <Calendar className="h-8 w-8 text-slate-300 mb-2" />
-                <p className="text-xs">No notifications or exam schedule releases.</p>
+            {exams.length === 0 ? (
+              <div className="flex-1 flex flex-col items-center justify-center py-12 border border-dashed border-slate-200 rounded-xl bg-slate-50 text-slate-400">
+                <FileText className="h-8 w-8 mb-3 text-slate-300" />
+                <p className="text-sm font-medium">No assessments currently scheduled.</p>
               </div>
             ) : (
               <div className="space-y-3">
-                {notifications.map((n) => (
-                  <div key={n._id} className="text-left text-xs bg-slate-50 hover:bg-slate-100/70 border border-slate-100 hover:border-slate-200/60 rounded-xl p-3 transition-colors">
-                    <span className="font-bold text-slate-800 block mb-1">{n.title}</span>
-                    <span className="text-slate-500 leading-relaxed block line-clamp-2">{n.content}</span>
-                    <span className="text-4xs font-semibold text-slate-400 block mt-2">{new Date(n.createdAt).toLocaleDateString()}</span>
+                {exams.slice(0, 3).map((exam) => (
+                  <div key={exam._id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors">
+                    <div className="flex items-start gap-4">
+                      <div className="mt-1 h-10 w-10 shrink-0 bg-[#1157CF]/10 text-[#1157CF] rounded-lg flex items-center justify-center">
+                        <BookOpen className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-[10px] font-bold bg-slate-200 text-slate-700 px-2 py-0.5 rounded uppercase tracking-wider">{exam.examType}</span>
+                          <span className="text-xs font-bold text-slate-500 flex items-center gap-1"><Clock className="h-3.5 w-3.5" /> {exam.duration} mins</span>
+                        </div>
+                        <h4 className="font-bold text-slate-900">{exam.name}</h4>
+                        <p className="text-xs text-slate-500 line-clamp-1 mt-0.5">{exam.description || "Simulated clinical paper."}</p>
+                      </div>
+                    </div>
+                    <Link 
+                      href={`/student/exams`} 
+                      className="shrink-0 inline-flex justify-center items-center gap-1.5 rounded-lg bg-[#1157CF] px-4 py-2 text-xs font-bold text-white hover:bg-[#0D46A8] transition-colors shadow-sm"
+                    >
+                      Enter Examination
+                    </Link>
                   </div>
                 ))}
               </div>
             )}
           </div>
-          <Link href="/student/announcements" className="text-xs font-bold text-[#2E76C0] hover:text-teal-800 mt-4 flex items-center gap-0.5 justify-end group">
-            <span>View All Releases</span>
-            <ChevronRight className="h-3.5 w-3.5 transform group-hover:translate-x-0.5 transition-transform" />
-          </Link>
-        </div>
-      </div>
 
-      {/* Leaderboard Standings */}
-      <div className="premium-card p-4 md:p-6 bg-white">
-        <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
-          <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2 uppercase tracking-wider">
-            <Trophy className="h-4.5 w-4.5 text-[#F59E0B] fill-[#F59E0B]/10" />
-            Top Performers Standings
-          </h3>
-          <span className="text-3xs text-slate-400 font-semibold uppercase tracking-wider">Active Cohort</span>
-        </div>
-
-        {leaderboard.length === 0 ? (
-          <div className="text-center text-slate-400 py-12 text-xs">
-            No rankings calculated yet.
+          {/* Performance Trend Chart */}
+          <div className="premium-card p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-[15px] font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                <BarChart3 className="h-4 w-4 text-[#1157CF]" /> Performance Trend
+              </h2>
+              <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest bg-slate-100 px-2 py-1 rounded">Last 6 Weeks</span>
+            </div>
+            
+            <div className="h-[240px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={performanceTrend} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
+                  <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#6B7280' }} dy={10} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#6B7280' }} domain={['dataMin - 10', 100]} />
+                  <Tooltip 
+                    contentStyle={{ borderRadius: '8px', border: '1px solid #E5E7EB', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', fontSize: '12px', fontWeight: 600 }} 
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="score" 
+                    stroke="#1157CF" 
+                    strokeWidth={3} 
+                    dot={{ r: 4, strokeWidth: 2, fill: '#fff' }} 
+                    activeDot={{ r: 6, strokeWidth: 0, fill: '#1157CF' }} 
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
           </div>
-        ) : (
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-            {leaderboard.map((student, idx) => {
-              const isMe = student.name === currentUser.name;
-              return (
-                <div 
-                  key={student._id} 
-                  className={`flex flex-col justify-between p-3.5 rounded-xl border transition-all ${
-                    isMe 
-                      ? "bg-teal-50/30 border-teal-355 shadow-sm" 
-                      : "bg-slate-50/50 border-slate-200/60 hover:bg-slate-50"
-                  }`}
-                >
-                  <div className="flex items-center justify-between gap-2 mb-3">
-                    <span className={`h-6 w-6 rounded-full flex items-center justify-center font-bold text-2xs ${
-                      idx === 0 ? "bg-amber-100 text-amber-800" :
-                      idx === 1 ? "bg-slate-200 text-slate-800" :
-                      idx === 2 ? "bg-orange-100 text-orange-800" : "bg-slate-100 text-slate-600"
-                    }`}>
-                      #{idx + 1}
-                    </span>
-                    <span className="text-2xs text-slate-400 font-bold uppercase tracking-wider">{student.batch}</span>
-                  </div>
 
-                  <div>
-                    <span className="font-extrabold text-slate-900 block truncate text-xs">{student.name} {isMe && "(You)"}</span>
-                    <span className="text-3xs font-semibold text-slate-400 uppercase tracking-wider mt-0.5 block">{student.level}</span>
-                  </div>
-
-                  <div className="flex items-center justify-between border-t border-slate-100 pt-2.5 mt-3">
-                    <span className="text-xs font-black text-[#1F548C]">{student.xp} XP</span>
-                    {student.streak > 0 && (
-                      <span className="text-3xs text-orange-655 font-bold flex items-center gap-0.5">
-                        <Flame className="h-3 w-3 fill-orange-500 text-orange-500" /> {student.streak}d
-                      </span>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
-
-      {/* Available Exams Shortcut */}
-      <div className="premium-card p-4 md:p-6 bg-white">
-        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-          <div>
-            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Assigned Simulative Examinations</h3>
-            <p className="text-3xs text-slate-400 font-medium mt-0.5">Mock exams available for your batch ({currentUser.batch})</p>
-          </div>
-          <Link href="/student/exams" className="text-xs font-bold text-[#2E76C0] hover:text-teal-800 flex items-center gap-0.5">
-            <span>Browse All Exams</span>
-            <ChevronRight className="h-3.5 w-3.5" />
-          </Link>
         </div>
 
-        {exams.length === 0 ? (
-          <div className="text-center text-slate-400 py-12 text-xs border border-dashed border-slate-200 rounded-xl">
-            No exams published for your batch ({currentUser.batch}) at this moment.
-          </div>
-        ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {exams.slice(0, 3).map((exam) => (
-              <div key={exam._id} className="border border-slate-200/80 rounded-xl p-4 bg-slate-50 flex flex-col justify-between hover:border-slate-350 transition-colors">
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-2">
-                    <span className="text-4xs bg-teal-100 text-teal-800 font-bold px-2 py-0.5 rounded uppercase tracking-wider">{exam.examType}</span>
-                    <span className="text-4xs text-red-500 font-bold uppercase tracking-wider">{exam.negativeMarking > 0 ? `-${exam.negativeMarking} Penalty` : "No Penalty"}</span>
-                  </div>
-                  <h4 className="font-extrabold text-slate-800 text-sm">{exam.name}</h4>
-                  <p className="text-2xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">{exam.description || "Simulated clinical paper."}</p>
-                </div>
-                <div className="flex items-center justify-between mt-5 border-t border-slate-200/60 pt-3">
-                  <span className="text-2xs text-slate-500 font-bold">Duration: {exam.duration} mins</span>
-                  <Link 
-                    href={`/student/exams`} 
-                    className="inline-flex items-center gap-0.5 rounded-lg bg-[#2E76C0] px-3.5 py-1.5 text-2xs font-bold text-white hover:bg-[#1F548C] shadow-md shadow-[#2E76C0]/10 transition-colors"
-                  >
-                    <span>Attempt Exam</span>
-                    <ChevronRight className="h-3 w-3" />
-                  </Link>
+        {/* Right Column (1/3): Analytics & Updates */}
+        <div className="space-y-6 flex flex-col">
+          
+          {/* Subject Proficiency */}
+          <div className="premium-card p-6 flex-1 flex flex-col">
+            <h2 className="text-[15px] font-bold text-slate-900 uppercase tracking-wider mb-6 pb-4 border-b border-slate-100">
+              Proficiency Analysis
+            </h2>
+            
+            {weakTopics.length === 0 ? (
+              <div className="flex-1 flex items-center justify-center text-center text-slate-400 text-xs">
+                Complete more assessments to generate subject analytics.
+              </div>
+            ) : (
+              <div className="flex-1 min-h-[200px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={weakTopics} layout="vertical" margin={{ left: -10, right: 10, top: 0, bottom: 0 }}>
+                    <XAxis type="number" hide />
+                    <YAxis dataKey="subject" type="category" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#475569', fontWeight: 500 }} width={80} />
+                    <Tooltip 
+                      cursor={{ fill: '#F3F4F6' }}
+                      contentStyle={{ borderRadius: '8px', border: '1px solid #E5E7EB', fontSize: '12px' }}
+                    />
+                    <Bar dataKey="correct" stackId="a" fill="#0F7B3E" radius={[0, 0, 0, 0]} barSize={12} />
+                    <Bar dataKey="incorrect" stackId="a" fill="#C0152A" radius={[0, 4, 4, 0]} barSize={12} />
+                  </BarChart>
+                </ResponsiveContainer>
+                <div className="flex items-center justify-center gap-4 mt-4 pt-4 border-t border-slate-100 text-[10px] font-bold uppercase tracking-wider">
+                  <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-[#0F7B3E]"/> Correct</div>
+                  <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-[#C0152A]"/> Incorrect</div>
                 </div>
               </div>
-            ))}
+            )}
           </div>
-        )}
+
+          {/* Institutional Updates */}
+          <div className="premium-card p-6 bg-slate-900 text-white">
+            <div className="flex items-center gap-2 mb-6 border-b border-slate-800 pb-4">
+              <Bell className="h-4 w-4 text-blue-400" />
+              <h2 className="text-[15px] font-bold uppercase tracking-wider text-white">
+                Official Updates
+              </h2>
+            </div>
+            
+            {notifications.length === 0 ? (
+              <div className="py-8 text-center text-slate-500 text-xs">
+                No new announcements.
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {notifications.map((n) => (
+                  <div key={n._id} className="group cursor-pointer">
+                    <div className="flex justify-between items-baseline mb-1">
+                      <span className="font-bold text-sm text-slate-100 group-hover:text-blue-400 transition-colors">{n.title}</span>
+                      <span className="text-[10px] font-bold text-slate-500 tracking-wider">{new Date(n.createdAt).toLocaleDateString()}</span>
+                    </div>
+                    <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">{n.content}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+        </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

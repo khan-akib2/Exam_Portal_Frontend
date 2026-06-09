@@ -4,8 +4,8 @@ import SessionStorageBridge from "@/components/SessionStorageBridge";
 import { ReactLenis } from 'lenis/react';
 
 export const metadata = {
-  title: "MedExam Portal | Gamified Medical Assessment Platform",
-  description: "A premium, gamified exam portal designed for medical students to practice simulative papers, NEET PG, FMGE, and university courses.",
+  title: "MedAssess Pro | World-Class Medical Examination Platform",
+  description: "Assessment Infrastructure for Medical Excellence. A premium medical examination platform.",
   icons: {
     icon: "/logo.png",
     shortcut: "/logo.png",
