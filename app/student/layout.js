@@ -80,7 +80,7 @@ export default function StudentLayout({ children }) {
   const isExamPage = pathname.includes("/student/exam/");
 
   if (isExamPage) {
-    return <div className="flex min-h-screen flex-col bg-slate-900 text-white">{children}</div>;
+    return <div className="flex min-h-screen flex-col bg-[#FAFBFC] text-slate-800">{children}</div>;
   }
 
   return (

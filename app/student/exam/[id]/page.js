@@ -386,10 +386,10 @@ export default function ExamPortalPage({ params }) {
 
   if (loading && !exam) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#1A0B08] text-orange-50">
+      <div className="flex h-screen items-center justify-center bg-[#FAFBFC] text-slate-800">
         <div className="flex flex-col items-center gap-3">
-          <RefreshCw className="h-8 w-8 animate-spin text-red-600" />
-          <span className="text-sm font-semibold text-orange-200">Initializing secure environment...</span>
+          <RefreshCw className="h-8 w-8 animate-spin text-blue-600" />
+          <span className="text-sm font-semibold text-slate-600">Initializing secure environment...</span>
         </div>
       </div>
     );
@@ -398,29 +398,29 @@ export default function ExamPortalPage({ params }) {
   // --- Landing Screen for Assessment ---
   if (!examStarted && exam) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#1A0B08] text-orange-50 font-sans p-4">
-        <div className="max-w-xl w-full bg-[#2A1612] rounded-2xl shadow-2xl border border-[#4A2620] overflow-hidden">
-          <div className="bg-red-900 p-6 text-white text-center border-b border-red-950">
-            <h1 className="text-2xl font-black tracking-tight mb-2">Start Assessment</h1>
-            <p className="text-sm text-red-200">{exam.name}</p>
+      <div className="flex h-screen items-center justify-center bg-[#FAFBFC] text-slate-800 font-sans p-4">
+        <div className="max-w-xl w-full bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+          <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-6 text-white text-center">
+            <h1 className="text-2xl font-bold tracking-tight mb-2">Start Assessment</h1>
+            <p className="text-sm text-blue-100">{exam.name}</p>
           </div>
           <div className="p-8 space-y-6">
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-[#1A0B08] border border-[#3A1D18] p-4 rounded-xl text-center">
-                <span className="block text-xs font-bold text-orange-400/70 uppercase tracking-wider mb-1">Duration</span>
-                <span className="text-lg font-bold text-orange-100">{exam.duration} mins</span>
+              <div className="bg-slate-50 border border-slate-100 p-4 rounded-xl text-center">
+                <span className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Duration</span>
+                <span className="text-lg font-bold text-slate-800">{exam.duration} mins</span>
               </div>
-              <div className="bg-[#1A0B08] border border-[#3A1D18] p-4 rounded-xl text-center">
-                <span className="block text-xs font-bold text-orange-400/70 uppercase tracking-wider mb-1">Questions</span>
-                <span className="text-lg font-bold text-orange-100">{exam.questions?.length || "TBD"} Qs</span>
+              <div className="bg-slate-50 border border-slate-100 p-4 rounded-xl text-center">
+                <span className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Questions</span>
+                <span className="text-lg font-bold text-slate-800">{exam.questions?.length || "TBD"} Qs</span>
               </div>
             </div>
 
-            <div className="bg-orange-950/40 border border-orange-900/50 rounded-xl p-4 flex gap-3 text-orange-200 text-sm">
-              <ShieldAlert className="h-6 w-6 shrink-0 text-orange-500" />
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex gap-3 text-amber-805 text-sm">
+              <ShieldAlert className="h-6 w-6 shrink-0 text-amber-600" />
               <div>
-                <p className="font-bold mb-1 text-orange-300">Strict Proctoring Enabled</p>
-                <p className="text-xs leading-relaxed text-orange-300/70">
+                <p className="font-bold mb-1 text-amber-900">Strict Proctoring Enabled</p>
+                <p className="text-xs leading-relaxed text-amber-700">
                   This examination requires full-screen mode. Exiting full-screen, switching tabs, or minimizing the browser will be recorded as a security violation and may auto-submit your exam.
                 </p>
               </div>
@@ -429,7 +429,7 @@ export default function ExamPortalPage({ params }) {
             <button
               onClick={startSession}
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 bg-red-800 hover:bg-red-700 text-white font-bold py-3.5 px-6 rounded-xl transition-all disabled:opacity-50 border border-red-700 shadow-lg shadow-red-900/30"
+              className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-6 rounded-xl transition-all disabled:opacity-50 border border-blue-600 hover:border-blue-700 shadow-md shadow-blue-500/10 cursor-pointer"
             >
               {loading ? (
                 <RefreshCw className="h-5 w-5 animate-spin" />
@@ -472,22 +472,22 @@ export default function ExamPortalPage({ params }) {
     let baseClass = "h-10 w-10 rounded-lg flex items-center justify-center font-bold text-xs border transition-all ";
 
     if (isActive) {
-      baseClass += "ring-2 ring-red-600 ring-offset-2 ring-offset-[#1A0B08] ";
+      baseClass += "ring-2 ring-blue-600 ring-offset-2 ring-offset-white ";
     }
 
-    if (!ans) return baseClass + "bg-[#2A1612] border-[#4A2620] text-orange-300/60 hover:border-orange-500/50";
+    if (!ans) return baseClass + "bg-slate-50 border-slate-200 text-slate-400 hover:border-slate-300";
 
     if (ans.isMarkedForReview) {
-      return baseClass + "bg-purple-900 border-purple-700 text-purple-100 shadow-sm shadow-purple-900/40"; // Marked
+      return baseClass + "bg-purple-50 border-purple-200 text-purple-700 shadow-xs hover:bg-purple-100"; // Marked
     }
     if (ans.selectedOption !== null) {
-      return baseClass + "bg-emerald-900 border-emerald-700 text-emerald-100 shadow-sm shadow-emerald-900/40"; // Answered
+      return baseClass + "bg-emerald-50 border-emerald-200 text-emerald-700 shadow-xs hover:bg-emerald-100"; // Answered
     }
     if (ans.visited) {
-      return baseClass + "bg-[#3A1D18] border-[#5A2E25] text-orange-400/70"; // Visited but skipped
+      return baseClass + "bg-slate-100 border-slate-300 text-slate-600 hover:bg-slate-200"; // Visited but skipped
     }
     
-    return baseClass + "bg-[#2A1612] border-[#4A2620] text-orange-300/60 hover:border-orange-500/50"; // Not Visited
+    return baseClass + "bg-slate-50 border-slate-200 text-slate-400 hover:border-slate-300"; // Not Visited
   };
 
   return (
@@ -495,18 +495,18 @@ export default function ExamPortalPage({ params }) {
       ref={containerRef}
       onContextMenu={(e) => e.preventDefault()}
       onCopy={(e) => e.preventDefault()}
-      className="flex flex-col h-screen bg-[#1A0B08] text-orange-50 font-sans anti-copy overflow-hidden selection:bg-red-900/50"
+      className="flex flex-col h-screen bg-[#FAFBFC] text-slate-800 font-sans anti-copy overflow-hidden selection:bg-blue-50"
     >
       {/* Top Header Controls */}
-      <header className="flex items-center justify-between px-4 py-3 md:px-6 md:py-4 border-b border-[#3A1D18] bg-[#2A1612] shadow-md shrink-0 gap-2 z-10">
+      <header className="flex items-center justify-between px-4 py-3 md:px-6 md:py-4 border-b border-slate-200 bg-white shadow-sm shrink-0 gap-2 z-10">
         <div className="min-w-0 pr-2">
-          <h2 className="text-sm md:text-md font-bold tracking-tight text-orange-100 truncate">{exam.name}</h2>
-          <div className="flex flex-wrap items-center gap-2 text-3xs text-orange-400/60 mt-0.5">
-            <span className="hidden sm:inline">Type: <strong className="text-orange-300/80">{exam.examType}</strong></span>
+          <h2 className="text-sm md:text-md font-bold tracking-tight text-slate-800 truncate">{exam.name}</h2>
+          <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 mt-0.5 font-medium">
+            <span className="hidden sm:inline">Type: <strong className="text-slate-700">{exam.examType}</strong></span>
             <span className="hidden sm:inline">|</span>
-            <span>Total: <strong className="text-orange-300/80">{questions.length} Qs</strong></span>
+            <span>Total: <strong className="text-slate-700">{questions.length} Qs</strong></span>
             <span>|</span>
-            <span className="text-red-400 font-semibold">Penalty: {exam.negativeMarking === 0 ? "None" : `-${Math.abs(exam.negativeMarking)}`}</span>
+            <span className="text-rose-600 bg-rose-50 border border-rose-100 px-2 py-0.5 rounded font-semibold text-xs">Penalty: {exam.negativeMarking === 0 ? "None" : `-${Math.abs(exam.negativeMarking)}`}</span>
           </div>
         </div>
 
@@ -515,7 +515,7 @@ export default function ExamPortalPage({ params }) {
           {/* Mobile Palette Trigger Button */}
           <button
             onClick={() => setPaletteOpen(true)}
-            className="md:hidden flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#4A2620] bg-[#1A0B08] text-orange-400/70 hover:bg-[#3A1D18] hover:text-orange-100 transition-colors"
+            className="md:hidden flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-slate-50 text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors cursor-pointer"
             title="Question Palette"
           >
             <svg
@@ -533,7 +533,7 @@ export default function ExamPortalPage({ params }) {
           {!isFullscreen && (
             <button
               onClick={requestFullscreenMode}
-              className="hidden sm:inline-flex items-center gap-1.5 rounded-lg border border-red-800 bg-red-950/40 px-3 py-1.5 text-xs font-semibold text-red-400 hover:bg-red-900/50 transition-colors"
+              className="hidden sm:inline-flex items-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-700 hover:bg-amber-105 transition-colors cursor-pointer"
             >
               <Maximize2 className="h-3.5 w-3.5" />
               <span>Resume Fullscreen</span>
@@ -541,18 +541,18 @@ export default function ExamPortalPage({ params }) {
           )}
 
           {/* Countdown Clock */}
-          <div className={`flex items-center gap-2 rounded-lg bg-[#1A0B08] border px-2.5 py-1.5 md:px-4 md:py-2 border-[#4A2620] ${isLowTime ? "timer-pulse-warning bg-red-950/40 border-red-800 text-red-400" : "text-orange-200"}`}>
-            <Clock className="h-3.5 w-3.5 md:h-4 md:w-4 text-red-600" />
+          <div className={`flex items-center gap-2 rounded-lg bg-slate-50 border px-2.5 py-1.5 md:px-4 md:py-2 border-slate-200 ${isLowTime ? "animate-pulse bg-rose-55 border-rose-200 text-rose-600 font-bold" : "text-slate-700"}`}>
+            <Clock className={`h-3.5 w-3.5 md:h-4 md:w-4 ${isLowTime ? "text-rose-600 animate-spin-slow" : "text-blue-600"}`} />
             <span className="font-mono font-bold text-xs md:text-sm tracking-widest">{formatTime(timeLeft)}</span>
           </div>
 
           {/* Submit */}
           <button
             onClick={() => setSubmitModalOpen(true)}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-red-800 px-3 py-1.5 md:px-4 md:py-2 text-xs font-bold text-white shadow-md shadow-red-900/30 hover:bg-red-700 hover:shadow-lg transition-all border border-red-700"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 md:px-4 md:py-2 text-xs font-bold text-white shadow-sm hover:bg-blue-700 hover:shadow transition-all border border-blue-600 cursor-pointer"
           >
             <span>Submit</span>
-            <span className="keycap text-4xs bg-red-950 border-red-900 text-white hidden md:inline-flex opacity-80">S</span>
+            <span className="keycap text-4xs bg-blue-700 border border-blue-800 text-white hidden md:inline-flex opacity-85 px-1 rounded">S</span>
           </button>
         </div>
       </header>
@@ -561,15 +561,15 @@ export default function ExamPortalPage({ params }) {
       <div className="flex flex-1 overflow-hidden relative">
         {/* Anti-cheat overlay if fullscreen is lost */}
         {examStarted && !isFullscreen && !warningModalOpen && !submitModalOpen && (
-          <div className="absolute inset-0 z-40 bg-[#1A0B08]/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center">
-            <ShieldAlert className="h-16 w-16 text-red-500 mb-4" />
-            <h2 className="text-2xl font-black text-orange-50 mb-2">Fullscreen Required</h2>
-            <p className="text-orange-200/70 max-w-md mb-6">
+          <div className="absolute inset-0 z-40 bg-slate-900/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center text-white">
+            <ShieldAlert className="h-16 w-16 text-rose-500 mb-4" />
+            <h2 className="text-2xl font-black text-white mb-2">Fullscreen Required</h2>
+            <p className="text-slate-205 max-w-md mb-6 font-medium">
               You must remain in fullscreen mode during the examination. Your session is temporarily paused.
             </p>
             <button
               onClick={requestFullscreenMode}
-              className="bg-red-800 text-white font-bold py-3 px-8 rounded-xl hover:bg-red-700 transition-colors shadow-lg border border-red-700"
+              className="bg-blue-600 text-white font-bold py-3 px-8 rounded-xl hover:bg-blue-700 transition-colors shadow-lg border border-blue-600 cursor-pointer"
             >
               Return to Fullscreen
             </button>
@@ -577,40 +577,40 @@ export default function ExamPortalPage({ params }) {
         )}
 
         {/* Left Side: Question Board */}
-        <div className="flex-1 flex flex-col justify-between overflow-y-auto p-6 md:p-8 bg-[#1A0B08]">
-          <div className="max-w-3xl mx-auto w-full space-y-6">
+        <div className="flex-1 flex flex-col justify-between overflow-y-auto p-6 md:p-8 bg-[#FAFBFC]">
+          <div className="max-w-3xl mx-auto w-full space-y-6 animate-fade-up">
             
             {/* Main Content Card */}
-            <div className="bg-[#2A1612] border border-[#4A2620] rounded-2xl shadow-xl overflow-hidden">
+            <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
               <div className="p-6 md:p-8 space-y-6">
                 
                 {/* Question Card Title & Header */}
-                <div className="flex items-center justify-between border-b border-[#3A1D18] pb-4">
-                  <span className="text-xs font-bold text-orange-400/70 uppercase tracking-widest flex items-center gap-2">
-                    <span className="bg-red-600 w-1.5 h-4 rounded-full"></span>
+                <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                  <span className="text-xs font-bold text-blue-600 uppercase tracking-widest flex items-center gap-2">
+                    <span className="bg-blue-600 w-1.5 h-4 rounded-full"></span>
                     Question {currentIndex + 1} of {questions.length}
                   </span>
-                  <span className="text-xs bg-[#1A0B08] border border-[#4A2620] px-2 py-1 rounded text-orange-300 font-semibold">
+                  <span className="text-xs bg-slate-50 border border-slate-200 px-2 py-1 rounded text-slate-600 font-semibold">
                     1.00 Mark
                   </span>
                 </div>
 
                 {/* Question Text */}
                 <div className="space-y-4">
-                  <h3 className="text-lg md:text-xl font-medium leading-relaxed text-orange-50">
+                  <h3 className="text-lg md:text-xl font-semibold leading-relaxed text-slate-800">
                     {questions[currentIndex]?.question}
                   </h3>
 
                   {/* Question attachment image */}
                   {questions[currentIndex]?.image && (
-                    <div className="relative group max-w-sm rounded-xl overflow-hidden border border-[#4A2620] bg-[#1A0B08] self-start cursor-zoom-in" onClick={() => setZoomedImage(questions[currentIndex].image)}>
+                    <div className="relative group max-w-sm rounded-xl overflow-hidden border border-slate-200 bg-slate-50 self-start cursor-zoom-in" onClick={() => setZoomedImage(questions[currentIndex].image)}>
                       <img
                         src={questions[currentIndex].image}
                         alt="Clinical attachment"
-                        className="max-h-56 w-auto object-contain opacity-90 group-hover:opacity-100 transition-opacity"
+                        className="max-h-56 w-auto object-contain opacity-95 group-hover:opacity-100 transition-opacity"
                       />
-                      <div className="absolute inset-0 bg-[#1A0B08]/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <div className="bg-[#2A1612] text-orange-100 p-2 rounded-lg shadow-lg flex items-center gap-1.5 font-bold text-xs border border-[#4A2620]">
+                      <div className="absolute inset-0 bg-slate-900/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <div className="bg-white text-slate-800 p-2 rounded-lg shadow-lg flex items-center gap-1.5 font-bold text-xs border border-slate-200">
                           <ZoomIn className="h-4 w-4" /> Expand
                         </div>
                       </div>
@@ -626,23 +626,23 @@ export default function ExamPortalPage({ params }) {
                       <button
                         key={oIdx}
                         onClick={() => handleSelectOption(oIdx)}
-                        className={`w-full flex items-center gap-4 rounded-xl border p-4 text-left transition-all duration-200 ${
+                        className={`w-full flex items-center gap-4 rounded-xl border p-4 text-left transition-all duration-200 cursor-pointer ${
                           isSelected
-                            ? "bg-red-950/40 border-red-600 text-orange-50 ring-1 ring-red-600 shadow-md shadow-red-900/20"
-                            : "bg-[#1A0B08] border-[#3A1D18] text-orange-200/80 hover:bg-[#3A1D18] hover:border-[#5A2E25]"
+                            ? "bg-blue-50/70 border-blue-500 text-slate-800 ring-1 ring-blue-500 shadow-sm shadow-blue-500/10"
+                            : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50/70 hover:border-slate-350"
                         }`}
                       >
                         <span className={`h-7 w-7 rounded-full flex items-center justify-center font-bold text-xs border shrink-0 transition-colors ${
                           isSelected 
-                            ? "bg-red-700 border-red-600 text-white" 
-                            : "bg-[#2A1612] border-[#4A2620] text-orange-400/60"
+                            ? "bg-blue-600 border-blue-600 text-white" 
+                            : "bg-slate-50 border-slate-200 text-slate-500"
                         }`}>
                           {String.fromCharCode(65 + oIdx)}
                         </span>
                         <span className="text-sm font-semibold leading-snug">{option}</span>
                         
                         {/* Visual Keycap indicator */}
-                        <span className="keycap text-3xs ml-auto font-mono hidden sm:inline-flex select-none border-[#4A2620] bg-[#2A1612] text-orange-500/50">
+                        <span className="keycap text-3xs ml-auto font-mono hidden sm:inline-flex select-none border border-slate-200 bg-slate-50 text-slate-400 px-1 rounded">
                           {oIdx + 1}
                         </span>
                       </button>
@@ -653,13 +653,13 @@ export default function ExamPortalPage({ params }) {
             </div>
 
             {/* Keyboard Shortcuts Hint */}
-            <div className="flex flex-wrap items-center justify-center gap-4 bg-[#2A1612] border border-[#3A1D18] rounded-xl px-4 py-3 text-3xs text-orange-400/60 mt-6 select-none max-w-3xl mx-auto w-full shadow-sm">
-              <span className="font-bold text-orange-300 uppercase tracking-widest">Keyboard Controls:</span>
-              <span className="flex items-center gap-0.5"><span className="keycap font-black text-4xs bg-[#1A0B08] border-[#4A2620] text-orange-500/70">1-4</span> Select</span>
-              <span className="flex items-center gap-0.5"><span className="keycap font-black text-4xs bg-[#1A0B08] border-[#4A2620] text-orange-500/70">←</span> / <span className="keycap font-black text-4xs bg-[#1A0B08] border-[#4A2620] text-orange-500/70">→</span> Navigate</span>
-              <span className="flex items-center gap-0.5"><span className="keycap font-black text-4xs bg-[#1A0B08] border-[#4A2620] text-orange-500/70">M</span> / <span className="keycap font-black text-4xs bg-[#1A0B08] border-[#4A2620] text-orange-500/70">R</span> Review</span>
-              <span className="flex items-center gap-0.5"><span className="keycap font-black text-4xs bg-[#1A0B08] border-[#4A2620] text-orange-500/70">C</span> Clear</span>
-              <span className="flex items-center gap-0.5"><span className="keycap font-black text-4xs bg-[#1A0B08] border-[#4A2620] text-orange-500/70">S</span> Submit</span>
+            <div className="flex flex-wrap items-center justify-center gap-4 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-[11px] text-slate-500 mt-6 select-none max-w-3xl mx-auto w-full shadow-2xs">
+              <span className="font-bold text-slate-700 uppercase tracking-widest">Keyboard Controls:</span>
+              <span className="flex items-center gap-0.5"><span className="keycap font-black text-4xs bg-white border border-slate-200 text-slate-600 px-1 rounded shadow-2xs">1-4</span> Select</span>
+              <span className="flex items-center gap-0.5"><span className="keycap font-black text-4xs bg-white border border-slate-200 text-slate-600 px-1 rounded shadow-2xs">←</span> / <span className="keycap font-black text-4xs bg-white border border-slate-200 text-slate-600 px-1 rounded shadow-2xs">→</span> Navigate</span>
+              <span className="flex items-center gap-0.5"><span className="keycap font-black text-4xs bg-white border border-slate-200 text-slate-600 px-1 rounded shadow-2xs">M</span> / <span className="keycap font-black text-4xs bg-white border border-slate-200 text-slate-600 px-1 rounded shadow-2xs">R</span> Review</span>
+              <span className="flex items-center gap-0.5"><span className="keycap font-black text-4xs bg-white border border-slate-200 text-slate-600 px-1 rounded shadow-2xs">C</span> Clear</span>
+              <span className="flex items-center gap-0.5"><span className="keycap font-black text-4xs bg-white border border-slate-200 text-slate-600 px-1 rounded shadow-2xs">S</span> Submit</span>
             </div>
           </div>
 
@@ -669,7 +669,7 @@ export default function ExamPortalPage({ params }) {
               <button
                 onClick={handlePrev}
                 disabled={currentIndex === 0}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-[#4A2620] bg-[#2A1612] shadow-sm px-4 py-2.5 text-xs font-bold text-orange-200/80 hover:text-orange-50 hover:bg-[#3A1D18] transition-colors disabled:opacity-50 disabled:hover:bg-[#2A1612]"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white shadow-sm px-4 py-2.5 text-xs font-bold text-slate-705 hover:text-slate-900 hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:hover:bg-white cursor-pointer"
               >
                 <ChevronLeft className="h-4 w-4" />
                 <span>Previous</span>
@@ -678,7 +678,7 @@ export default function ExamPortalPage({ params }) {
               <button
                 onClick={handleClearResponse}
                 disabled={currentAnswer?.selectedOption === null}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-[#4A2620] bg-[#2A1612] shadow-sm px-4 py-2.5 text-xs font-bold text-orange-200/80 hover:text-orange-50 hover:bg-[#3A1D18] transition-colors disabled:opacity-50 disabled:hover:bg-[#2A1612]"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white shadow-sm px-4 py-2.5 text-xs font-bold text-slate-705 hover:text-slate-900 hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:hover:bg-white cursor-pointer"
               >
                 <span>Clear</span>
               </button>
@@ -687,10 +687,10 @@ export default function ExamPortalPage({ params }) {
             <div className="flex items-center gap-2">
               <button
                 onClick={handleToggleMarkForReview}
-                className={`inline-flex items-center gap-1.5 rounded-xl border px-4 py-2.5 text-xs font-bold transition-all shadow-sm ${
+                className={`inline-flex items-center gap-1.5 rounded-xl border px-4 py-2.5 text-xs font-bold transition-all shadow-sm cursor-pointer ${
                   currentAnswer?.isMarkedForReview
-                    ? "bg-purple-900/40 border-purple-800 text-purple-200"
-                    : "border-[#4A2620] bg-[#2A1612] text-orange-200/80 hover:bg-[#3A1D18] hover:text-orange-50"
+                    ? "bg-purple-50 border-purple-200 text-purple-700"
+                    : "border-slate-200 bg-white text-slate-705 hover:bg-slate-50 hover:text-slate-900"
                 }`}
               >
                 <Bookmark className={`h-4 w-4 ${currentAnswer?.isMarkedForReview ? "fill-purple-500 text-purple-500" : ""}`} />
@@ -700,7 +700,7 @@ export default function ExamPortalPage({ params }) {
               <button
                 onClick={handleNext}
                 disabled={currentIndex === questions.length - 1}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-red-800 border border-red-700 shadow-lg shadow-red-900/30 px-5 py-2.5 text-xs font-bold text-white hover:bg-red-700 transition-all disabled:opacity-50 disabled:hover:bg-red-800"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-blue-600 border border-blue-600 shadow-md shadow-blue-500/10 px-5 py-2.5 text-xs font-bold text-white hover:bg-blue-700 transition-all disabled:opacity-50 disabled:hover:bg-blue-600 cursor-pointer"
               >
                 <span>Save & Next</span>
                 <ChevronRight className="h-4 w-4" />
@@ -710,9 +710,9 @@ export default function ExamPortalPage({ params }) {
         </div>
 
         {/* Right Side: Navigation Sidebar Panel */}
-        <aside className="w-80 border-l border-[#3A1D18] bg-[#2A1612] shadow-2xl p-6 flex flex-col justify-between shrink-0 overflow-y-auto hidden md:flex z-10">
+        <aside className="w-80 border-l border-slate-200 bg-white shadow-sm p-6 flex flex-col justify-between shrink-0 overflow-y-auto hidden md:flex z-10">
           <div className="space-y-6">
-            <h3 className="text-sm font-black text-orange-100 uppercase tracking-wider border-b border-[#3A1D18] pb-4">
+            <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider border-b border-slate-100 pb-4">
               Question Palette
             </h3>
 
@@ -722,7 +722,7 @@ export default function ExamPortalPage({ params }) {
                 <button
                   key={q._id}
                   onClick={() => handleNavigate(idx)}
-                  className={getNavColor(q._id, idx)}
+                  className={`${getNavColor(q._id, idx)} cursor-pointer`}
                 >
                   {idx + 1}
                 </button>
@@ -731,24 +731,24 @@ export default function ExamPortalPage({ params }) {
           </div>
 
           {/* Palette Legend Indicator */}
-          <div className="border-t border-[#3A1D18] pt-6 mt-6 space-y-4 bg-[#1A0B08] -mx-6 -mb-6 p-6">
-            <h4 className="text-xs font-bold text-orange-500/70 uppercase tracking-widest">Status Legend</h4>
+          <div className="border-t border-slate-150 pt-6 mt-6 space-y-4 bg-slate-50/50 -mx-6 -mb-6 p-6">
+            <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest text-[10px]">Status Legend</h4>
             
-            <div className="grid grid-cols-2 gap-3 text-xs text-orange-300/80 font-medium">
+            <div className="grid grid-cols-2 gap-3 text-xs text-slate-600 font-medium">
               <div className="flex items-center gap-2">
-                <span className="h-4 w-4 rounded bg-[#2A1612] border border-[#4A2620] shadow-sm" />
+                <span className="h-4 w-4 rounded bg-slate-50 border border-slate-200 shadow-xs" />
                 <span>Not Visited</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="h-4 w-4 rounded bg-[#3A1D18] border border-[#5A2E25] shadow-sm" />
+                <span className="h-4 w-4 rounded bg-slate-100 border border-slate-300 shadow-xs" />
                 <span>Skipped</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="h-4 w-4 rounded bg-emerald-900 border border-emerald-700 shadow-sm" />
+                <span className="h-4 w-4 rounded bg-emerald-50 border border-emerald-200 shadow-xs" />
                 <span>Answered</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="h-4 w-4 rounded bg-purple-900 border border-purple-700 shadow-sm" />
+                <span className="h-4 w-4 rounded bg-purple-50 border border-purple-200 shadow-xs" />
                 <span>Marked</span>
               </div>
             </div>
@@ -758,19 +758,19 @@ export default function ExamPortalPage({ params }) {
 
       {/* ANTI-CHEAT ALERT WARNING MODAL */}
       {warningModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1A0B08]/80 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md bg-[#2A1612] border border-red-900 rounded-2xl p-6 shadow-2xl space-y-4 animate-slide-up text-left">
-            <div className="flex items-center gap-3 text-red-500 font-black border-b border-[#4A2620] pb-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-fade-in">
+          <div className="w-full max-w-md bg-white border border-slate-200 rounded-2xl p-6 shadow-2xl space-y-4 text-left">
+            <div className="flex items-center gap-3 text-rose-600 font-bold border-b border-slate-100 pb-3">
               <AlertTriangle className="h-6 w-6" />
-              <h2 className="text-base uppercase tracking-wider">Security Violation</h2>
+              <h2 className="text-base uppercase tracking-wider font-extrabold">Security Violation</h2>
             </div>
             
-            <p className="text-sm text-orange-200 leading-relaxed font-medium">
+            <p className="text-sm text-slate-700 leading-relaxed font-medium">
               {warningDetails}
             </p>
 
-            <div className="rounded-xl bg-[#1A0B08] border border-red-900/50 p-4 text-xs text-red-400 space-y-2">
-              <p>You have accumulated <strong>{warnings}</strong> warning(s).</p>
+            <div className="rounded-xl bg-rose-50 border border-rose-100 p-4 text-xs text-rose-800 space-y-2">
+              <p className="font-bold">You have accumulated <strong>{warnings}</strong> warning(s).</p>
               <p className="leading-normal">Please make sure to return to <strong>Fullscreen Mode</strong> and keep your browser window focused. Multiple security breaches will be audited.</p>
             </div>
 
@@ -780,7 +780,7 @@ export default function ExamPortalPage({ params }) {
                   setWarningModalOpen(false);
                   requestFullscreenMode(); // Try re-triggering fullscreen
                 }}
-                className="rounded-xl bg-red-800 px-6 py-2.5 text-xs font-bold text-white hover:bg-red-700 shadow-md transition-colors border border-red-700"
+                className="rounded-xl bg-blue-600 px-6 py-2.5 text-xs font-bold text-white hover:bg-blue-700 shadow-md transition-colors border border-blue-600 cursor-pointer"
               >
                 I Understand
               </button>
@@ -791,43 +791,43 @@ export default function ExamPortalPage({ params }) {
 
       {/* CLOUD IMAGE ZOOM MODAL */}
       {zoomedImage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1A0B08]/95 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/80 backdrop-blur-xs p-4">
           <div className="relative max-w-5xl max-h-[90vh]">
             <button
               onClick={() => setZoomedImage(null)}
-              className="absolute -top-12 right-0 text-orange-200 hover:text-white flex items-center gap-2 text-sm font-bold bg-[#2A1612] border border-[#4A2620] px-4 py-2 rounded-xl"
+              className="absolute -top-12 right-0 text-slate-600 hover:text-slate-805 flex items-center gap-2 text-sm font-bold bg-white border border-slate-200 px-4 py-2 rounded-xl cursor-pointer"
             >
               <X className="h-5 w-5" /> Close
             </button>
-            <img src={zoomedImage} alt="Zoomed view" className="max-w-full max-h-[85vh] object-contain rounded-xl border border-[#4A2620] bg-[#1A0B08] shadow-2xl" />
+            <img src={zoomedImage} alt="Zoomed view" className="max-w-full max-h-[85vh] object-contain rounded-xl border border-slate-200 bg-white shadow-2xl" />
           </div>
         </div>
       )}
 
       {/* EXAM SUBMIT CONFIRMATION DIALOG */}
       {submitModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1A0B08]/80 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md bg-[#2A1612] border border-[#4A2620] rounded-2xl p-6 shadow-2xl space-y-4 animate-slide-up text-left">
-            <h2 className="text-lg font-black text-orange-50 border-b border-[#3A1D18] pb-3 flex items-center gap-2">
-              <Check className="h-6 w-6 text-emerald-400 bg-emerald-950/50 border border-emerald-900/50 p-1 rounded-lg" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-fade-in">
+          <div className="w-full max-w-md bg-white border border-slate-200 rounded-2xl p-6 shadow-2xl space-y-4 text-left">
+            <h2 className="text-lg font-bold text-slate-800 border-b border-slate-100 pb-3 flex items-center gap-2">
+              <Check className="h-6 w-6 text-emerald-600 bg-emerald-50 border border-emerald-250 p-1 rounded-lg" />
               Submit Assessment?
             </h2>
 
-            <p className="text-sm text-orange-200/80 leading-relaxed">
+            <p className="text-sm text-slate-600 leading-relaxed font-medium">
               Are you sure you want to end your examination? You will not be able to change any selected options.
             </p>
 
-            <div className="rounded-xl bg-[#1A0B08] border border-[#3A1D18] p-4 space-y-3 text-sm text-orange-200/80">
+            <div className="rounded-xl bg-slate-50 border border-slate-200 p-4 space-y-3 text-sm text-slate-700">
               <div className="flex justify-between items-center">
                 <span>Total Answered:</span>
-                <span className="font-bold text-emerald-400 bg-emerald-950/50 border border-emerald-900/50 px-2 py-0.5 rounded">{totalAnswered} / {questions.length}</span>
+                <span className="font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded">{totalAnswered} / {questions.length}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span>Flagged for Review:</span>
-                <span className="font-bold text-purple-400 bg-purple-950/50 border border-purple-900/50 px-2 py-0.5 rounded">{totalMarked}</span>
+                <span className="font-bold text-purple-755 bg-purple-50 border border-purple-200 px-2 py-0.5 rounded">{totalMarked}</span>
               </div>
               {warnings > 0 && (
-                <div className="flex justify-between items-center text-red-400 font-semibold border-t border-[#3A1D18] pt-2 mt-2">
+                <div className="flex justify-between items-center text-rose-600 font-semibold border-t border-slate-200 pt-2 mt-2">
                   <span>Security Warnings:</span>
                   <span>{warnings} warnings</span>
                 </div>
@@ -837,14 +837,14 @@ export default function ExamPortalPage({ params }) {
             <div className="flex items-center justify-end gap-3 pt-4">
               <button
                 onClick={() => setSubmitModalOpen(false)}
-                className="rounded-xl bg-[#1A0B08] border border-[#4A2620] px-5 py-2.5 text-sm font-bold text-orange-300 hover:bg-[#3A1D18] hover:text-orange-100 transition-colors"
+                className="rounded-xl bg-white border border-slate-200 px-5 py-2.5 text-sm font-bold text-slate-505 hover:bg-slate-50 hover:text-slate-800 transition-colors cursor-pointer"
                 disabled={submitting}
               >
                 Resume Test
               </button>
               <button
                 onClick={handleSubmitExam}
-                className="rounded-xl bg-red-800 border border-red-700 px-6 py-2.5 text-sm font-bold text-white hover:bg-red-700 shadow-md shadow-red-900/30 transition-colors flex items-center gap-2"
+                className="rounded-xl bg-blue-600 border border-blue-600 px-6 py-2.5 text-sm font-bold text-white hover:bg-blue-700 shadow-md transition-colors flex items-center gap-2 cursor-pointer"
                 disabled={submitting}
               >
                 {submitting ? (
@@ -868,17 +868,17 @@ export default function ExamPortalPage({ params }) {
         <div className="fixed inset-0 z-50 flex justify-end md:hidden">
           {/* Backdrop */}
           <div 
-            className="fixed inset-0 bg-[#1A0B08]/80 backdrop-blur-sm animate-fade-in" 
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs animate-fade-in" 
             onClick={() => setPaletteOpen(false)} 
           />
           {/* Content */}
-          <aside className="relative w-80 bg-[#2A1612] p-6 shadow-2xl h-full flex flex-col justify-between overflow-y-auto animate-slide-right z-50 border-l border-[#4A2620]">
+          <aside className="relative w-80 bg-white p-6 shadow-2xl h-full flex flex-col justify-between overflow-y-auto animate-slide-right z-50 border-l border-slate-200">
             <div className="space-y-6">
-              <div className="flex items-center justify-between border-b border-[#3A1D18] pb-4">
-                <h3 className="text-sm font-black text-orange-100 uppercase tracking-wider">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">
                   Question Palette
                 </h3>
-                <button onClick={() => setPaletteOpen(false)} className="text-orange-400/60 hover:text-orange-100 bg-[#1A0B08] border border-[#4A2620] p-1.5 rounded-lg">
+                <button onClick={() => setPaletteOpen(false)} className="text-slate-400 hover:text-slate-700 bg-slate-50 border border-slate-200 p-1.5 rounded-lg cursor-pointer">
                   <X className="h-5 w-5" />
                 </button>
               </div>
@@ -892,7 +892,7 @@ export default function ExamPortalPage({ params }) {
                       handleNavigate(idx);
                       setPaletteOpen(false);
                     }}
-                    className={getNavColor(q._id, idx)}
+                    className={`${getNavColor(q._id, idx)} cursor-pointer`}
                   >
                     {idx + 1}
                   </button>
@@ -901,24 +901,24 @@ export default function ExamPortalPage({ params }) {
             </div>
 
             {/* Palette Legend */}
-            <div className="border-t border-[#3A1D18] pt-6 mt-6 space-y-4 bg-[#1A0B08] -mx-6 -mb-6 p-6">
-              <h4 className="text-xs font-bold text-orange-500/70 uppercase tracking-widest">Legend</h4>
+            <div className="border-t border-slate-100 pt-6 mt-6 space-y-4 bg-slate-50/50 -mx-6 -mb-6 p-6">
+              <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest text-[10px]">Legend</h4>
               
-              <div className="grid grid-cols-2 gap-3 text-xs text-orange-300/80 font-medium">
+              <div className="grid grid-cols-2 gap-3 text-xs text-slate-600 font-medium">
                 <div className="flex items-center gap-2">
-                  <span className="h-4 w-4 rounded bg-[#2A1612] border border-[#4A2620] shadow-sm" />
+                  <span className="h-4 w-4 rounded bg-slate-50 border border-slate-200 shadow-sm" />
                   <span>Not Visited</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="h-4 w-4 rounded bg-[#3A1D18] border border-[#5A2E25] shadow-sm" />
+                  <span className="h-4 w-4 rounded bg-slate-100 border border-slate-350 shadow-sm" />
                   <span>Skipped</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="h-4 w-4 rounded bg-emerald-900 border border-emerald-700 shadow-sm" />
+                  <span className="h-4 w-4 rounded bg-emerald-50 border border-emerald-200 shadow-sm" />
                   <span>Answered</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="h-4 w-4 rounded bg-purple-900 border border-purple-700 shadow-sm" />
+                  <span className="h-4 w-4 rounded bg-purple-50 border border-purple-200 shadow-sm" />
                   <span>Marked</span>
                 </div>
               </div>
