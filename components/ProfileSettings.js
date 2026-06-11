@@ -42,8 +42,8 @@ export default function ProfileSettings() {
 
   if (!currentUser) {
     return (
-      <div className="flex h-48 items-center justify-center bg-slate-50">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-teal-650" />
+      <div className="flex h-48 items-center justify-center bg-slate-50 dark:bg-transparent">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 dark:border-slate-800 border-t-teal-600 dark:border-t-teal-550" />
       </div>
     );
   }
@@ -143,14 +143,14 @@ export default function ProfileSettings() {
   return (
     <div className="max-w-4xl mx-auto space-y-8 text-left animate-fade-in pt-4">
       {/* Title */}
-      <div className="border-b border-slate-150 pb-5">
-        <h1 className="text-3xl font-black tracking-tight text-slate-900 flex items-center gap-3 leading-normal">
-          <span className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
+      <div className="border-b border-slate-150 dark:border-white/5 pb-5">
+        <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-3 leading-normal">
+          <span className="p-2 bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 rounded-xl">
             <Shield className="h-6 w-6" />
           </span>
           Account & Profile Settings
         </h1>
-        <p className="text-sm text-slate-500 mt-2 font-medium">
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 font-medium">
           Manage your personal details, verify credentials, and update security parameters.
         </p>
       </div>
@@ -204,19 +204,19 @@ export default function ProfileSettings() {
 
       <div className="grid gap-8 md:grid-cols-2">
         {/* Form 1: Profile Details */}
-        <div className="bg-white/70 backdrop-blur-xl border border-slate-200 p-8 space-y-6 rounded-3xl relative overflow-hidden group shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-white/70 dark:bg-[var(--card)] backdrop-blur-xl border border-slate-200 dark:border-white/5 p-8 space-y-6 rounded-3xl relative overflow-hidden group shadow-sm hover:shadow-md transition-shadow">
           <div className="absolute top-0 right-0 w-64 h-64 bg-teal-400/5 rounded-full blur-3xl pointer-events-none" />
           
-          <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-150 pb-4 flex items-center gap-2 relative z-10">
-            <User className="h-5 w-5 text-teal-600" />
+          <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest border-b border-slate-150 dark:border-white/5 pb-4 flex items-center gap-2 relative z-10">
+            <User className="h-5 w-5 text-teal-600 dark:text-teal-400" />
             Personal Details
           </h3>
 
           <form onSubmit={handleProfileSubmit} className="space-y-5 relative z-10">
             <div className="group/input">
-              <label className="block text-[10px] font-extrabold text-slate-600 mb-2 uppercase tracking-wider">Full Name</label>
+              <label className="block text-[10px] font-extrabold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-wider">Full Name</label>
               <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within/input:text-teal-500 transition-colors">
+                <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-455 group-focus-within/input:text-teal-500 transition-colors">
                   <User className="h-4 w-4" />
                 </span>
                 <input
@@ -224,38 +224,38 @@ export default function ProfileSettings() {
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full rounded-xl border-2 border-slate-200 bg-white pl-11 pr-4 py-3 text-sm outline-none transition-all duration-300 focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 font-bold text-slate-800 hover:border-slate-300 shadow-sm"
+                  className="w-full rounded-xl border-2 border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950/40 pl-11 pr-4 py-3 text-sm outline-none transition-all duration-300 focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 font-bold text-slate-800 dark:text-white hover:border-slate-300 dark:hover:border-slate-700 shadow-sm"
                   placeholder="John Doe"
                 />
               </div>
             </div>
 
             <div className="group/input opacity-80">
-              <label className="block text-[10px] font-extrabold text-slate-600 mb-2 uppercase tracking-wider">Email Address (Read-only)</label>
+              <label className="block text-[10px] font-extrabold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-wider">Email Address (Read-only)</label>
               <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-455">
                   <User className="h-4 w-4" />
                 </span>
                 <input
                   type="email"
                   disabled
                   value={currentUser.email}
-                  className="w-full rounded-xl border-2 border-slate-200 bg-slate-50 pl-11 pr-4 py-3 text-sm outline-none cursor-not-allowed font-bold text-slate-500 shadow-sm"
+                  className="w-full rounded-xl border-2 border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-slate-900/60 pl-11 pr-4 py-3 text-sm outline-none cursor-not-allowed font-bold text-slate-500 dark:text-slate-400 shadow-sm"
                 />
               </div>
             </div>
 
             <div className="group/input">
-              <label className="block text-[10px] font-extrabold text-slate-600 mb-2 uppercase tracking-wider">Phone Number</label>
+              <label className="block text-[10px] font-extrabold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-wider">Phone Number</label>
               <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within/input:text-teal-500 transition-colors">
+                <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-455 group-focus-within/input:text-teal-500 transition-colors">
                   <Phone className="h-4 w-4" />
                 </span>
                 <input
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full rounded-xl border-2 border-slate-200 bg-white pl-11 pr-4 py-3 text-sm outline-none transition-all duration-300 focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 font-bold text-slate-800 hover:border-slate-300 shadow-sm"
+                  className="w-full rounded-xl border-2 border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950/40 pl-11 pr-4 py-3 text-sm outline-none transition-all duration-300 focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 font-bold text-slate-800 dark:text-white hover:border-slate-300 dark:hover:border-slate-700 shadow-sm"
                   placeholder="+7 (999) 123-4567"
                 />
               </div>
@@ -273,19 +273,19 @@ export default function ProfileSettings() {
         </div>
 
         {/* Form 2: Password Security */}
-        <div className="bg-white/70 backdrop-blur-xl border border-slate-200 p-8 space-y-6 rounded-3xl relative overflow-hidden group shadow-sm hover:shadow-md transition-shadow">
+        <div className="bg-white/70 dark:bg-[var(--card)] backdrop-blur-xl border border-slate-200 dark:border-white/5 p-8 space-y-6 rounded-3xl relative overflow-hidden group shadow-sm hover:shadow-md transition-shadow">
           <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-400/5 rounded-full blur-3xl pointer-events-none" />
           
-          <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest border-b border-slate-150 pb-4 flex items-center gap-2 relative z-10">
-            <Lock className="h-5 w-5 text-indigo-600" />
+          <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-widest border-b border-slate-150 dark:border-white/5 pb-4 flex items-center gap-2 relative z-10">
+            <Lock className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
             Security & Credentials
           </h3>
 
           <form onSubmit={handlePasswordSubmit} className="space-y-5 relative z-10">
             <div className="group/input">
-              <label className="block text-[10px] font-extrabold text-slate-600 mb-2 uppercase tracking-wider">Current Password</label>
+              <label className="block text-[10px] font-extrabold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-wider">Current Password</label>
               <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within/input:text-indigo-500 transition-colors">
+                <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-455 group-focus-within/input:text-indigo-500 transition-colors">
                   <Lock className="h-4 w-4" />
                 </span>
                 <input
@@ -293,16 +293,16 @@ export default function ProfileSettings() {
                   required
                   value={passwordData.currentPassword}
                   onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-                  className="w-full rounded-xl border-2 border-slate-200 bg-white pl-11 pr-4 py-3 text-sm outline-none transition-all duration-300 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 font-bold text-slate-800 hover:border-slate-300 shadow-sm"
+                  className="w-full rounded-xl border-2 border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950/40 pl-11 pr-4 py-3 text-sm outline-none transition-all duration-300 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 font-bold text-slate-800 dark:text-white hover:border-slate-300 dark:hover:border-slate-700 shadow-sm"
                   placeholder="••••••••"
                 />
               </div>
             </div>
 
             <div className="group/input">
-              <label className="block text-[10px] font-extrabold text-slate-600 mb-2 uppercase tracking-wider">New Password</label>
+              <label className="block text-[10px] font-extrabold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-wider">New Password</label>
               <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within/input:text-indigo-500 transition-colors">
+                <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-455 group-focus-within/input:text-indigo-500 transition-colors">
                   <KeyRound className="h-4 w-4" />
                 </span>
                 <input
@@ -310,16 +310,16 @@ export default function ProfileSettings() {
                   required
                   value={passwordData.newPassword}
                   onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-                  className="w-full rounded-xl border-2 border-slate-200 bg-white pl-11 pr-4 py-3 text-sm outline-none transition-all duration-300 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 font-bold text-slate-800 hover:border-slate-300 shadow-sm"
+                  className="w-full rounded-xl border-2 border-slate-200 dark:border-white/10 bg-white dark:bg-slate-955/40 pl-11 pr-4 py-3 text-sm outline-none transition-all duration-300 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 font-bold text-slate-800 dark:text-white hover:border-slate-300 dark:hover:border-slate-700 shadow-sm"
                   placeholder="At least 6 characters"
                 />
               </div>
             </div>
 
             <div className="group/input">
-              <label className="block text-[10px] font-extrabold text-slate-600 mb-2 uppercase tracking-wider">Confirm New Password</label>
+              <label className="block text-[10px] font-extrabold text-slate-600 dark:text-slate-400 mb-2 uppercase tracking-wider">Confirm New Password</label>
               <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within/input:text-indigo-500 transition-colors">
+                <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-455 group-focus-within/input:text-indigo-500 transition-colors">
                   <KeyRound className="h-4 w-4" />
                 </span>
                 <input
@@ -327,7 +327,7 @@ export default function ProfileSettings() {
                   required
                   value={passwordData.confirmPassword}
                   onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                  className="w-full rounded-xl border-2 border-slate-200 bg-white pl-11 pr-4 py-3 text-sm outline-none transition-all duration-300 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 font-bold text-slate-800 hover:border-slate-300 shadow-sm"
+                  className="w-full rounded-xl border-2 border-slate-200 dark:border-white/10 bg-white dark:bg-slate-955/40 pl-11 pr-4 py-3 text-sm outline-none transition-all duration-300 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 font-bold text-slate-800 dark:text-white hover:border-slate-300 dark:hover:border-slate-700 shadow-sm"
                   placeholder="At least 6 characters"
                 />
               </div>

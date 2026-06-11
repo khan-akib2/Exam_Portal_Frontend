@@ -46,8 +46,8 @@ export default function SuperAdminDashboard() {
     return (
       <div className="flex h-[80vh] items-center justify-center bg-[var(--background)]">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-4 border-slate-200 border-t-[#1157CF] rounded-full animate-spin" />
-          <p className="text-sm font-semibold text-slate-500 uppercase tracking-widest">Loading Workspace...</p>
+          <div className="w-10 h-10 border-4 border-slate-200 dark:border-slate-800 border-t-[#1157CF] dark:border-t-blue-400 rounded-full animate-spin" />
+          <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Loading Workspace...</p>
         </div>
       </div>
     );
@@ -79,57 +79,57 @@ export default function SuperAdminDashboard() {
       {/* Grid Stats */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {/* Stat 1 */}
-        <div className="premium-card p-6 flex items-center justify-between bg-white">
+        <div className="premium-card p-6 flex items-center justify-between bg-white dark:bg-[var(--card)]">
           <div className="space-y-1">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 block mb-2">Sub-Administrators</span>
-            <h3 className="text-3xl font-black text-slate-900 leading-none tracking-tight">{stats.adminsCount}</h3>
-            <p className="text-xs font-bold text-slate-500 mt-1">{stats.activeAdmins} active accounts</p>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 block mb-2">Sub-Administrators</span>
+            <h3 className="text-3xl font-black text-slate-900 dark:text-white leading-none tracking-tight">{stats.adminsCount}</h3>
+            <p className="text-xs font-bold text-slate-500 dark:text-slate-400 mt-1">{stats.activeAdmins} active accounts</p>
           </div>
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#1157CF]/10 text-[#1157CF] border border-[#1157CF]/20 shrink-0">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#1157CF]/10 text-[#1157CF] dark:bg-[#1157CF]/20 dark:text-blue-400 border border-[#1157CF]/20 dark:border-[#1157CF]/30 shrink-0">
             <UserCheck className="h-5 w-5" />
           </div>
         </div>
 
         {/* Stat 2 */}
-        <div className="premium-card p-6 flex items-center justify-between bg-white">
+        <div className="premium-card p-6 flex items-center justify-between bg-white dark:bg-[var(--card)]">
           <div className="space-y-1">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 block mb-2">Global Anti-Cheat</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 block mb-2">Global Anti-Cheat</span>
             <div className="pt-1">
               {settings?.antiCheatEnabled ? (
-                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#0F7B3E] bg-[#DCFAED] border border-[#0F7B3E]/20 px-2.5 py-1 rounded uppercase tracking-wider">
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#0F7B3E] bg-[#DCFAED] dark:text-emerald-450 dark:bg-emerald-500/10 border border-[#0F7B3E]/20 dark:border-emerald-500/20 px-2.5 py-1 rounded uppercase tracking-wider">
                   <ShieldCheck className="h-3 w-3 animate-pulse" /> Active Mode
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#B45309] bg-[#FEF3CD] border border-[#B45309]/20 px-2.5 py-1 rounded uppercase tracking-wider">
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#B45309] bg-[#FEF3CD] dark:text-amber-450 dark:bg-amber-500/10 border border-[#B45309]/20 dark:border-amber-500/20 px-2.5 py-1 rounded uppercase tracking-wider">
                   Disabled
                 </span>
               )}
             </div>
-            <p className="text-xs font-bold text-slate-500 pt-1.5">Focus monitor & copy-paste blocks</p>
+            <p className="text-xs font-bold text-slate-500 dark:text-slate-400 pt-1.5">Focus monitor & copy-paste blocks</p>
           </div>
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-slate-600 border border-slate-200 shrink-0">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-350 border border-slate-200 dark:border-slate-700 shrink-0">
             <ShieldAlert className="h-5 w-5" />
           </div>
         </div>
 
         {/* Stat 3 */}
-        <div className="premium-card p-6 flex items-center justify-between bg-white">
+        <div className="premium-card p-6 flex items-center justify-between bg-white dark:bg-[var(--card)]">
           <div className="space-y-1">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 block mb-2">Maintenance State</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 block mb-2">Maintenance State</span>
             <div className="pt-1">
               {settings?.maintenanceMode ? (
-                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#C0152A] bg-[#FDEAEC] border border-[#C0152A]/20 px-2.5 py-1 rounded uppercase tracking-wider animate-pulse">
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#C0152A] bg-[#FDEAEC] dark:text-red-405 dark:bg-red-500/10 border border-[#C0152A]/20 dark:border-red-500/20 px-2.5 py-1 rounded uppercase tracking-wider animate-pulse">
                   <AlertTriangle className="h-3 w-3" /> System Offline
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-slate-700 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded uppercase tracking-wider">
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-slate-700 bg-slate-100 dark:text-slate-300 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2.5 py-1 rounded uppercase tracking-wider">
                   Online (Active)
                 </span>
               )}
             </div>
-            <p className="text-xs font-bold text-slate-500 pt-1.5">Limits student access</p>
+            <p className="text-xs font-bold text-slate-500 dark:text-slate-400 pt-1.5">Limits student access</p>
           </div>
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-slate-600 border border-slate-200 shrink-0">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-350 border border-slate-200 dark:border-slate-700 shrink-0">
             <Settings className="h-5 w-5" />
           </div>
         </div>
@@ -138,22 +138,22 @@ export default function SuperAdminDashboard() {
       {/* Navigation Actions Grid */}
       <div className="grid gap-6 md:grid-cols-3">
         {/* Action 1 */}
-        <div className="premium-card p-6 flex flex-col justify-between bg-white group cursor-pointer hover:border-[#1157CF]/50">
+        <div className="premium-card p-6 flex flex-col justify-between bg-white dark:bg-[var(--card)] group cursor-pointer hover:border-[#1157CF]/50">
           <div className="space-y-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#1157CF]/10 text-[#1157CF] border border-[#1157CF]/20">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#1157CF]/10 text-[#1157CF] dark:bg-[#1157CF]/20 dark:text-blue-400 border border-[#1157CF]/20 dark:border-[#1157CF]/30">
               <UserCheck className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-slate-900 mb-2">Manage Sub-Admins</h2>
-              <p className="text-xs text-slate-500 font-medium leading-relaxed">
+              <h2 className="text-base font-bold text-slate-900 dark:text-white mb-2">Manage Sub-Admins</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
                 Create sub-administrator credentials, allocate workspace modules (exams, question pools), or suspend accounts dynamically.
               </p>
             </div>
           </div>
-          <div className="mt-6 pt-4 border-t border-slate-100">
+          <div className="mt-6 pt-4 border-t border-slate-100 dark:border-white/5">
             <Link
               href="/superadmin/admins"
-              className="inline-flex items-center gap-1 text-xs font-bold text-[#1157CF] group-hover:text-[#0D46A8] transition-colors"
+              className="inline-flex items-center gap-1 text-xs font-bold text-[#1157CF] dark:text-blue-400 group-hover:text-[#0D46A8] dark:group-hover:text-blue-300 transition-colors"
             >
               <span>Manage Accounts</span>
               <ChevronRight className="h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
@@ -162,22 +162,22 @@ export default function SuperAdminDashboard() {
         </div>
 
         {/* Action 2 */}
-        <div className="premium-card p-6 flex flex-col justify-between bg-white group cursor-pointer hover:border-[#1157CF]/50">
+        <div className="premium-card p-6 flex flex-col justify-between bg-white dark:bg-[var(--card)] group cursor-pointer hover:border-[#1157CF]/50">
           <div className="space-y-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-slate-600 border border-slate-200">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-350 border border-slate-200 dark:border-slate-700">
               <Settings className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-slate-900 mb-2">Global System Settings</h2>
-              <p className="text-xs text-slate-500 font-medium leading-relaxed">
+              <h2 className="text-base font-bold text-slate-900 dark:text-white mb-2">Global System Settings</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
                 Configure student XP reward bounds, streaking milestones, anti-cheat tolerances, and platform maintenance templates.
               </p>
             </div>
           </div>
-          <div className="mt-6 pt-4 border-t border-slate-100">
+          <div className="mt-6 pt-4 border-t border-slate-100 dark:border-white/5">
             <Link
               href="/superadmin/settings"
-              className="inline-flex items-center gap-1 text-xs font-bold text-slate-600 group-hover:text-slate-900 transition-colors"
+              className="inline-flex items-center gap-1 text-xs font-bold text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors"
             >
               <span>Adjust Variables</span>
               <ChevronRight className="h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
@@ -186,22 +186,22 @@ export default function SuperAdminDashboard() {
         </div>
 
         {/* Action 3 */}
-        <div className="premium-card p-6 flex flex-col justify-between bg-white group cursor-pointer hover:border-[#1157CF]/50">
+        <div className="premium-card p-6 flex flex-col justify-between bg-white dark:bg-[var(--card)] group cursor-pointer hover:border-[#1157CF]/50">
           <div className="space-y-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-slate-600 border border-slate-200">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-350 border border-slate-200 dark:border-slate-700">
               <Activity className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-slate-900 mb-2">Platform Audit Logs</h2>
-              <p className="text-xs text-slate-500 font-medium leading-relaxed">
+              <h2 className="text-base font-bold text-slate-900 dark:text-white mb-2">Platform Audit Logs</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
                 Audit log histories of all logins, booklet ingestions, exam releases, and proctor-recorded cheating violations.
               </p>
             </div>
           </div>
-          <div className="mt-6 pt-4 border-t border-slate-100">
+          <div className="mt-6 pt-4 border-t border-slate-100 dark:border-white/5">
             <Link
               href="/superadmin/audit-logs"
-              className="inline-flex items-center gap-1 text-xs font-bold text-slate-600 group-hover:text-slate-900 transition-colors"
+              className="inline-flex items-center gap-1 text-xs font-bold text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors"
             >
               <span>View System Logs</span>
               <ChevronRight className="h-4 w-4 transform group-hover:translate-x-1 transition-transform" />

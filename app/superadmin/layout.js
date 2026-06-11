@@ -66,10 +66,10 @@ export default function SuperAdminLayout({ children }) {
 
   if (!authorized) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-50">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--background)]">
         <div className="flex flex-col items-center gap-3">
-          <RefreshCw className="h-8 w-8 animate-spin text-teal-600" />
-          <span className="text-sm font-semibold text-slate-600">Verifying session...</span>
+          <RefreshCw className="h-8 w-8 animate-spin text-teal-600 dark:text-teal-400" />
+          <span className="text-sm font-semibold text-slate-600 dark:text-slate-400">Verifying session...</span>
         </div>
       </div>
     );

@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme inline {
   --font-sans: "Inter Variable", "Inter", system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
@@ -146,6 +148,10 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.6);
   box-shadow: var(--shadow-xs);
 }
+.dark .glass-panel {
+  background: rgba(15, 17, 30, 0.85);
+  border-color: rgba(255, 255, 255, 0.05);
+}
 
 /* Lenis Smooth Scroll CSS */
 html.lenis, html.lenis body {
@@ -247,3 +253,14 @@ html.lenis, html.lenis body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Dark Mode CSS Variables Override */
+.dark {
+  --background: #070913;
+  --foreground: #F8FAFC;
+  --card: #0F111E;
+  --card-foreground: #F8FAFC;
+  --primary: #1157CF;
+  --border: #141829;
+}
+

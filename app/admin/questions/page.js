@@ -179,19 +179,19 @@ export default function QuestionReviewWorkspace() {
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="h-[calc(100vh-80px)] -mt-6 -mx-8 flex flex-col bg-[#FAFAFA]"
+      className="h-[calc(100vh-64px)] -mt-6 md:-mt-8 -mb-6 md:-mb-8 -mx-6 md:-mx-8 flex flex-col bg-[#FAFAFA] dark:bg-[var(--background)]"
     >
       {/* Top Header */}
-      <div className="h-14 border-b border-slate-200 bg-white flex items-center justify-between px-6 shrink-0">
+      <div className="h-14 border-b border-slate-200 dark:border-white/5 bg-white dark:bg-[var(--card)] flex items-center justify-between px-6 shrink-0">
         <div className="flex items-center gap-4">
-          <h1 className="text-sm font-black text-slate-900 flex items-center gap-2">
+          <h1 className="text-sm font-black text-slate-900 dark:text-white flex items-center gap-2">
             <FileText className="h-4 w-4 text-[#1157CF]" /> Question Workspace
           </h1>
           <span className="text-xs text-slate-400 font-medium">|</span>
-          <span className="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">{questions.length} Items</span>
+          <span className="text-xs font-bold text-slate-500 dark:text-slate-450 bg-slate-100 dark:bg-white/5 px-2 py-0.5 rounded-full">{questions.length} Items</span>
         </div>
         <div className="flex items-center gap-3">
-          <Link href="/admin/questions/upload" className="text-xs font-bold text-slate-600 hover:text-slate-900 border border-slate-200 bg-slate-50 hover:bg-slate-100 px-3 py-1.5 rounded transition-colors flex items-center gap-1.5">
+          <Link href="/admin/questions/upload" className="text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 px-3 py-1.5 rounded transition-colors flex items-center gap-1.5">
             <UploadCloud className="h-3.5 w-3.5" /> PDF Pipeline
           </Link>
           <button 
@@ -207,8 +207,8 @@ export default function QuestionReviewWorkspace() {
       <div className="flex-1 flex overflow-hidden">
         
         {/* Left Panel: Navigator */}
-        <div className="w-80 border-r border-slate-200 bg-white flex flex-col shrink-0 z-10 shadow-[2px_0_10px_rgba(0,0,0,0.02)]">
-          <div className="p-3 border-b border-slate-100 bg-slate-50/50">
+        <div className="w-80 border-r border-slate-200 dark:border-white/5 bg-white dark:bg-[var(--card)] flex flex-col shrink-0 z-10 shadow-[2px_0_10px_rgba(0,0,0,0.02)] dark:shadow-none">
+          <div className="p-3 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/5">
             <div className="relative">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
               <input
@@ -216,7 +216,7 @@ export default function QuestionReviewWorkspace() {
                 placeholder="Search questions..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-8 pr-3 py-1.5 bg-white border border-slate-200 rounded text-xs font-medium focus:outline-none focus:border-[#1157CF] focus:ring-1 focus:ring-[#1157CF]"
+                className="w-full pl-8 pr-3 py-1.5 bg-white dark:bg-[var(--background)] border border-slate-200 dark:border-white/5 rounded text-xs font-medium focus:outline-none focus:border-[#1157CF] focus:ring-1 focus:ring-[#1157CF] text-slate-900 dark:text-white"
               />
             </div>
           </div>
@@ -226,10 +226,10 @@ export default function QuestionReviewWorkspace() {
             ) : filteredQuestions.length === 0 ? (
               <div className="p-8 text-center text-xs text-slate-400 font-medium">No questions found.</div>
             ) : (
-              <div className="divide-y divide-slate-100">
+              <div className="divide-y divide-slate-100 dark:divide-white/5">
                 {activeQuestion && activeQuestion._id === "new" && (
-                  <div className="p-3 bg-[#1157CF]/5 border-l-2 border-[#1157CF] cursor-pointer">
-                    <div className="text-xs font-bold text-[#1157CF] line-clamp-2">New Draft Question...</div>
+                  <div className="p-3 bg-[#1157CF]/5 dark:bg-blue-500/10 border-l-2 border-[#1157CF] dark:border-blue-500 cursor-pointer">
+                    <div className="text-xs font-bold text-[#1157CF] dark:text-blue-400 line-clamp-2">New Draft Question...</div>
                     <div className="flex items-center gap-2 mt-1.5">
                       <span className="text-[9px] font-bold uppercase tracking-wider text-[#1157CF]/60">Editing</span>
                     </div>
@@ -241,15 +241,15 @@ export default function QuestionReviewWorkspace() {
                     onClick={() => setActiveQuestion(q)}
                     className={`p-4 cursor-pointer transition-all border-l-4 ${
                       activeQuestion?._id === q._id 
-                        ? 'bg-gradient-to-r from-blue-50 to-white border-blue-600 shadow-sm relative z-10' 
-                        : 'border-transparent hover:bg-slate-50/80'
+                        ? 'bg-gradient-to-r from-blue-50 to-white dark:from-blue-950/20 dark:to-transparent border-blue-600 dark:border-blue-500 shadow-sm relative z-10' 
+                        : 'border-transparent hover:bg-slate-50/80 dark:hover:bg-white/5'
                     }`}
                   >
-                    <div className={`text-xs font-bold line-clamp-2 leading-relaxed ${activeQuestion?._id === q._id ? 'text-[#1157CF]' : 'text-slate-700'}`}>
+                    <div className={`text-xs font-bold line-clamp-2 leading-relaxed ${activeQuestion?._id === q._id ? 'text-[#1157CF] dark:text-blue-400' : 'text-slate-700 dark:text-slate-300'}`}>
                       {q.question || "Empty Question"}
                     </div>
                     <div className="flex items-center gap-2 mt-2">
-                      <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">
+                      <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-450 bg-slate-100 dark:bg-white/5 px-1.5 py-0.5 rounded">
                         {q.subject || 'General'}
                       </span>
                       <span className="text-[9px] font-bold text-slate-400 flex items-center gap-1">
@@ -264,18 +264,18 @@ export default function QuestionReviewWorkspace() {
         </div>
 
         {/* Center Panel: Editor */}
-        <div className="flex-1 flex flex-col bg-white overflow-hidden relative">
+        <div className="flex-1 flex flex-col bg-white dark:bg-[var(--card)] overflow-hidden relative">
           {activeQuestion ? (
             <>
               {/* Editor Toolbar */}
-              <div className="h-12 border-b border-slate-100 bg-slate-50 flex items-center gap-1 px-4 shrink-0">
-                <button className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-200 rounded"><Bold className="h-4 w-4" /></button>
-                <button className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-200 rounded"><Italic className="h-4 w-4" /></button>
-                <div className="w-px h-4 bg-slate-300 mx-1"></div>
-                <button className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-200 rounded"><AlignLeft className="h-4 w-4" /></button>
-                <button className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-200 rounded"><AlignJustify className="h-4 w-4" /></button>
-                <div className="w-px h-4 bg-slate-300 mx-1"></div>
-                <button className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-200 rounded"><ImageIcon className="h-4 w-4" /></button>
+              <div className="h-12 border-b border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-white/5 flex items-center gap-1 px-4 shrink-0">
+                <button className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/10 rounded"><Bold className="h-4 w-4" /></button>
+                <button className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/10 rounded"><Italic className="h-4 w-4" /></button>
+                <div className="w-px h-4 bg-slate-300 dark:bg-white/10 mx-1"></div>
+                <button className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/10 rounded"><AlignLeft className="h-4 w-4" /></button>
+                <button className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/10 rounded"><AlignJustify className="h-4 w-4" /></button>
+                <div className="w-px h-4 bg-slate-300 dark:bg-white/10 mx-1"></div>
+                <button className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/10 rounded"><ImageIcon className="h-4 w-4" /></button>
               </div>
 
               <div className="flex-1 overflow-y-auto p-8 max-w-4xl mx-auto w-full hide-scrollbar">
@@ -286,29 +286,29 @@ export default function QuestionReviewWorkspace() {
                       value={editorData.question}
                       onChange={(e) => setEditorData({...editorData, question: e.target.value})}
                       placeholder="Type your question stem here..."
-                      className="w-full text-xl font-bold text-slate-900 border-none outline-none resize-none bg-transparent placeholder:text-slate-300"
+                      className="w-full text-xl font-bold text-slate-900 dark:text-white border-none outline-none resize-none bg-transparent placeholder:text-slate-300 dark:placeholder:text-slate-700"
                       rows={4}
                     />
                   </div>
 
                   {/* Options */}
                   <div className="space-y-3">
-                    <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Options</h3>
+                    <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2">Options</h3>
                     {editorData.options.map((opt, idx) => (
                       <div 
                         key={idx} 
-                        className={`flex items-center gap-3 p-3.5 rounded-2xl border-2 transition-all focus-within:ring-4 focus-within:ring-blue-500/10 focus-within:border-blue-400 group ${
+                        className={`flex items-center gap-3 p-3.5 rounded-2xl border-2 transition-all focus-within:ring-4 focus-within:ring-blue-500/10 focus-within:border-blue-400 dark:focus-within:border-blue-500 group ${
                           editorData.correctAnswer === idx 
-                            ? 'border-emerald-500 bg-emerald-50/50 shadow-sm' 
-                            : 'border-slate-200 bg-white hover:border-slate-300'
+                            ? 'border-emerald-500 dark:border-emerald-500/30 bg-emerald-50/50 dark:bg-emerald-950/10 shadow-sm' 
+                            : 'border-slate-200 dark:border-white/5 bg-white dark:bg-[var(--background)] hover:border-slate-300 dark:hover:border-white/10'
                         }`}
                       >
                         <button 
                           onClick={() => setEditorData({...editorData, correctAnswer: idx})}
                           className={`flex items-center justify-center h-6 w-6 rounded-full border-2 shrink-0 transition-all ${
                             editorData.correctAnswer === idx 
-                              ? 'border-emerald-500 bg-emerald-500 text-white shadow-md shadow-emerald-500/30' 
-                              : 'border-slate-300 text-slate-400 hover:border-slate-400 group-focus-within:border-blue-400'
+                              ? 'border-emerald-500 dark:border-emerald-500 bg-emerald-500 text-white shadow-md shadow-emerald-500/30' 
+                              : 'border-slate-300 dark:border-white/20 text-slate-400 dark:text-slate-500 hover:border-slate-400 dark:hover:border-slate-300 group-focus-within:border-blue-400 dark:group-focus-within:border-blue-500'
                           }`}
                         >
                           {editorData.correctAnswer === idx ? <Check className="h-3.5 w-3.5" /> : <span className="text-[10px] font-bold">{String.fromCharCode(65 + idx)}</span>}
@@ -322,7 +322,7 @@ export default function QuestionReviewWorkspace() {
                             setEditorData({...editorData, options: newOpts});
                           }}
                           placeholder={`Option ${String.fromCharCode(65 + idx)}`}
-                          className={`w-full text-sm font-medium outline-none bg-transparent ${editorData.correctAnswer === idx ? 'text-[#0F7B3E]' : 'text-slate-700'}`}
+                          className={`w-full text-sm font-medium outline-none bg-transparent ${editorData.correctAnswer === idx ? 'text-[#0F7B3E] dark:text-emerald-400' : 'text-slate-700 dark:text-slate-200'}`}
                         />
                       </div>
                     ))}
@@ -330,12 +330,12 @@ export default function QuestionReviewWorkspace() {
 
                   {/* Explanation */}
                   <div>
-                    <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Explanation (Optional)</h3>
+                    <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2">Explanation (Optional)</h3>
                     <textarea 
                       value={editorData.explanation}
                       onChange={(e) => setEditorData({...editorData, explanation: e.target.value})}
                       placeholder="Explain the rationale behind the correct answer..."
-                      className="w-full text-sm font-medium text-slate-600 bg-slate-50 border border-slate-200 rounded-xl p-4 outline-none focus:border-[#1157CF] focus:bg-white transition-all min-h-[120px]"
+                      className="w-full text-sm font-medium text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-[var(--background)] border border-slate-200 dark:border-white/5 rounded-xl p-4 outline-none focus:border-[#1157CF] dark:focus:border-blue-500 focus:bg-white dark:focus:bg-[var(--background)] transition-all min-h-[120px]"
                     />
                   </div>
                 </div>
@@ -343,16 +343,16 @@ export default function QuestionReviewWorkspace() {
             </>
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center text-slate-400 p-8">
-              <div className="h-16 w-16 bg-slate-50 rounded-full flex items-center justify-center border border-slate-100 mb-4 shadow-sm">
-                <FileText className="h-6 w-6 text-slate-300" />
+              <div className="h-16 w-16 bg-slate-50 dark:bg-white/5 rounded-full flex items-center justify-center border border-slate-100 dark:border-white/5 mb-4 shadow-sm">
+                <FileText className="h-6 w-6 text-slate-300 dark:text-slate-600" />
               </div>
-              <p className="text-sm font-bold text-slate-900 mb-1">No Question Selected</p>
-              <p className="text-xs font-medium text-slate-500 text-center max-w-xs">
+              <p className="text-sm font-bold text-slate-900 dark:text-white mb-1">No Question Selected</p>
+              <p className="text-xs font-medium text-slate-500 dark:text-slate-400 text-center max-w-xs">
                 Select a question from the navigator on the left, or create a new one to start editing.
               </p>
               <button 
                 onClick={handleNewQuestion}
-                className="mt-6 text-xs font-bold text-[#1157CF] bg-[#1157CF]/10 hover:bg-[#1157CF]/20 px-4 py-2 rounded-lg transition-colors"
+                className="mt-6 text-xs font-bold text-[#1157CF] bg-[#1157CF]/10 hover:bg-[#1157CF]/20 dark:bg-[#1157CF]/10 dark:hover:bg-[#1157CF]/20 px-4 py-2 rounded-lg transition-colors"
               >
                 Create New Question
               </button>
@@ -362,11 +362,11 @@ export default function QuestionReviewWorkspace() {
 
         {/* Right Panel: Metadata & Properties */}
         {activeQuestion && (
-          <div className="w-72 border-l border-slate-200 bg-[#FAFAFA] flex flex-col shrink-0 z-10 shadow-[-2px_0_10px_rgba(0,0,0,0.02)]">
-            <div className="h-12 border-b border-slate-200 flex items-center justify-between px-4 bg-white shrink-0">
-              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Properties</span>
+          <div className="w-72 border-l border-slate-200 dark:border-white/5 bg-[#FAFAFA] dark:bg-[var(--card)] flex flex-col shrink-0 z-10 shadow-[-2px_0_10px_rgba(0,0,0,0.02)] dark:shadow-none">
+            <div className="h-12 border-b border-slate-200 dark:border-white/5 flex items-center justify-between px-4 bg-white dark:bg-[var(--card)] shrink-0">
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Properties</span>
               <div className="flex gap-1">
-                <button onClick={handleDelete} className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors" title="Delete">
+                <button onClick={handleDelete} className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 rounded transition-colors" title="Delete">
                   <Trash2 className="h-3.5 w-3.5" />
                 </button>
               </div>
@@ -377,11 +377,11 @@ export default function QuestionReviewWorkspace() {
               {/* Categorization */}
               <div className="space-y-4">
                 <div>
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1.5 block">Subject Mapping</label>
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1.5 block">Subject Mapping</label>
                   <select 
                     value={editorData.subject}
                     onChange={(e) => setEditorData({...editorData, subject: e.target.value})}
-                    className="w-full bg-white border border-slate-200 rounded text-xs font-bold text-slate-700 px-3 py-2 outline-none focus:border-[#1157CF] appearance-none"
+                    className="w-full bg-white dark:bg-[var(--background)] border border-slate-200 dark:border-white/5 rounded text-xs font-bold text-slate-700 dark:text-slate-200 px-3 py-2 outline-none focus:border-[#1157CF] dark:focus:border-blue-500 appearance-none"
                   >
                     <option value="General Medicine">General Medicine</option>
                     <option value="Surgery">Surgery</option>
@@ -393,27 +393,27 @@ export default function QuestionReviewWorkspace() {
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1.5 block">Chapter / Topic</label>
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1.5 block">Chapter / Topic</label>
                   <input 
                     type="text"
                     value={editorData.chapter}
                     onChange={(e) => setEditorData({...editorData, chapter: e.target.value})}
                     placeholder="e.g. Cardiovascular System"
-                    className="w-full bg-white border border-slate-200 rounded text-xs font-medium text-slate-700 px-3 py-2 outline-none focus:border-[#1157CF]"
+                    className="w-full bg-white dark:bg-[var(--background)] border border-slate-200 dark:border-white/5 rounded text-xs font-medium text-slate-700 dark:text-slate-200 px-3 py-2 outline-none focus:border-[#1157CF] dark:focus:border-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1.5 block">Difficulty Level</label>
-                  <div className="flex bg-slate-100 p-0.5 rounded-lg border border-slate-200">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1.5 block">Difficulty Level</label>
+                  <div className="flex bg-slate-100 dark:bg-white/5 p-0.5 rounded-lg border border-slate-200 dark:border-white/5">
                     {["Easy", "Medium", "Hard"].map(level => (
                       <button
                         key={level}
                         onClick={() => setEditorData({...editorData, difficulty: level})}
                         className={`flex-1 text-[10px] font-bold py-1.5 rounded-md transition-all ${
                           editorData.difficulty === level 
-                            ? 'bg-white text-slate-900 shadow-sm' 
-                            : 'text-slate-500 hover:text-slate-700'
+                            ? 'bg-white dark:bg-white/10 text-slate-900 dark:text-white shadow-sm' 
+                            : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
                         }`}
                       >
                         {level}
@@ -425,12 +425,12 @@ export default function QuestionReviewWorkspace() {
 
               {/* Tags */}
               <div>
-                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1.5 flex items-center gap-1">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1.5 flex items-center gap-1">
                   <Tag className="h-3 w-3" /> Tags
                 </label>
                 <div className="flex flex-wrap gap-1.5 mb-2">
                   {editorData.tags.map(tag => (
-                    <span key={tag} className="inline-flex items-center gap-1 bg-[#1157CF]/10 text-[#1157CF] px-2 py-0.5 rounded text-[10px] font-bold">
+                    <span key={tag} className="inline-flex items-center gap-1 bg-[#1157CF]/10 dark:bg-blue-500/10 text-[#1157CF] dark:text-blue-400 px-2 py-0.5 rounded text-[10px] font-bold">
                       {tag}
                       <button onClick={() => removeTag(tag)} className="hover:text-[#0D46A8]"><X className="h-2.5 w-2.5" /></button>
                     </span>
@@ -442,22 +442,22 @@ export default function QuestionReviewWorkspace() {
                   onChange={(e) => setTagInput(e.target.value)}
                   onKeyDown={addTag}
                   placeholder="Add tag and press Enter..."
-                  className="w-full bg-white border border-slate-200 rounded text-xs font-medium text-slate-700 px-3 py-2 outline-none focus:border-[#1157CF]"
+                  className="w-full bg-white dark:bg-[var(--background)] border border-slate-200 dark:border-white/5 rounded text-xs font-medium text-slate-700 dark:text-slate-200 px-3 py-2 outline-none focus:border-[#1157CF] dark:focus:border-blue-500"
                 />
               </div>
 
               {/* System Info */}
               {activeQuestion._id !== "new" && (
-                <div className="pt-4 border-t border-slate-200">
-                  <p className="text-[10px] font-medium text-slate-400">ID: {activeQuestion._id}</p>
-                  <p className="text-[10px] font-medium text-slate-400">Created: {new Date(activeQuestion.createdAt || Date.now()).toLocaleDateString()}</p>
+                <div className="pt-4 border-t border-slate-200 dark:border-white/5">
+                  <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500">ID: {activeQuestion._id}</p>
+                  <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500">Created: {new Date(activeQuestion.createdAt || Date.now()).toLocaleDateString()}</p>
                 </div>
               )}
 
             </div>
             
             {/* Action Bar */}
-            <div className="p-4 bg-white border-t border-slate-200 shrink-0">
+            <div className="p-4 bg-white dark:bg-[var(--card)] border-t border-slate-200 dark:border-white/5 shrink-0">
               <button 
                 onClick={handleSave}
                 disabled={isSaving}

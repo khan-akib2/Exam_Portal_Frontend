@@ -256,8 +256,8 @@ export default function StudentsManager() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight">Student Management</h1>
-          <p className="text-sm text-slate-500 font-medium mt-1">Manage enrollments, statuses, and student credentials.</p>
+          <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Student Management</h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400 font-medium mt-1">Manage enrollments, statuses, and student credentials.</p>
         </div>
 
         <div className="flex items-center gap-3">
@@ -266,13 +266,13 @@ export default function StudentsManager() {
               setBulkModalOpen(true);
               setBulkResult(null);
             }}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 text-slate-700 text-xs font-black rounded-xl hover:bg-slate-50 hover:shadow-md transition-all active:scale-95"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 text-xs font-black rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 hover:shadow-md transition-all active:scale-95 cursor-pointer"
           >
             <Upload className="h-4 w-4 text-[#1157CF]" /> Bulk Import
           </button>
           <button
             onClick={() => setModalOpen(true)}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#1157CF] to-blue-500 text-white text-xs font-black rounded-xl hover:shadow-lg hover:shadow-blue-500/30 hover:-translate-y-0.5 transition-all active:scale-95"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#1157CF] to-blue-500 text-white text-xs font-black rounded-xl hover:shadow-lg hover:shadow-blue-500/30 hover:-translate-y-0.5 transition-all active:scale-95 cursor-pointer"
           >
             <UserPlus className="h-4 w-4" /> Add Student
           </button>
@@ -281,77 +281,77 @@ export default function StudentsManager() {
 
       {/* Top Statistics Row */}
       <div className="grid grid-cols-3 gap-5">
-        <div className="bg-white/70 backdrop-blur-xl border border-slate-200 p-5 rounded-3xl flex items-center justify-between shadow-sm hover:shadow-md transition-all hover:-translate-y-1 relative overflow-hidden group">
+        <div className="bg-white/70 dark:bg-[var(--card)] backdrop-blur-xl border border-slate-200 dark:border-white/5 p-5 rounded-3xl flex items-center justify-between shadow-sm hover:shadow-md transition-all hover:-translate-y-1 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/5 rounded-full blur-2xl pointer-events-none group-hover:bg-blue-500/10 transition-colors duration-500" />
           <div className="relative z-10">
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Total Enrolled</p>
-            <p className="text-3xl font-black text-slate-900 tracking-tight">{students.length}</p>
+            <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Total Enrolled</p>
+            <p className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{students.length}</p>
           </div>
-          <div className="h-12 w-12 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center relative z-10 shadow-sm">
-            <Users className="h-6 w-6 text-[#1157CF]" />
+          <div className="h-12 w-12 rounded-2xl bg-blue-50 dark:bg-[#1157CF]/20 border border-blue-100 dark:border-blue-500/25 flex items-center justify-center relative z-10 shadow-sm text-[#1157CF] dark:text-blue-400">
+            <Users className="h-6 w-6" />
           </div>
         </div>
-        <div className="bg-white/70 backdrop-blur-xl border border-slate-200 p-5 rounded-3xl flex items-center justify-between shadow-sm hover:shadow-md transition-all hover:-translate-y-1 relative overflow-hidden group">
+        <div className="bg-white/70 dark:bg-[var(--card)] backdrop-blur-xl border border-slate-200 dark:border-white/5 p-5 rounded-3xl flex items-center justify-between shadow-sm hover:shadow-md transition-all hover:-translate-y-1 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none group-hover:bg-emerald-500/10 transition-colors duration-500" />
           <div className="relative z-10">
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Active Accounts</p>
-            <p className="text-3xl font-black text-slate-900 tracking-tight">{activeCount}</p>
+            <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Active Accounts</p>
+            <p className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{activeCount}</p>
           </div>
-          <div className="h-12 w-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center relative z-10 shadow-sm">
-            <Shield className="h-6 w-6 text-emerald-600" />
+          <div className="h-12 w-12 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/25 flex items-center justify-center relative z-10 shadow-sm text-emerald-600 dark:text-emerald-400">
+            <Shield className="h-6 w-6" />
           </div>
         </div>
-        <div className="bg-white/70 backdrop-blur-xl border border-slate-200 p-5 rounded-3xl flex items-center justify-between shadow-sm hover:shadow-md transition-all hover:-translate-y-1 relative overflow-hidden group">
+        <div className="bg-white/70 dark:bg-[var(--card)] backdrop-blur-xl border border-slate-200 dark:border-white/5 p-5 rounded-3xl flex items-center justify-between shadow-sm hover:shadow-md transition-all hover:-translate-y-1 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/5 rounded-full blur-2xl pointer-events-none group-hover:bg-indigo-500/10 transition-colors duration-500" />
           <div className="relative z-10">
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">Active Batches</p>
-            <p className="text-3xl font-black text-slate-900 tracking-tight">{uniqueBatches.length}</p>
+            <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Active Batches</p>
+            <p className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{uniqueBatches.length}</p>
           </div>
-          <div className="h-12 w-12 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center relative z-10 shadow-sm">
-            <Calendar className="h-6 w-6 text-indigo-600" />
+          <div className="h-12 w-12 rounded-2xl bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-500/25 flex items-center justify-center relative z-10 shadow-sm text-indigo-650 dark:text-indigo-400">
+            <Calendar className="h-6 w-6" />
           </div>
         </div>
       </div>
 
       {/* Main Data Grid */}
-      <div className="bg-white/70 backdrop-blur-xl border border-slate-200 rounded-3xl flex flex-col overflow-hidden shadow-sm">
+      <div className="bg-white/70 dark:bg-[var(--card)] backdrop-blur-xl border border-slate-200 dark:border-white/5 rounded-3xl flex flex-col overflow-hidden shadow-sm">
         
         {/* Toolbar */}
-        <div className="p-4 border-b border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4 bg-slate-50/50">
+        <div className="p-4 border-b border-slate-200 dark:border-white/5 flex flex-col md:flex-row items-center justify-between gap-4 bg-slate-50/50 dark:bg-slate-900/50">
           <div className="relative w-full md:w-80">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-slate-500" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search name or email..."
-              className="w-full pl-9 pr-4 py-2 rounded-lg border border-slate-200 text-xs font-medium bg-white focus:outline-none focus:border-[#1157CF] focus:ring-1 focus:ring-[#1157CF] transition-shadow"
+              className="w-full pl-9 pr-4 py-2 rounded-lg border border-slate-200 dark:border-white/10 text-xs font-medium bg-white dark:bg-slate-950/40 text-slate-900 dark:text-white focus:outline-none focus:border-[#1157CF] dark:focus:border-blue-500 focus:ring-1 focus:ring-[#1157CF] dark:focus:ring-blue-500 transition-shadow"
             />
           </div>
 
-          <div className="flex items-center gap-3 w-full md:w-auto">
-            <div className="relative flex-1 md:w-40">
-              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+          <div className="flex items-center gap-3 w-full md:w-auto text-left">
+            <div className="relative flex-1 md:w-40 text-left">
+              <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 dark:text-slate-500" />
               <select
                 value={batchFilter}
                 onChange={(e) => setBatchFilter(e.target.value)}
-                className="w-full pl-8 pr-4 py-2 rounded-lg border border-slate-200 text-xs font-bold bg-white focus:outline-none focus:border-[#1157CF] appearance-none"
+                className="w-full pl-8 pr-4 py-2 rounded-lg border border-slate-200 dark:border-white/10 text-xs font-bold bg-white dark:bg-slate-950/40 text-slate-900 dark:text-white focus:outline-none focus:border-[#1157CF] dark:focus:border-blue-500 appearance-none animate-none"
               >
-                <option value="">All Batches</option>
+                <option value="" className="dark:bg-slate-950 dark:text-white">All Batches</option>
                 {uniqueBatches.map(b => (
-                  <option key={b} value={b}>{b}</option>
+                  <option key={b} value={b} className="dark:bg-slate-950 dark:text-white">{b}</option>
                 ))}
               </select>
             </div>
-            <div className="relative flex-1 md:w-40">
+            <div className="relative flex-1 md:w-40 text-left">
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="w-full px-4 py-2 rounded-lg border border-slate-200 text-xs font-bold bg-white focus:outline-none focus:border-[#1157CF] appearance-none"
+                className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-white/10 text-xs font-bold bg-white dark:bg-slate-950/40 text-slate-900 dark:text-white focus:outline-none focus:border-[#1157CF] dark:focus:border-blue-500 appearance-none"
               >
-                <option value="">All Statuses</option>
-                <option value="active">Active</option>
-                <option value="suspended">Suspended</option>
+                <option value="" className="dark:bg-slate-950 dark:text-white">All Statuses</option>
+                <option value="active" className="dark:bg-slate-950 dark:text-white">Active</option>
+                <option value="suspended" className="dark:bg-slate-950 dark:text-white">Suspended</option>
               </select>
             </div>
           </div>
@@ -359,20 +359,20 @@ export default function StudentsManager() {
 
         {/* Bulk Action Toolbar */}
         {selectedStudentIds.length > 0 && (
-          <div className="bg-[#1157CF]/5 border-b border-[#1157CF]/10 px-4 py-3 flex items-center justify-between animate-fade-in">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-[#1157CF] bg-[#1157CF]/10 px-2 py-0.5 rounded">
+          <div className="bg-[#1157CF]/5 border-b border-[#1157CF]/10 dark:border-white/5 px-4 py-3 flex items-center justify-between animate-fade-in">
+            <div className="flex items-center gap-2 text-left">
+              <span className="text-xs font-bold text-[#1157CF] dark:text-blue-450 bg-[#1157CF]/10 dark:bg-blue-500/10 px-2 py-0.5 rounded">
                 {selectedStudentIds.length} Selected
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <button onClick={() => handleBulkStatusChange("active")} className="text-[10px] font-bold text-[#0F7B3E] bg-white border border-[#0F7B3E]/20 hover:bg-[#DCFAED] px-3 py-1.5 rounded transition-colors shadow-sm">
+              <button onClick={() => handleBulkStatusChange("active")} className="text-[10px] font-bold text-[#0F7B3E] dark:text-emerald-400 bg-white dark:bg-slate-900 border border-[#0F7B3E]/20 dark:border-emerald-500/20 hover:bg-[#DCFAED] dark:hover:bg-emerald-500/10 px-3 py-1.5 rounded transition-colors shadow-sm cursor-pointer">
                 Activate
               </button>
-              <button onClick={() => handleBulkStatusChange("suspended")} className="text-[10px] font-bold text-[#B45309] bg-white border border-[#B45309]/20 hover:bg-[#FEF3CD] px-3 py-1.5 rounded transition-colors shadow-sm">
+              <button onClick={() => handleBulkStatusChange("suspended")} className="text-[10px] font-bold text-[#B45309] dark:text-amber-400 bg-white dark:bg-slate-900 border border-[#B45309]/20 dark:border-amber-500/20 hover:bg-[#FEF3CD] dark:hover:bg-amber-500/10 px-3 py-1.5 rounded transition-colors shadow-sm cursor-pointer">
                 Suspend
               </button>
-              <button onClick={handleBulkDeleteStudents} className="text-[10px] font-bold text-[#C0152A] bg-white border border-[#C0152A]/20 hover:bg-[#FDEAEC] px-3 py-1.5 rounded transition-colors shadow-sm">
+              <button onClick={handleBulkDeleteStudents} className="text-[10px] font-bold text-[#C0152A] dark:text-red-400 bg-white dark:bg-slate-900 border border-[#C0152A]/20 dark:border-red-500/20 hover:bg-[#FDEAEC] dark:hover:bg-red-500/10 px-3 py-1.5 rounded transition-colors shadow-sm cursor-pointer">
                 Delete
               </button>
             </div>
@@ -380,36 +380,36 @@ export default function StudentsManager() {
         )}
 
         {/* Data Grid */}
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto text-left">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-200">
+              <tr className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-white/5">
                 <th className="px-4 py-3 w-12 text-center">
-                  <button onClick={handleSelectAllFilteredStudents} className="text-slate-400 hover:text-[#1157CF] flex items-center justify-center w-full">
+                  <button onClick={handleSelectAllFilteredStudents} className="text-slate-400 hover:text-[#1157CF] dark:hover:text-blue-400 flex items-center justify-center w-full cursor-pointer">
                     {selectedStudentIds.length === filteredStudents.length && filteredStudents.length > 0 ? (
-                      <CheckSquare className="h-4.5 w-4.5 text-[#1157CF]" />
+                      <CheckSquare className="h-4.5 w-4.5 text-[#1157CF] dark:text-blue-450" />
                     ) : (
                       <Square className="h-4.5 w-4.5" />
                     )}
                   </button>
                 </th>
-                <th className="px-4 py-3 text-[10px] uppercase tracking-widest font-bold text-slate-500">Student Profile</th>
-                <th className="px-4 py-3 text-[10px] uppercase tracking-widest font-bold text-slate-500">Batch</th>
-                <th className="px-4 py-3 text-[10px] uppercase tracking-widest font-bold text-slate-500">Status</th>
-                <th className="px-4 py-3 text-[10px] uppercase tracking-widest font-bold text-slate-500 text-right">Actions</th>
+                <th className="px-4 py-3 text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-slate-400">Student Profile</th>
+                <th className="px-4 py-3 text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-slate-400">Batch</th>
+                <th className="px-4 py-3 text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-slate-400">Status</th>
+                <th className="px-4 py-3 text-[10px] uppercase tracking-widest font-bold text-slate-500 dark:text-slate-400 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 dark:divide-white/5">
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="px-4 py-12 text-center text-sm font-medium text-slate-500">
-                    <RefreshCw className="h-5 w-5 animate-spin mx-auto mb-2 text-[#1157CF]" />
+                  <td colSpan={5} className="px-4 py-12 text-center text-sm font-medium text-slate-500 dark:text-slate-400">
+                    <RefreshCw className="h-5 w-5 animate-spin mx-auto mb-2 text-[#1157CF] dark:text-blue-400" />
                     Loading grid...
                   </td>
                 </tr>
               ) : filteredStudents.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-4 py-12 text-center text-sm font-medium text-slate-500">
+                  <td colSpan={5} className="px-4 py-12 text-center text-sm font-medium text-slate-500 dark:text-slate-400">
                     No students found matching filters.
                   </td>
                 </tr>
@@ -417,52 +417,52 @@ export default function StudentsManager() {
                 filteredStudents.map((student) => {
                   const isSelected = selectedStudentIds.includes(student._id);
                   return (
-                    <tr key={student._id} className={`hover:bg-slate-50 transition-colors ${isSelected ? "bg-[#1157CF]/5" : ""}`}>
+                    <tr key={student._id} className={`hover:bg-slate-50/50 dark:hover:bg-slate-900/30 transition-colors ${isSelected ? "bg-[#1157CF]/5 dark:bg-blue-500/5" : ""}`}>
                       <td className="px-4 py-4 text-center">
-                        <button onClick={() => handleStudentSelectToggle(student._id)} className="text-slate-400 hover:text-[#1157CF] flex items-center justify-center w-full">
+                        <button onClick={() => handleStudentSelectToggle(student._id)} className="text-slate-400 hover:text-[#1157CF] dark:hover:text-blue-400 flex items-center justify-center w-full cursor-pointer">
                           {isSelected ? (
-                            <CheckSquare className="h-4.5 w-4.5 text-[#1157CF]" />
+                            <CheckSquare className="h-4.5 w-4.5 text-[#1157CF] dark:text-blue-450" />
                           ) : (
                             <Square className="h-4.5 w-4.5" />
                           )}
                         </button>
                       </td>
-                      <td className="px-4 py-4">
+                      <td className="px-4 py-4 text-left">
                         <div className="flex items-center gap-3">
-                          <div className="h-9 w-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-xs font-black text-slate-600 shrink-0">
+                          <div className="h-9 w-9 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-white/10 flex items-center justify-center text-xs font-black text-slate-600 dark:text-slate-350 shrink-0">
                             {getInitials(student.name)}
                           </div>
                           <div>
-                            <div className="text-sm font-bold text-slate-900">{student.name}</div>
-                            <div className="text-xs text-slate-500 font-medium mt-0.5">{student.email}</div>
+                            <div className="text-sm font-bold text-slate-900 dark:text-white">{student.name}</div>
+                            <div className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">{student.email}</div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-4 py-4">
-                        <span className="inline-flex items-center px-2 py-1 rounded bg-slate-100 border border-slate-200 text-[10px] font-bold text-slate-700 uppercase tracking-wider">
+                      <td className="px-4 py-4 text-left">
+                        <span className="inline-flex items-center px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
                           {student.batch}
                         </span>
                       </td>
-                      <td className="px-4 py-4">
+                      <td className="px-4 py-4 text-left">
                         {student.status === "active" ? (
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black text-emerald-700 bg-emerald-50 uppercase tracking-widest border border-emerald-200 shadow-sm">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black text-emerald-700 dark:text-emerald-450 bg-emerald-50 dark:bg-emerald-500/10 uppercase tracking-widest border border-emerald-200 dark:border-emerald-500/20 shadow-sm">
                             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Active
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black text-slate-600 bg-slate-100 uppercase tracking-widest border border-slate-200 shadow-sm">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 uppercase tracking-widest border border-slate-200 dark:border-slate-700 shadow-sm">
                             <div className="w-1.5 h-1.5 rounded-full bg-slate-400" /> Suspended
                           </span>
                         )}
                       </td>
                       <td className="px-4 py-4 text-right">
-                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity" style={{ opacity: 1 }}>
-                          <button onClick={() => handleToggleStatus(student._id, student.status)} className="p-1.5 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded transition-colors" title="Toggle Status">
+                        <div className="flex items-center justify-end gap-2" style={{ opacity: 1 }}>
+                          <button onClick={() => handleToggleStatus(student._id, student.status)} className="p-1.5 text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors cursor-pointer" title="Toggle Status">
                             <Shield className="h-4 w-4" />
                           </button>
-                          <button onClick={() => handleDeleteStudent(student._id, student.name)} className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors" title="Delete">
+                          <button onClick={() => handleDeleteStudent(student._id, student.name)} className="p-1.5 text-slate-400 hover:text-red-650 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 rounded transition-colors cursor-pointer" title="Delete">
                             <Trash2 className="h-4 w-4" />
                           </button>
-                          <button className="p-1.5 text-slate-400 hover:text-[#1157CF] hover:bg-[#EEF4FF] rounded transition-colors" title="More Options">
+                          <button className="p-1.5 text-slate-400 hover:text-[#1157CF] dark:hover:text-blue-400 hover:bg-[#EEF4FF] dark:hover:bg-blue-500/10 rounded transition-colors cursor-pointer" title="More Options">
                             <MoreHorizontal className="h-4 w-4" />
                           </button>
                         </div>
@@ -476,49 +476,49 @@ export default function StudentsManager() {
         </div>
         
         {/* Pagination placeholder */}
-        <div className="p-4 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-slate-500 bg-slate-50/50">
+        <div className="p-4 border-t border-slate-100 dark:border-white/5 flex items-center justify-between text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-900/50 text-left">
           <div>Showing {filteredStudents.length} results</div>
           <div className="flex gap-1">
-            <button className="px-2.5 py-1 rounded border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-50" disabled>Prev</button>
-            <button className="px-2.5 py-1 rounded border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-50" disabled>Next</button>
+            <button className="px-2.5 py-1 rounded border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950/40 text-slate-700 dark:text-slate-350 hover:bg-slate-50 dark:hover:bg-slate-900 disabled:opacity-50 cursor-pointer" disabled>Prev</button>
+            <button className="px-2.5 py-1 rounded border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950/40 text-slate-700 dark:text-slate-350 hover:bg-slate-50 dark:hover:bg-slate-900 disabled:opacity-50 cursor-pointer" disabled>Next</button>
           </div>
         </div>
       </div>
 
       {/* Add Student Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md bg-white rounded-xl border border-slate-200 shadow-2xl overflow-hidden">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-slate-50">
-              <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Enroll Student</h2>
-              <button onClick={() => setModalOpen(false)} className="text-slate-400 hover:text-slate-600 p-1 hover:bg-slate-200 rounded">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-955/60 backdrop-blur-sm p-4">
+          <div className="w-full max-w-md bg-white dark:bg-[#0F111E] rounded-xl border border-slate-200 dark:border-white/5 shadow-2xl overflow-hidden">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-slate-900">
+              <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Enroll Student</h2>
+              <button onClick={() => setModalOpen(false)} className="text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-white p-1 hover:bg-slate-200 dark:hover:bg-slate-800 rounded cursor-pointer">
                 <X className="h-4 w-4" />
               </button>
             </div>
             <form onSubmit={handleAddStudent}>
-              <div className="p-5 space-y-4">
+              <div className="p-5 space-y-4 text-left">
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Full Name</label>
-                  <input type="text" required value={newStudent.name} onChange={(e) => setNewStudent({...newStudent, name: e.target.value})} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-[#1157CF] focus:ring-1 focus:ring-[#1157CF]" placeholder="John Doe" />
+                  <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">Full Name</label>
+                  <input type="text" required value={newStudent.name} onChange={(e) => setNewStudent({...newStudent, name: e.target.value})} className="w-full rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950/40 text-slate-900 dark:text-white px-3 py-2 text-sm outline-none focus:border-[#1157CF] focus:ring-1 focus:ring-[#1157CF]" placeholder="John Doe" />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Email Address</label>
-                  <input type="email" required value={newStudent.email} onChange={(e) => setNewStudent({...newStudent, email: e.target.value})} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-[#1157CF] focus:ring-1 focus:ring-[#1157CF]" placeholder="john@example.com" />
+                  <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">Email Address</label>
+                  <input type="email" required value={newStudent.email} onChange={(e) => setNewStudent({...newStudent, email: e.target.value})} className="w-full rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950/40 text-slate-900 dark:text-white px-3 py-2 text-sm outline-none focus:border-[#1157CF] focus:ring-1 focus:ring-[#1157CF]" placeholder="john@example.com" />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Phone (Optional)</label>
-                    <input type="text" value={newStudent.phone} onChange={(e) => setNewStudent({...newStudent, phone: e.target.value})} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-[#1157CF] focus:ring-1 focus:ring-[#1157CF]" placeholder="+1 555 1234" />
+                    <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">Phone (Optional)</label>
+                    <input type="text" value={newStudent.phone} onChange={(e) => setNewStudent({...newStudent, phone: e.target.value})} className="w-full rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950/40 text-slate-900 dark:text-white px-3 py-2 text-sm outline-none focus:border-[#1157CF] focus:ring-1 focus:ring-[#1157CF]" placeholder="+1 555 1234" />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Batch</label>
-                    <input type="text" value={newStudent.batch} onChange={(e) => setNewStudent({...newStudent, batch: e.target.value})} className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm outline-none focus:border-[#1157CF] focus:ring-1 focus:ring-[#1157CF]" placeholder="Fall 2026" />
+                    <label className="block text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">Batch</label>
+                    <input type="text" value={newStudent.batch} onChange={(e) => setNewStudent({...newStudent, batch: e.target.value})} className="w-full rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950/40 text-slate-900 dark:text-white px-3 py-2 text-sm outline-none focus:border-[#1157CF] focus:ring-1 focus:ring-[#1157CF]" placeholder="Fall 2026" />
                   </div>
                 </div>
               </div>
-              <div className="p-5 border-t border-slate-100 flex items-center justify-end gap-2 bg-slate-50">
-                <button type="button" onClick={() => setModalOpen(false)} className="px-4 py-2 text-xs font-bold text-slate-600 hover:text-slate-900 transition-colors">Cancel</button>
-                <button type="submit" disabled={loading} className="px-4 py-2 bg-[#1157CF] text-white text-xs font-bold rounded hover:bg-[#0D46A8] transition-colors shadow-sm disabled:opacity-50">
+              <div className="p-5 border-t border-slate-100 dark:border-white/5 flex items-center justify-end gap-2 bg-slate-50 dark:bg-slate-900">
+                <button type="button" onClick={() => setModalOpen(false)} className="px-4 py-2 text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer">Cancel</button>
+                <button type="submit" disabled={loading} className="px-4 py-2 bg-[#1157CF] text-white text-xs font-bold rounded hover:bg-[#0D46A8] transition-colors shadow-sm disabled:opacity-50 cursor-pointer">
                   {loading ? "Creating..." : "Create & Send Invite"}
                 </button>
               </div>
@@ -529,11 +529,11 @@ export default function StudentsManager() {
 
       {/* Bulk Import Modal */}
       {bulkModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
-          <div className="w-full max-w-lg bg-white rounded-xl border border-slate-200 shadow-2xl overflow-hidden">
-             <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-slate-50">
-              <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Bulk Import CSV</h2>
-              <button onClick={() => setBulkModalOpen(false)} className="text-slate-400 hover:text-slate-600 p-1 hover:bg-slate-200 rounded">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-955/60 backdrop-blur-sm p-4">
+          <div className="w-full max-w-lg bg-white dark:bg-[#0F111E] rounded-xl border border-slate-200 dark:border-white/5 shadow-2xl overflow-hidden">
+             <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-slate-900">
+              <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Bulk Import CSV</h2>
+              <button onClick={() => setBulkModalOpen(false)} className="text-slate-400 hover:text-slate-650 dark:text-slate-500 dark:hover:text-white p-1 hover:bg-slate-200 dark:hover:bg-slate-800 rounded cursor-pointer">
                 <X className="h-4 w-4" />
               </button>
             </div>
@@ -541,10 +541,10 @@ export default function StudentsManager() {
                <div className="w-16 h-16 rounded-full bg-[#1157CF]/10 text-[#1157CF] mx-auto flex items-center justify-center mb-4">
                  <Download className="h-6 w-6" />
                </div>
-               <h3 className="text-sm font-bold text-slate-900 mb-1">Upload CSV Document</h3>
-               <p className="text-xs text-slate-500 mb-4">Format: Name, Email, Phone, Batch</p>
+               <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-1">Upload CSV Document</h3>
+               <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">Format: Name, Email, Phone, Batch</p>
                
-               <button className="px-4 py-2 border border-slate-200 bg-slate-50 text-slate-700 font-bold text-xs rounded hover:bg-slate-100 transition-colors">
+               <button className="px-4 py-2 border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-slate-950/40 text-slate-700 dark:text-slate-300 font-bold text-xs rounded hover:bg-slate-100 dark:hover:bg-slate-900 hover:border-slate-350 transition-colors cursor-pointer">
                  Select File from Computer
                </button>
             </div>
